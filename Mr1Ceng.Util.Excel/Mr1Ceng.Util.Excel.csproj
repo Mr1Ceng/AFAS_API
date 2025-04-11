@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>7.0.0</Version>
+    <Authors>Mr1Ceng</Authors>
+    <Company>Mr1Ceng</Company>
+    <PackageOutputPath>..\..\.nuget</PackageOutputPath>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>提供Excel相关服务的类库</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NPOI" Version="2.7.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+@AFAS_HostAddress = http://localhost:5165
+
+GET {{AFAS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
