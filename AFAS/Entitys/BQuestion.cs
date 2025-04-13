@@ -7,6 +7,8 @@ public partial class BQuestion
 {
     public string QuestionId { get; set; } = null!;
 
+    public string QuestionCode { get; set; } = null!;
+
     public string QuestionName { get; set; } = null!;
 
     public string QuestionnaireId { get; set; } = null!;

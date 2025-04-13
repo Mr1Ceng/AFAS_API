@@ -334,13 +334,14 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.Instruction3).HasColumnType("NVARCHAR(500)");
             entity.Property(e => e.Instruction4).HasColumnType("NVARCHAR(500)");
             entity.Property(e => e.Precautions).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.QuestionCode).HasColumnType("NVARCHAR(2)");
             entity.Property(e => e.QuestionName).HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.QuestionnaireId).HasColumnType("NVARCHAR(6)");
         });
 
         modelBuilder.Entity<BQuestionS1>(entity =>
         {
-            entity.HasKey(e => new { e.QuestionId, e.GridType });
+            entity.HasKey(e => new { e.QuestionId, e.GridType, e.GridSort });
 
             entity.ToTable("b_Question_S1");
 

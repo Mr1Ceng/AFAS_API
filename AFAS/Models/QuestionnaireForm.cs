@@ -3,7 +3,7 @@
     /// <summary>
     /// 试卷表单
     /// </summary>
-    public class BQuestionnaireForm
+    public class QuestionnaireForm
     {
         /// <summary>
         /// 试卷编码;QN开头的6位字母数字

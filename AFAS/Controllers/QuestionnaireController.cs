@@ -1,26 +1,26 @@
 using AFAS.Business.Questionnaire;
 using AFAS.Entitys;
-using AFAS.Internals;
 using AFAS.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
-using System.Reflection;
 
 namespace AFAS.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class TestControllerController : ControllerBase
+    public class QuestionnaireController : ControllerBase
     {
-        private readonly ILogger<TestControllerController> _logger;
+        private readonly ILogger<QuestionnaireController> _logger;
         private readonly IQuestionnaireService _questionnaireService;
 
-        public TestControllerController(IQuestionnaireService service, ILogger<TestControllerController> logger)
+        public QuestionnaireController(IQuestionnaireService service, ILogger<QuestionnaireController> logger)
         {
             _logger = logger;
             _questionnaireService = service;
         }
+
+
+        #region Questionnaire
 
         /// <summary>
         /// 获取试卷列表
@@ -29,6 +29,14 @@ namespace AFAS.Controllers
         [HttpPost]
         public async Task<ResponseModel<List<BQuestionnaire>>> GetQuestionnaireListAsync()
         => new (await _questionnaireService.GetQuestionnaireListAsync());
+
+        /// <summary>
+        /// 获取试卷列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionnaireId}")]
+        public async Task<ResponseModel<QuestionnaireModel>> GetQuestionnaireModelAsync(string questionnaireId)
+        => new(await _questionnaireService.GetQuestionnaireModelAsync(questionnaireId));
 
         /// <summary>
         /// 获取试卷
@@ -44,7 +52,7 @@ namespace AFAS.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResponseModel<string>> SaveQuestionnaireAsync(BQuestionnaireForm data)
+        public async Task<ResponseModel<string>> SaveQuestionnaireAsync(QuestionnaireForm data)
         => new(await _questionnaireService.SaveQuestionnaireAsync(data));
 
         /// <summary>
@@ -52,11 +60,25 @@ namespace AFAS.Controllers
         /// </summary>
         /// <param name="questionnaireId"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("{questionnaireId}")]
         public async Task<ResponseModel> RemoveQuestionnaireAsync(string questionnaireId)
         {
-            _ = await _questionnaireService.RemoveQuestionnaireAsync(questionnaireId);
+            await _questionnaireService.RemoveQuestionnaireAsync(questionnaireId);
             return new ResponseModel();
         }
+
+        #endregion
+
+        #region Question
+
+        /// <summary>
+        /// 获取题目列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionnaireId}")]
+        public async Task<ResponseModel<List<BQuestion>>> GetQuestionListAsync(string questionnaireId)
+        => new(await _questionnaireService.GetQuestionListAsync(questionnaireId));
+
+        #endregion
     }
 }
