@@ -1,9 +1,6 @@
 ﻿using AFAS.Entitys;
-using AFAS.Internals;
 using AFAS.Models;
 using Microsoft.EntityFrameworkCore;
-using Mr1Ceng.Util;
-using System.Reflection;
 
 namespace AFAS.Business.Questionnaire;
 
@@ -60,15 +57,62 @@ public interface IQuestionnaireService
     /// </summary>
     /// <param name="questionnaireId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestion>> GetQuestionListAsync(string questionnaireId)
-    {
-        var questions = new List<BQuestion>();
-        using (var context = new AfasContext())
-        {
-            questions = await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ToListAsync();
-        }
-        return questions;
-    }
+    Task<List<BQuestion>> GetQuestionListAsync(string questionnaireId);
 
+    /// <summary>
+    /// 获取题目S1信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<List<BQuestionS1>> GetQuestionS1Async(string questionId);
+
+    /// <summary>
+    /// 获取题目S2信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<List<BQuestionS2>> GetQuestionS2Async(string questionId);
+
+    /// <summary>
+    /// 获取题目S3信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<List<BQuestionS3>> GetQuestionS3Async(string questionId);
+
+    /// <summary>
+    /// 获取题目S4信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<BQuestionS4> GetQuestionS4Async(string questionId);
+
+    /// <summary>
+    /// 获取题目S5信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<List<BQuestionS5>> GetQuestionS5Async(string questionId);
+
+    /// <summary>
+    /// 获取题目T1信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<QuestionT1Model> GetQuestionT1Async(string questionId);
+
+    /// <summary>
+    /// 获取题目T2信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<QuestionT2Model> GetQuestionT2Async(string questionId);
+
+    /// <summary>
+    /// 获取题目T3信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task<List<BQuestionT3>> GetQuestionT3Async(string questionId);
     #endregion
 }

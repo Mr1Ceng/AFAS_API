@@ -79,6 +79,70 @@ namespace AFAS.Controllers
         public async Task<ResponseModel<List<BQuestion>>> GetQuestionListAsync(string questionnaireId)
         => new(await _questionnaireService.GetQuestionListAsync(questionnaireId));
 
+        /// <summary>
+        /// 获取题目S1信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<List<BQuestionS1>>> GetQuestionS1Async(string questionId)
+        => new(await _questionnaireService.GetQuestionS1Async(questionId));
+
+        /// <summary>
+        /// 获取题目S2信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<List<BQuestionS2>>> GetQuestionS2Async(string questionId)
+        => new(await _questionnaireService.GetQuestionS2Async(questionId));
+
+        /// <summary>
+        /// 获取题目S3信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<List<BQuestionS3>>> GetQuestionS3Async(string questionId)
+        => new(await _questionnaireService.GetQuestionS3Async(questionId));
+
+        /// <summary>
+        /// 获取题目S4信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<BQuestionS4>> GetQuestionS4Async(string questionId)
+        => new(await _questionnaireService.GetQuestionS4Async(questionId));
+
+        /// <summary>
+        /// 获取题目S5信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<List<BQuestionS5>>> GetQuestionS5Async(string questionId)
+        => new(await _questionnaireService.GetQuestionS5Async(questionId));
+
+        /// <summary>
+        /// 获取题目T1信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<QuestionT1Model>> GetQuestionT1Async(string questionId)
+        => new(await _questionnaireService.GetQuestionT1Async(questionId));
+
+        /// <summary>
+        /// 获取题目T2信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<QuestionT2Model>> GetQuestionT2Async(string questionId)
+        => new(await _questionnaireService.GetQuestionT2Async(questionId));
+
+        /// <summary>
+        /// 获取题目T3信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel<List<BQuestionT3>>> GetQuestionT3Async(string questionId)
+        => new(await _questionnaireService.GetQuestionT3Async(questionId));
+
         #endregion
     }
 }

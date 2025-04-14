@@ -1,7 +1,6 @@
 ﻿using AFAS.Entitys;
 using AFAS.Internals;
 using AFAS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Reflection;
@@ -182,5 +181,144 @@ public class QuestionnaireService : IQuestionnaireService
         return questions;
     }
 
+    /// <summary>
+    /// 获取题目S1信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<List<BQuestionS1>> GetQuestionS1Async(string questionId)
+    {
+        var questions = new List<BQuestionS1>();
+        using (var context = new AfasContext())
+        {
+            questions = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).ToListAsync();
+        }
+        return questions;
+    }
+
+    /// <summary>
+    /// 获取题目S2信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<List<BQuestionS2>> GetQuestionS2Async(string questionId)
+    {
+        var questions = new List<BQuestionS2>();
+        using (var context = new AfasContext())
+        {
+            questions = await context.BQuestionS2s.Where(x => x.QuestionId == questionId).ToListAsync();
+        }
+        return questions;
+    }
+
+    /// <summary>
+    /// 获取题目S3信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<List<BQuestionS3>> GetQuestionS3Async(string questionId)
+    {
+        var questions = new List<BQuestionS3>();
+        using (var context = new AfasContext())
+        {
+            questions = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).ToListAsync();
+        }
+        return questions;
+    }
+
+    /// <summary>
+    /// 获取题目S4信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<BQuestionS4> GetQuestionS4Async(string questionId)
+    {
+        var question = new BQuestionS4();
+        using (var context = new AfasContext())
+        {
+            question = await context.BQuestionS4s.SingleAsync(x => x.QuestionId == questionId);
+        }
+        return question;
+    }
+
+    /// <summary>
+    /// 获取题目S5信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<List<BQuestionS5>> GetQuestionS5Async(string questionId)
+    {
+        var questions = new List<BQuestionS5>();
+        using (var context = new AfasContext())
+        {
+            questions = await context.BQuestionS5s.Where(x => x.QuestionId == questionId).ToListAsync();
+        }
+        return questions;
+    }
+
+    /// <summary>
+    /// 获取题目T1信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<QuestionT1Model> GetQuestionT1Async(string questionId)
+    {
+        var question = new QuestionT1Model();
+        using (var context = new AfasContext())
+        {
+            var questionT1 = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == questionId);
+            question = new QuestionT1Model()
+            {
+                QuestionId = questionT1.QuestionId,
+                NumberQuestion = questionT1.NumberQuestion,
+                StoryQuestion = questionT1.StoryQuestion,
+                Number1 = questionT1.Number1,
+                Number2 = questionT1.Number2,
+                Number3 = questionT1.Number3,
+                bQuestionT1QList = await context.BQuestionT1Qs.Where(x => x.QuestionId == questionId).ToListAsync(),
+                bQuestionT1AList = await context.BQuestionT1As.Where(x => x.QuestionId == questionId).ToListAsync()
+            };
+        }
+        return question;
+    }
+
+    /// <summary>
+    /// 获取题目T2信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<QuestionT2Model> GetQuestionT2Async(string questionId)
+    {
+        var question = new QuestionT2Model();
+        using (var context = new AfasContext())
+        {
+            var questionT2 = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == questionId);
+            question = new QuestionT2Model()
+            {
+                QuestionId = questionT2.QuestionId,
+                Question = questionT2.Question,
+                Number1 = questionT2.Number1,
+                Number2 = questionT2.Number2,
+                bQuestionT2QList = await context.BQuestionT2Qs.Where(x => x.QuestionId == questionId).ToListAsync(),
+                bQuestionT2AList = await context.BQuestionT2As.Where(x => x.QuestionId == questionId).ToListAsync()
+            };
+        }
+        return question;
+    }
+
+    /// <summary>
+    /// 获取题目T3信息
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task<List<BQuestionT3>> GetQuestionT3Async(string questionId)
+    {
+        var questions = new List<BQuestionT3>();
+        using (var context = new AfasContext())
+        {
+            questions = await context.BQuestionT3s.Where(x => x.QuestionId == questionId).ToListAsync();
+        }
+        return questions;
+    }
     #endregion
 }
