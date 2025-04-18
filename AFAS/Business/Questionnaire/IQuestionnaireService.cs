@@ -1,5 +1,5 @@
 ﻿using AFAS.Entitys;
-using AFAS.Models;
+using AFAS.Models.Question;
 using Microsoft.EntityFrameworkCore;
 
 namespace AFAS.Business.Questionnaire;
@@ -64,35 +64,35 @@ public interface IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<List<BQuestionS1>> GetQuestionS1Async(string questionId);
+    Task<QuestionS1Model> GetQuestionS1Async(string questionId);
 
     /// <summary>
     /// 获取题目S2信息
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<List<BQuestionS2>> GetQuestionS2Async(string questionId);
+    Task<QuestionS2Model> GetQuestionS2Async(string questionId);
 
     /// <summary>
     /// 获取题目S3信息
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<List<BQuestionS3>> GetQuestionS3Async(string questionId);
+    Task<QuestionS3Model> GetQuestionS3Async(string questionId);
 
     /// <summary>
     /// 获取题目S4信息
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<BQuestionS4> GetQuestionS4Async(string questionId);
+    Task<QuestionS4Model> GetQuestionS4Async(string questionId);
 
     /// <summary>
     /// 获取题目S5信息
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<List<BQuestionS5>> GetQuestionS5Async(string questionId);
+    Task<QuestionS5Model> GetQuestionS5Async(string questionId);
 
     /// <summary>
     /// 获取题目T1信息
@@ -113,6 +113,26 @@ public interface IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    Task<List<BQuestionT3>> GetQuestionT3Async(string questionId);
+    Task<QuestionT3Model> GetQuestionT3Async(string questionId);
+    #endregion
+
+    #region Answer
+
+    /// <summary>
+    /// 保存题目S1答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerS1Async(AnswerS1Model data, string userId);
+
+    /// <summary>
+    /// 保存题目S2答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerS2Async(AnswerS2Model data, string userId);
+
     #endregion
 }

@@ -1,4 +1,4 @@
-﻿namespace AFAS.Models
+﻿namespace AFAS.Models.Question
 {
     /// <summary>
     /// 试卷表单

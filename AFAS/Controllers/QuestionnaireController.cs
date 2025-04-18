@@ -1,6 +1,6 @@
 using AFAS.Business.Questionnaire;
 using AFAS.Entitys;
-using AFAS.Models;
+using AFAS.Models.Question;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
 
@@ -28,7 +28,7 @@ namespace AFAS.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<ResponseModel<List<BQuestionnaire>>> GetQuestionnaireListAsync()
-        => new (await _questionnaireService.GetQuestionnaireListAsync());
+        => new(await _questionnaireService.GetQuestionnaireListAsync());
 
         /// <summary>
         /// 获取试卷列表
@@ -84,7 +84,7 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<List<BQuestionS1>>> GetQuestionS1Async(string questionId)
+        public async Task<ResponseModel<QuestionS1Model>> GetQuestionS1Async(string questionId)
         => new(await _questionnaireService.GetQuestionS1Async(questionId));
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<List<BQuestionS2>>> GetQuestionS2Async(string questionId)
+        public async Task<ResponseModel<QuestionS2Model>> GetQuestionS2Async(string questionId)
         => new(await _questionnaireService.GetQuestionS2Async(questionId));
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<List<BQuestionS3>>> GetQuestionS3Async(string questionId)
+        public async Task<ResponseModel<QuestionS3Model>> GetQuestionS3Async(string questionId)
         => new(await _questionnaireService.GetQuestionS3Async(questionId));
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<BQuestionS4>> GetQuestionS4Async(string questionId)
+        public async Task<ResponseModel<QuestionS4Model>> GetQuestionS4Async(string questionId)
         => new(await _questionnaireService.GetQuestionS4Async(questionId));
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<List<BQuestionS5>>> GetQuestionS5Async(string questionId)
+        public async Task<ResponseModel<QuestionS5Model>> GetQuestionS5Async(string questionId)
         => new(await _questionnaireService.GetQuestionS5Async(questionId));
 
         /// <summary>
@@ -140,8 +140,33 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
-        public async Task<ResponseModel<List<BQuestionT3>>> GetQuestionT3Async(string questionId)
+        public async Task<ResponseModel<QuestionT3Model>> GetQuestionT3Async(string questionId)
         => new(await _questionnaireService.GetQuestionT3Async(questionId));
+
+        #endregion
+
+
+        #region Answer
+
+        /// <summary>
+        /// 保存题目S1答案
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost("{userId}")]
+        public async Task<ResponseModel<string>> SaveAnswerS1Async(AnswerS1Model data, string userId = "")
+            => new(await _questionnaireService.SaveAnswerS1Async(data, userId));
+
+        /// <summary>
+        /// 保存题目S2答案
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost("{userId}")]
+        public async Task<ResponseModel<string>> SaveAnswerS2Async(AnswerS2Model data, string userId = "")
+            => new(await _questionnaireService.SaveAnswerS2Async(data, userId));
 
         #endregion
     }

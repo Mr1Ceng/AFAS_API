@@ -12,4 +12,6 @@ public partial class BQuestionS2
     public int GridColumn { get; set; }
 
     public int GridValue { get; set; }
+
+    public bool IsTrue { get; set; }
 }

@@ -139,16 +139,15 @@ public partial class AfasContext : DbContext
 
         modelBuilder.Entity<BAnswerS2A>(entity =>
         {
-            entity.HasKey(e => new { e.AnswerId, e.QuestionId, e.GridRow });
+            entity.HasKey(e => new { e.AnswerId, e.QuestionId, e.GridRow, e.GridColumn });
 
             entity.ToTable("b_Answer_S2_A");
 
             entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
             entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.GridRow).HasColumnType("NVARCHAR(100)");
-            entity.Property(e => e.ErrorNumber).HasColumnType("INT");
-            entity.Property(e => e.MarkNumber).HasColumnType("INT");
-            entity.Property(e => e.TimeConsume).HasColumnType("INT");
+            entity.Property(e => e.GridColumn).HasColumnType("INT");
+            entity.Property(e => e.Selected).HasColumnType("BIT");
         });
 
         modelBuilder.Entity<BAnswerS3>(entity =>
@@ -361,6 +360,7 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.GridRow).HasColumnType("INT");
             entity.Property(e => e.GridColumn).HasColumnType("INT");
             entity.Property(e => e.GridValue).HasColumnType("INT");
+            entity.Property(e => e.IsTrue).HasColumnType("BIT");
         });
 
         modelBuilder.Entity<BQuestionS3>(entity =>

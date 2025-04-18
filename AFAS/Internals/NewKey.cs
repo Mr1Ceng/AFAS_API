@@ -24,6 +24,4 @@ public class NewKey
         }
         return newkey;
     }
-
-
 }

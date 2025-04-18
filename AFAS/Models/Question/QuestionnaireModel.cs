@@ -1,6 +1,6 @@
 ﻿using AFAS.Entitys;
 
-namespace AFAS.Models
+namespace AFAS.Models.Question
 {
     /// <summary>
     /// 试卷模型

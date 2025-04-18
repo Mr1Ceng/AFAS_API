@@ -1,6 +1,6 @@
 ﻿using AFAS.Entitys;
 
-namespace AFAS.Models
+namespace AFAS.Models.Question
 {
     /// <summary>
     /// 试卷题目T1模型
@@ -8,9 +8,9 @@ namespace AFAS.Models
     public class QuestionT1Model
     {
         /// <summary>
-        /// 题目编码;QS开头的6位字母数字组合
+        /// 题目基本信息
         /// </summary>
-        public string QuestionId { get; set; } = "";
+        public BQuestion QuestionInfo { get; set; } = new();
 
         /// <summary>
         /// 数字题

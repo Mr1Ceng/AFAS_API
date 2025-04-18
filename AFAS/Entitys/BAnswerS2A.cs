@@ -11,9 +11,7 @@ public partial class BAnswerS2A
 
     public string GridRow { get; set; } = null!;
 
-    public int MarkNumber { get; set; }
+    public int GridColumn { get; set; }
 
-    public int ErrorNumber { get; set; }
-
-    public int TimeConsume { get; set; }
+    public bool Selected { get; set; }
 }

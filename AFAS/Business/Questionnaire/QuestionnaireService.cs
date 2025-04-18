@@ -1,6 +1,6 @@
 ﻿using AFAS.Entitys;
 using AFAS.Internals;
-using AFAS.Models;
+using AFAS.Models.Question;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Reflection;
@@ -63,7 +63,6 @@ public class QuestionnaireService : IQuestionnaireService
             questionnaire.bQuestionS5List = await context.BQuestionS5s.Where(x => x.QuestionId == s5).ToListAsync();
             var questionT1 = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == t1);
             questionnaire.bQuestionT1 = new QuestionT1Model() {
-                QuestionId = questionT1.QuestionId,
                 NumberQuestion = questionT1.NumberQuestion,
                 StoryQuestion = questionT1.StoryQuestion,
                 Number1 = questionT1.Number1,
@@ -75,7 +74,6 @@ public class QuestionnaireService : IQuestionnaireService
             var questionT2 = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == t2);
             questionnaire.bQuestionT2 = new QuestionT2Model()
             {
-                QuestionId = questionT2.QuestionId,
                 Question = questionT2.Question,
                 Number1 = questionT2.Number1,
                 Number2 = questionT2.Number2,
@@ -186,14 +184,15 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestionS1>> GetQuestionS1Async(string questionId)
+    public async Task<QuestionS1Model> GetQuestionS1Async(string questionId)
     {
-        var questions = new List<BQuestionS1>();
+        var question = new QuestionS1Model();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderBy(x=>x.GridSort).ToListAsync();
         }
-        return questions;
+        return question;
     }
 
     /// <summary>
@@ -201,14 +200,15 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestionS2>> GetQuestionS2Async(string questionId)
+    public async Task<QuestionS2Model> GetQuestionS2Async(string questionId)
     {
-        var questions = new List<BQuestionS2>();
+        var question = new QuestionS2Model();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestionS2s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionS2s.Where(x => x.QuestionId == questionId).ToListAsync();
         }
-        return questions;
+        return question;
     }
 
     /// <summary>
@@ -216,14 +216,15 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestionS3>> GetQuestionS3Async(string questionId)
+    public async Task<QuestionS3Model> GetQuestionS3Async(string questionId)
     {
-        var questions = new List<BQuestionS3>();
+        var question = new QuestionS3Model();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).ToListAsync();
         }
-        return questions;
+        return question;
     }
 
     /// <summary>
@@ -231,12 +232,13 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<BQuestionS4> GetQuestionS4Async(string questionId)
+    public async Task<QuestionS4Model> GetQuestionS4Async(string questionId)
     {
-        var question = new BQuestionS4();
+        var question = new QuestionS4Model();
         using (var context = new AfasContext())
         {
-            question = await context.BQuestionS4s.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionS4s.SingleAsync(x => x.QuestionId == questionId);
         }
         return question;
     }
@@ -246,14 +248,15 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestionS5>> GetQuestionS5Async(string questionId)
+    public async Task<QuestionS5Model> GetQuestionS5Async(string questionId)
     {
-        var questions = new List<BQuestionS5>();
+        var question = new QuestionS5Model();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestionS5s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionS5s.Where(x => x.QuestionId == questionId).ToListAsync();
         }
-        return questions;
+        return question;
     }
 
     /// <summary>
@@ -269,7 +272,7 @@ public class QuestionnaireService : IQuestionnaireService
             var questionT1 = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == questionId);
             question = new QuestionT1Model()
             {
-                QuestionId = questionT1.QuestionId,
+                QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId),
                 NumberQuestion = questionT1.NumberQuestion,
                 StoryQuestion = questionT1.StoryQuestion,
                 Number1 = questionT1.Number1,
@@ -295,7 +298,7 @@ public class QuestionnaireService : IQuestionnaireService
             var questionT2 = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == questionId);
             question = new QuestionT2Model()
             {
-                QuestionId = questionT2.QuestionId,
+                QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId),
                 Question = questionT2.Question,
                 Number1 = questionT2.Number1,
                 Number2 = questionT2.Number2,
@@ -311,14 +314,177 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionId"></param>
     /// <returns></returns>
-    public async Task<List<BQuestionT3>> GetQuestionT3Async(string questionId)
+    public async Task<QuestionT3Model> GetQuestionT3Async(string questionId)
     {
-        var questions = new List<BQuestionT3>();
+        var question = new QuestionT3Model();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestionT3s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
+            question.QuestionList = await context.BQuestionT3s.Where(x => x.QuestionId == questionId).ToListAsync();
         }
-        return questions;
+        return question;
     }
+    #endregion
+
+    #region Answer
+
+    /// <summary>
+    /// 保存题目S1答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerS1Async(AnswerS1Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null) {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerS1s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerS1()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        OriginScore = data.OriginScore,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerS1s.Add(answer);
+                    context.BAnswerS1As.AddRange(data.answerList.Select(x => new BAnswerS1A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridType = x.GridType,
+                        TimeConsume = x.TimeConsume,
+                    }));
+                }
+                else
+                {
+                    answer.OriginScore = data.OriginScore;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerS1s.Update(answer);
+                    context.BAnswerS1As.UpdateRange(data.answerList.Select(x => new BAnswerS1A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridType = x.GridType,
+                        TimeConsume = x.TimeConsume,
+                    }));
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
+
+    /// <summary>
+    /// 保存题目S2答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerS2Async(AnswerS2Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerS2s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerS2()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        TimeConsume = data.TimeConsume,
+                        MarkNumber = data.MarkNumber,
+                        ErrorNumber = data.ErrorNumber,
+                        ErrorRate = data.ErrorRate,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerS2s.Add(answer);
+                    context.BAnswerS2As.AddRange(data.answerList.Select(x => new BAnswerS2A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridRow = x.GridRow,
+                        GridColumn = x.GridColumn,
+                        Selected = x.Selected,
+                    }));
+                }
+                else
+                {
+                    answer.TimeConsume = data.TimeConsume;
+                    answer.MarkNumber = data.MarkNumber;
+                    answer.ErrorNumber = data.ErrorNumber;
+                    answer.ErrorRate = data.ErrorRate;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerS2s.Update(answer);
+                    context.BAnswerS2As.UpdateRange(data.answerList.Select(x => new BAnswerS2A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridRow = x.GridRow,
+                        GridColumn = x.GridColumn,
+                        Selected = x.Selected,
+                    }));
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
     #endregion
 }
