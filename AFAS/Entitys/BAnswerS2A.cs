@@ -9,7 +9,7 @@ public partial class BAnswerS2A
 
     public string QuestionId { get; set; } = null!;
 
-    public string GridRow { get; set; } = null!;
+    public int GridRow { get; set; }
 
     public int GridColumn { get; set; }
 

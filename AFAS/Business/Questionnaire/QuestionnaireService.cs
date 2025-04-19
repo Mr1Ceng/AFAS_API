@@ -26,7 +26,6 @@ public class QuestionnaireService : IQuestionnaireService
     /// 获取试卷列表
     /// </summary>
     /// <returns></returns>
-
     public async Task<List<BQuestionnaire>> GetQuestionnaireListAsync()
     {
         var questionnaries = new List<BQuestionnaire>();
@@ -104,7 +103,6 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-
     public async Task<string> SaveQuestionnaireAsync(QuestionnaireForm data)
     {
         var questionnarie = new BQuestionnaire();
@@ -140,7 +138,6 @@ public class QuestionnaireService : IQuestionnaireService
     /// </summary>
     /// <param name="questionnaireId"></param>
     /// <returns></returns>
-
     public async Task RemoveQuestionnaireAsync(string questionnaireId)
     {
         var questionnarie = new BQuestionnaire();
@@ -402,7 +399,6 @@ public class QuestionnaireService : IQuestionnaireService
         return answerBasic.AnswerId;
     }
 
-
     /// <summary>
     /// 保存题目S2答案
     /// </summary>
@@ -473,6 +469,87 @@ public class QuestionnaireService : IQuestionnaireService
                         GridRow = x.GridRow,
                         GridColumn = x.GridColumn,
                         Selected = x.Selected,
+                    }));
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
+    /// <summary>
+    /// 保存题目S3答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerS3Async(AnswerS3Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerS3s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerS3()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        TimeConsume = data.TimeConsume,
+                        RightNumber = data.RightNumber,
+                        ErrorNumber = data.ErrorNumber,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerS3s.Add(answer);
+                    context.BAnswerS3As.AddRange(data.answerList.Select(x => new BAnswerS3A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridRow = x.GridRow,
+                        GridColumn = x.GridColumn,
+                        Value = x.Value,
+                    }));
+                }
+                else
+                {
+                    answer.TimeConsume = data.TimeConsume;
+                    answer.RightNumber = data.RightNumber;
+                    answer.ErrorNumber = data.ErrorNumber;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerS3s.Update(answer);
+                    context.BAnswerS3As.UpdateRange(data.answerList.Select(x => new BAnswerS3A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        GridRow = x.GridRow,
+                        GridColumn = x.GridColumn,
+                        Value = x.Value,
                     }));
                 }
 

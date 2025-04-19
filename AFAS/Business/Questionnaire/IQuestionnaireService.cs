@@ -1,6 +1,5 @@
 ﻿using AFAS.Entitys;
 using AFAS.Models.Question;
-using Microsoft.EntityFrameworkCore;
 
 namespace AFAS.Business.Questionnaire;
 
@@ -9,8 +8,6 @@ namespace AFAS.Business.Questionnaire;
 /// </summary>
 public interface IQuestionnaireService
 {
-
-
     #region Questionnaire
 
     /// <summary>
@@ -134,5 +131,12 @@ public interface IQuestionnaireService
     /// <returns></returns>
     Task<string> SaveAnswerS2Async(AnswerS2Model data, string userId);
 
+    /// <summary>
+    /// 保存题目S3答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerS3Async(AnswerS3Model data, string userId);
     #endregion
 }

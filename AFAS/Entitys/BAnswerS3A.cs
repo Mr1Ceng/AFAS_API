@@ -11,9 +11,7 @@ public partial class BAnswerS3A
 
     public int GridRow { get; set; }
 
-    public int MarkNumber { get; set; }
+    public int GridColumn { get; set; }
 
-    public int ErrorNumber { get; set; }
-
-    public int TimeConsume { get; set; }
+    public int Value { get; set; }
 }

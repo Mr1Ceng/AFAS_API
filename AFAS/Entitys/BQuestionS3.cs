@@ -11,5 +11,5 @@ public partial class BQuestionS3
 
     public int GridColumn { get; set; }
 
-    public string GridValue { get; set; } = null!;
+    public int GridValue { get; set; }
 }

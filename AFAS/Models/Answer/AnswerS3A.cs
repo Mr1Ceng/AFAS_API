@@ -1,9 +1,9 @@
 ﻿namespace AFAS.Models.Answer
 {
     /// <summary>
-    /// S2答案明细
+    /// S3答案明细
     /// </summary>
-    public class AnswerS2A
+    public class AnswerS3A
     {
         /// <summary>
         /// 行号
@@ -16,9 +16,9 @@
         public int GridColumn { get; set; } = 0;
 
         /// <summary>
-        /// 是否选择
+        /// 答案值
         /// </summary>
-        public bool Selected { get; set; } = false;
+        public int Value { get; set; } = 0;
 
     }
 }
