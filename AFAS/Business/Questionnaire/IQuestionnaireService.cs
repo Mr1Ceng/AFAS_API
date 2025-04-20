@@ -138,5 +138,22 @@ public interface IQuestionnaireService
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<string> SaveAnswerS3Async(AnswerS3Model data, string userId);
+
+    /// <summary>
+    /// 保存题目S4答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerS4Async(AnswerS4Model data, string userId);
+
+    /// <summary>
+    /// 保存题目S5答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerS5Async(AnswerS5Model data, string userId);
+
     #endregion
 }

@@ -563,5 +563,141 @@ public class QuestionnaireService : IQuestionnaireService
         return answerBasic.AnswerId;
     }
 
+    /// <summary>
+    /// 保存题目S4答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerS4Async(AnswerS4Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerS4s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerS4()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        TimeConsume = data.TimeConsume,
+                        QuestionImage = data.QuestionImage,
+                        AnswerImage = data.AnswerImage,
+                        CrossNumber = data.CrossNumber,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerS4s.Add(answer);
+                }
+                else
+                {
+                    answer.TimeConsume = data.TimeConsume;
+                    answer.QuestionImage = data.QuestionImage;
+                    answer.AnswerImage = data.AnswerImage;
+                    answer.CrossNumber = data.CrossNumber;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerS4s.Update(answer);
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
+    /// <summary>
+    /// 保存题目S5答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerS5Async(AnswerS5Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerS5s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerS5()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        TimeConsume = data.TimeConsume,
+                        QuestionImage = data.QuestionImage,
+                        AnswerImage = data.AnswerImage,
+                        ShapeNumber = data.ShapeNumber,
+                        ErrorNumber = data.ErrorNumber,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerS5s.Add(answer);
+                }
+                else
+                {
+                    answer.TimeConsume = data.TimeConsume;
+                    answer.QuestionImage = data.QuestionImage;
+                    answer.AnswerImage = data.AnswerImage;
+                    answer.ShapeNumber = data.ShapeNumber;
+                    answer.ErrorNumber = data.ErrorNumber;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerS5s.Update(answer);
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
     #endregion
 }
