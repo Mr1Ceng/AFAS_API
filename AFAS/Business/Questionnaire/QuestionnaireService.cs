@@ -60,22 +60,16 @@ public class QuestionnaireService : IQuestionnaireService
             questionnaire.bQuestionS3List = await context.BQuestionS3s.Where(x => x.QuestionId == s3).ToListAsync();
             questionnaire.bQuestionS4 = await context.BQuestionS4s.SingleAsync(x => x.QuestionId == s4);
             questionnaire.bQuestionS5List = await context.BQuestionS5s.Where(x => x.QuestionId == s5).ToListAsync();
-            var questionT1 = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == t1);
             questionnaire.bQuestionT1 = new QuestionT1Model() {
-                NumberQuestion = questionT1.NumberQuestion,
-                StoryQuestion = questionT1.StoryQuestion,
-                Number1 = questionT1.Number1,
-                Number2 = questionT1.Number2,
-                Number3 = questionT1.Number3,
+                QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == t1),
+                AnswerInfo = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == t1),
                 bQuestionT1QList = await context.BQuestionT1Qs.Where(x => x.QuestionId == t1).ToListAsync(),
                 bQuestionT1AList = await context.BQuestionT1As.Where(x => x.QuestionId == t1).ToListAsync()
             };
-            var questionT2 = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == t2);
             questionnaire.bQuestionT2 = new QuestionT2Model()
             {
-                Question = questionT2.Question,
-                Number1 = questionT2.Number1,
-                Number2 = questionT2.Number2,
+                QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == t2),
+                AnswerInfo = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == t2),
                 bQuestionT2QList = await context.BQuestionT2Qs.Where(x => x.QuestionId == t2).ToListAsync(),
                 bQuestionT2AList = await context.BQuestionT2As.Where(x => x.QuestionId == t2).ToListAsync()
             };
@@ -266,15 +260,10 @@ public class QuestionnaireService : IQuestionnaireService
         var question = new QuestionT1Model();
         using (var context = new AfasContext())
         {
-            var questionT1 = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == questionId);
             question = new QuestionT1Model()
             {
                 QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId),
-                NumberQuestion = questionT1.NumberQuestion,
-                StoryQuestion = questionT1.StoryQuestion,
-                Number1 = questionT1.Number1,
-                Number2 = questionT1.Number2,
-                Number3 = questionT1.Number3,
+                AnswerInfo = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == questionId),
                 bQuestionT1QList = await context.BQuestionT1Qs.Where(x => x.QuestionId == questionId).ToListAsync(),
                 bQuestionT1AList = await context.BQuestionT1As.Where(x => x.QuestionId == questionId).ToListAsync()
             };
@@ -292,13 +281,10 @@ public class QuestionnaireService : IQuestionnaireService
         var question = new QuestionT2Model();
         using (var context = new AfasContext())
         {
-            var questionT2 = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == questionId);
             question = new QuestionT2Model()
             {
                 QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId),
-                Question = questionT2.Question,
-                Number1 = questionT2.Number1,
-                Number2 = questionT2.Number2,
+                AnswerInfo = await context.BQuestionT2s.SingleAsync(x => x.QuestionId == questionId),
                 bQuestionT2QList = await context.BQuestionT2Qs.Where(x => x.QuestionId == questionId).ToListAsync(),
                 bQuestionT2AList = await context.BQuestionT2As.Where(x => x.QuestionId == questionId).ToListAsync()
             };

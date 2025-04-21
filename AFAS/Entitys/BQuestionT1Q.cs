@@ -9,5 +9,7 @@ public partial class BQuestionT1Q
 
     public int QuestionSort { get; set; }
 
+    public string QuestionType { get; set; } = null!;
+
     public string QuestionQ { get; set; } = null!;
 }

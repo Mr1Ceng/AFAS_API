@@ -431,6 +431,7 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.QuestionQ)
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_Q");
+            entity.Property(e => e.QuestionType).HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BQuestionT2>(entity =>

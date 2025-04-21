@@ -1,4 +1,5 @@
 using AFAS.Business.Questionnaire;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +28,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCors("AllowFrontend");
+
+// 配置静态文件中间件
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "../AFAS.Static/")),
+    RequestPath = "/Static" // 自定义访问路径前缀
+});
 
 app.UseAuthorization();
 

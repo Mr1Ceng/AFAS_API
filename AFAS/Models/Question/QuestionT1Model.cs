@@ -13,29 +13,9 @@ namespace AFAS.Models.Question
         public BQuestion QuestionInfo { get; set; } = new();
 
         /// <summary>
-        /// 数字题
+        /// 题目标准答案信息
         /// </summary>
-        public string NumberQuestion { get; set; } = "";
-
-        /// <summary>
-        /// 故事题
-        /// </summary>
-        public string StoryQuestion { get; set; } = "";
-
-        /// <summary>
-        /// 数字题1答案
-        /// </summary>
-        public int Number1 { get; set; } = 0;
-
-        /// <summary>
-        /// 数字题2答案
-        /// </summary>
-        public int Number2 { get; set; } = 0;
-
-        /// <summary>
-        /// 故事题答案
-        /// </summary>
-        public int Number3 { get; set; } = 0;
+        public BQuestionT1 AnswerInfo { get; set; } = new();
 
         /// <summary>
         /// 题目T1问题列表
