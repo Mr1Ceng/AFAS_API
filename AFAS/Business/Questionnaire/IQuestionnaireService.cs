@@ -155,5 +155,12 @@ public interface IQuestionnaireService
     /// <returns></returns>
     Task<string> SaveAnswerS5Async(AnswerS5Model data, string userId);
 
+    /// <summary>
+    /// 保存题目T1答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerT1Async(AnswerT1Model data, string userId);
     #endregion
 }
