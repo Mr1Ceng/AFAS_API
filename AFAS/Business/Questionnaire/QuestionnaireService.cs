@@ -766,5 +766,82 @@ public class QuestionnaireService : IQuestionnaireService
         return answerBasic.AnswerId;
     }
 
+    /// <summary>
+    /// 保存题目T2答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerT2Async(AnswerT2Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerT2s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerT2()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        Number1 = data.Number1,
+                        Number2 = data.Number2,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerT2s.Add(answer);
+                    context.BAnswerT2As.AddRange(data.answerList.Select(x => new BAnswerT2A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        QuestionSort = x.QuestionSort,
+                        AnswerSort = x.AnswerSort,
+                    }));
+                }
+                else
+                {
+                    answer.Number1 = data.Number1;
+                    answer.Number2 = data.Number2;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerT2s.Update(answer);
+                    context.BAnswerT2As.UpdateRange(data.answerList.Select(x => new BAnswerT2A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        QuestionSort = x.QuestionSort,
+                        AnswerSort = x.AnswerSort,
+                    }));
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
     #endregion
 }

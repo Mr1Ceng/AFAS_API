@@ -206,6 +206,16 @@ namespace AFAS.Controllers
         [HttpPost("{userId}")]
         public async Task<ResponseModel<string>> SaveAnswerT1Async(AnswerT1Model data, string userId = "")
             => new(await _questionnaireService.SaveAnswerT1Async(data, userId));
+
+        /// <summary>
+        /// 保存题目T2答案
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost("{userId}")]
+        public async Task<ResponseModel<string>> SaveAnswerT2Async(AnswerT2Model data, string userId = "")
+            => new(await _questionnaireService.SaveAnswerT2Async(data, userId));
         #endregion
 
     }
