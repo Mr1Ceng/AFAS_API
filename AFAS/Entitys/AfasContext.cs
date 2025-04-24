@@ -49,6 +49,8 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<BDictionaryItem> BDictionaryItems { get; set; }
 
+    public virtual DbSet<BEvaluationStandard> BEvaluationStandards { get; set; }
+
     public virtual DbSet<BQuestion> BQuestions { get; set; }
 
     public virtual DbSet<BQuestionS1> BQuestionS1s { get; set; }
@@ -318,6 +320,24 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.ParentItemId).HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.Sort).HasColumnType("INT");
             entity.Property(e => e.Status).HasColumnType("NVARCHAR(10)");
+        });
+
+        modelBuilder.Entity<BEvaluationStandard>(entity =>
+        {
+            entity.HasKey(e => e.LevelCode);
+
+            entity.ToTable("b_Evaluation_Standard");
+
+            entity.Property(e => e.LevelCode).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.LevelName).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.S1).HasColumnType("INT");
+            entity.Property(e => e.S2).HasColumnType("INT");
+            entity.Property(e => e.S3).HasColumnType("INT");
+            entity.Property(e => e.S4).HasColumnType("INT");
+            entity.Property(e => e.S5).HasColumnType("INT");
+            entity.Property(e => e.T1).HasColumnType("INT");
+            entity.Property(e => e.T2).HasColumnType("INT");
+            entity.Property(e => e.T3).HasColumnType("INT");
         });
 
         modelBuilder.Entity<BQuestion>(entity =>

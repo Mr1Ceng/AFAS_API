@@ -213,7 +213,7 @@ public class QuestionnaireService : IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).OrderBy(x=>x.GridRow).ThenBy(x=>x.GridColumn).ToListAsync();
         }
         return question;
     }
@@ -830,6 +830,87 @@ public class QuestionnaireService : IQuestionnaireService
                         QuestionId = answer.QuestionId,
                         QuestionSort = x.QuestionSort,
                         AnswerSort = x.AnswerSort,
+                    }));
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
+    /// <summary>
+    /// 保存题目T3答案
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<string> SaveAnswerT3Async(AnswerT3Model data, string userId)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
+                if (question == null)
+                {
+                    throw new Exception("问题不存在");
+                }
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    answerBasic = new BAnswer()
+                    {
+                        AnswerId = NewCode.Ul25Key,
+                        QuestionnaireId = question.QuestionnaireId,
+                        UserId = userId,
+                    };
+                    context.BAnswers.Add(answerBasic);
+                }
+
+                var answer = await context.BAnswerT3s.FirstOrDefaultAsync(b => b.AnswerId == answerBasic.AnswerId && b.QuestionId == data.QuestionId);
+                if (answer == null)
+                {
+                    answer = new BAnswerT3()
+                    {
+                        AnswerId = answerBasic.AnswerId,
+                        QuestionId = question.QuestionId,
+                        Level1 = data.Level1,
+                        Level2 = data.Level2,
+                        StandardScore = data.StandardScore,
+                        Remark = data.Remark,
+                    };
+                    context.BAnswerT3s.Add(answer);
+                    context.BAnswerT3As.AddRange(data.answerList.Select(x => new BAnswerT3A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        QuestionType = x.QuestionType,
+                        QuestionSort = x.QuestionSort,
+                        Level = x.Level,
+                        Value = x.Value,
+                    }));
+                }
+                else
+                {
+                    answer.Level1 = data.Level1;
+                    answer.Level2 = data.Level2;
+                    answer.StandardScore = data.StandardScore;
+                    answer.Remark = data.Remark;
+                    context.BAnswerT3s.Update(answer);
+                    context.BAnswerT3As.UpdateRange(data.answerList.Select(x => new BAnswerT3A()
+                    {
+                        AnswerId = answer.AnswerId,
+                        QuestionId = answer.QuestionId,
+                        QuestionType = x.QuestionType,
+                        QuestionSort = x.QuestionSort,
+                        Level = x.Level,
+                        Value = x.Value,
                     }));
                 }
 
