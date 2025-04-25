@@ -7,7 +7,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", builder =>
     {
-        builder.WithOrigins("http://localhost:5173") // 允许的前端地址
+        builder.WithOrigins(["http://localhost:5173", "http://localhost:8123"]) // 允许的前端地址
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
