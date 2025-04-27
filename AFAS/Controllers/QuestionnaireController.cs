@@ -1,5 +1,5 @@
 using AFAS.Business.Questionnaire;
-using AFAS.Entitys;
+using AFAS.Entity;
 using AFAS.Models.Question;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;

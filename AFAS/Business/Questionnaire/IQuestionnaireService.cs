@@ -1,4 +1,4 @@
-﻿using AFAS.Entitys;
+﻿using AFAS.Entity;
 using AFAS.Models.Question;
 
 namespace AFAS.Business.Questionnaire;

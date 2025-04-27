@@ -1,4 +1,4 @@
-﻿using AFAS.Entitys;
+﻿using AFAS.Entity;
 using AFAS.Internals;
 using AFAS.Models.Question;
 using Microsoft.EntityFrameworkCore;

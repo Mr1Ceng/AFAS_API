@@ -1,4 +1,4 @@
-using AFAS.Entitys;
+using AFAS.Entity;
 using Mr1Ceng.Util;
 
 namespace AFAS.Internals;

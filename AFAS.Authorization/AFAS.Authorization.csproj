@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AFAS.Entity\AFAS.Entity.csproj" />
+    <ProjectReference Include="..\AFAS.Infrastructure\AFAS.Infrastructure.csproj" />
+    <ProjectReference Include="..\Mr1Ceng.Util\Mr1Ceng.Util.csproj" />
+  </ItemGroup>
+
+</Project>

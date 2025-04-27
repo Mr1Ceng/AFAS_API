@@ -1,4 +1,4 @@
-﻿using AFAS.Entitys;
+﻿using AFAS.Entity;
 using AFAS.Models.Answer;
 
 namespace AFAS.Models.Question

@@ -7,24 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entitys\" />
     <Folder Include="Models\Basic\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AFAS.Authorization\AFAS.Authorization.csproj" />
+    <ProjectReference Include="..\AFAS.Entity\AFAS.Entity.csproj" />
     <ProjectReference Include="..\Mr1Ceng.Util\Mr1Ceng.Util.csproj" />
   </ItemGroup>
 
