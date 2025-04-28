@@ -1,8 +1,13 @@
+using AFAS.Authorization;
+using AFAS.Business.Account;
 using AFAS.Business.Questionnaire;
+using AFAS.Infrastructure;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponseFilter>(); }); //Òì³£´¦Àí
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", builder =>
@@ -16,7 +21,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IAuthInfo, AuthInfo>();
 builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
+builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 
 var app = builder.Build();
 

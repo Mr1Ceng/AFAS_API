@@ -27,5 +27,7 @@ namespace AFAS.Controllers
         [HttpPost]
         public async Task<ResponseModel<WebAppIdentityModel>> WebAppLoginByPassword(WebAppPasswordLoginPostData data)
         => new(await service.WebAppLoginByPasswordAsync(data.Account, data.Password));
+
+
     }
 }

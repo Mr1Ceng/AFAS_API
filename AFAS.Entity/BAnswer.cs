@@ -10,4 +10,6 @@ public partial class BAnswer
     public string QuestionnaireId { get; set; } = null!;
 
     public string UserId { get; set; } = null!;
+
+    public string Status { get; set; } = null!;
 }

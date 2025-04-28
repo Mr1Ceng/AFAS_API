@@ -2,7 +2,7 @@
 using AFAS.Infrastructure.Models;
 using Mr1Ceng.Util;
 
-namespace YaoZR.Service.Data.SystemBasic;
+namespace AFAS.Infrastructure;
 
 /// <summary>
 /// 终端相关工具类
@@ -35,10 +35,14 @@ public class TerminalHelper
     /// 获取终端列表
     /// </summary>
     /// <returns></returns>
-    public static IList<TerminalKeyItem> GetTerminalKeyList() => new s_TerminalManager().GetEntityObjects()
-        .Cast<s_Terminal>()
-        .OrderBy(x => x.TerminalCode)
-        .Select(x => new TerminalKeyItem
+    public static IList<TerminalKeyItem> GetTerminalKeyList() 
+    { 
+        var terminals = new List<STerminal>();
+        using (var context = new AfasContext())
+        {
+            terminals = context.STerminals.OrderBy(x => x.TerminalCode).ToList();
+        }
+        return terminals.Select(x => new TerminalKeyItem
         {
             SystemId = x.SystemId,
             TerminalId = x.TerminalId,
@@ -49,6 +53,7 @@ public class TerminalHelper
             TerminalKey = x.TerminalKey,
             TerminalSecret = x.TerminalSecret
         }).ToList();
+    }
 
     /// <summary>
     /// 获取终端信息
@@ -58,25 +63,28 @@ public class TerminalHelper
     public static TerminalInfo GetTerminalInfo(string terminalId)
     {
         terminalId = GetString.FromObject(terminalId, 50);
-        var terminal = new s_TerminalManager().GetEntityObject(terminalId);
-        if (terminal.IsPersistent)
+        using (var context = new AfasContext())
         {
-            var system = new s_SystemManager().GetEntityObject(terminal.SystemId);
-            return new TerminalInfo
+            var terminal = context.STerminals.Where(x=>x.TerminalId == terminalId).FirstOrDefault();
+            if (terminal != null)
             {
-                SystemId = terminal.SystemId,
-                SystemCode = system.SystemCode,
-                SystemName = system.SystemName,
-                SystemType = system.SystemType,
-                TerminalId = terminal.TerminalId,
-                TerminalCode = terminal.TerminalCode,
-                TerminalName = terminal.TerminalName,
-                TerminalType = terminal.TerminalType,
-                TerminalKey = terminal.TerminalKey,
-                TerminalSecret = terminal.TerminalSecret,
-                IsSite = terminal.IsSite,
-                Remark = terminal.Remark
-            };
+                var system = context.SSystems.Where(x => x.SystemId == terminal.SystemId).FirstOrDefault()??new SSystem();
+                return new TerminalInfo
+                {
+                    SystemId = terminal.SystemId,
+                    SystemCode = system.SystemCode,
+                    SystemName = system.SystemName,
+                    SystemType = system.SystemType,
+                    TerminalId = terminal.TerminalId,
+                    TerminalCode = terminal.TerminalCode,
+                    TerminalName = terminal.TerminalName,
+                    TerminalType = terminal.TerminalType,
+                    TerminalKey = terminal.TerminalKey,
+                    TerminalSecret = terminal.TerminalSecret,
+                    IsSite = terminal.IsSite,
+                    Remark = terminal.Remark
+                };
+            }
         }
         return new TerminalInfo
         {

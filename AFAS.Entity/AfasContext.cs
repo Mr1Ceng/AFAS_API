@@ -85,11 +85,17 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<LogApi> LogApis { get; set; }
 
+    public virtual DbSet<LogDebug> LogDebugs { get; set; }
+
+    public virtual DbSet<LogException> LogExceptions { get; set; }
+
     public virtual DbSet<LogToken> LogTokens { get; set; }
 
     public virtual DbSet<LogUserLogin> LogUserLogins { get; set; }
 
     public virtual DbSet<SPara> SParas { get; set; }
+
+    public virtual DbSet<SSystem> SSystems { get; set; }
 
     public virtual DbSet<STerminal> STerminals { get; set; }
 
@@ -105,9 +111,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionnaireId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.UserId).HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionnaireId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.Status)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
         });
 
         modelBuilder.Entity<BAnswerS1>(entity =>
@@ -116,10 +131,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S1");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.OriginScore).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
         });
 
@@ -129,9 +150,15 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S1_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.GridType).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.GridType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.TimeConsume).HasColumnType("INT");
         });
 
@@ -141,12 +168,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S2");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.ErrorNumber).HasColumnType("INT");
             entity.Property(e => e.ErrorRate).HasColumnType("DECIMAL(6,2)");
             entity.Property(e => e.MarkNumber).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
             entity.Property(e => e.TimeConsume).HasColumnType("INT");
         });
@@ -157,8 +190,12 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S2_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.GridRow).HasColumnType("INT");
             entity.Property(e => e.GridColumn).HasColumnType("INT");
             entity.Property(e => e.Selected).HasColumnType("BIT");
@@ -170,10 +207,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S3");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.ErrorNumber).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.RightNumber).HasColumnType("INT");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
             entity.Property(e => e.TimeConsume).HasColumnType("INT");
@@ -185,8 +228,12 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S3_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.GridRow).HasColumnType("INT");
             entity.Property(e => e.GridColumn).HasColumnType("INT");
             entity.Property(e => e.Value).HasColumnType("INT");
@@ -198,10 +245,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S4");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerImage).HasDefaultValue("");
             entity.Property(e => e.CrossNumber).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.QuestionImage).HasDefaultValue("");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
             entity.Property(e => e.TimeConsume).HasColumnType("INT");
         });
@@ -212,10 +267,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_S5");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerImage).HasDefaultValue("");
             entity.Property(e => e.ErrorNumber).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.QuestionImage).HasDefaultValue("");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.ShapeNumber).HasColumnType("INT");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
             entity.Property(e => e.TimeConsume).HasColumnType("INT");
@@ -227,13 +290,19 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T1");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.ErrorNumber).HasColumnType("INT");
             entity.Property(e => e.Number1).HasColumnType("INT");
             entity.Property(e => e.Number2).HasColumnType("INT");
             entity.Property(e => e.Number3).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
         });
 
@@ -243,10 +312,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T1_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
-            entity.Property(e => e.AnswerSort).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.AnswerSort)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BAnswerT2>(entity =>
@@ -255,11 +330,17 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T2");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.Number1).HasColumnType("INT");
             entity.Property(e => e.Number2).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
         });
 
@@ -269,10 +350,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T2_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
-            entity.Property(e => e.AnswerSort).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.AnswerSort)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BAnswerT3>(entity =>
@@ -281,11 +368,17 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T3");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.Level1).HasColumnType("INT");
             entity.Property(e => e.Level2).HasColumnType("INT");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.StandardScore).HasColumnType("INT");
         });
 
@@ -295,12 +388,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Answer_T3_A");
 
-            entity.Property(e => e.AnswerId).HasColumnType("NVARCHAR(25)");
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionType).HasColumnType("BIT");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
             entity.Property(e => e.Level).HasColumnType("INT");
-            entity.Property(e => e.Value).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Value)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
         });
 
         modelBuilder.Entity<BDictionary>(entity =>
@@ -309,11 +408,19 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Dictionary");
 
-            entity.Property(e => e.DictionaryId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.DictionaryName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Introduce).HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.DictionaryId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.DictionaryName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Introduce)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
             entity.Property(e => e.Sort).HasColumnType("INT");
-            entity.Property(e => e.Status).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Status)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BDictionaryItem>(entity =>
@@ -322,16 +429,34 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Dictionary_Item");
 
-            entity.Property(e => e.DictionaryId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.ItemId).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.Field1).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Field2).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Field3).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Introduce).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.ItemName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.ParentItemId).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.DictionaryId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ItemId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Field1)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Field2)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Field3)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Introduce)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.ItemName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ParentItemId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.Sort).HasColumnType("INT");
-            entity.Property(e => e.Status).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Status)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BEvaluationStandard>(entity =>
@@ -340,8 +465,12 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Evaluation_Standard");
 
-            entity.Property(e => e.LevelCode).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.LevelName).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.LevelCode)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.LevelName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.S1).HasColumnType("INT");
             entity.Property(e => e.S2).HasColumnType("INT");
             entity.Property(e => e.S3).HasColumnType("INT");
@@ -358,15 +487,33 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.Instruction).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.Instruction2).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.Instruction3).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.Instruction4).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.Precautions).HasColumnType("NVARCHAR(200)");
-            entity.Property(e => e.QuestionCode).HasColumnType("NVARCHAR(2)");
-            entity.Property(e => e.QuestionName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.QuestionnaireId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.Instruction)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Instruction2)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Instruction3)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Instruction4)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Precautions)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.QuestionCode)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.QuestionName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.QuestionnaireId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
         });
 
         modelBuilder.Entity<BQuestionS1>(entity =>
@@ -375,8 +522,12 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_S1");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.GridType).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.GridType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.GridSort).HasColumnType("INT");
             entity.Property(e => e.GridValue).HasColumnType("INT");
         });
@@ -387,7 +538,9 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_S2");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.GridRow).HasColumnType("INT");
             entity.Property(e => e.GridColumn).HasColumnType("INT");
             entity.Property(e => e.GridValue).HasColumnType("INT");
@@ -400,7 +553,9 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_S3");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.GridRow).HasColumnType("INT");
             entity.Property(e => e.GridColumn).HasColumnType("INT");
             entity.Property(e => e.GridValue).HasColumnType("INT");
@@ -412,7 +567,9 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_S4");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
         });
 
         modelBuilder.Entity<BQuestionS5>(entity =>
@@ -421,8 +578,13 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_S5");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.ImageId).HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.ImageId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.Image).HasDefaultValue("");
         });
 
         modelBuilder.Entity<BQuestionT1>(entity =>
@@ -431,12 +593,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T1");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.Number1).HasColumnType("INT");
             entity.Property(e => e.Number2).HasColumnType("INT");
             entity.Property(e => e.Number3).HasColumnType("INT");
-            entity.Property(e => e.NumberQuestion).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.StoryQuestion).HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.NumberQuestion)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.StoryQuestion)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
         });
 
         modelBuilder.Entity<BQuestionT1A>(entity =>
@@ -445,10 +613,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T1_A");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
-            entity.Property(e => e.AnswerSort).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.Answer).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.AnswerSort)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Answer)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.IsTrue).HasColumnType("BIT");
         });
 
@@ -458,12 +632,17 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T1_Q");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
             entity.Property(e => e.QuestionQ)
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_Q");
-            entity.Property(e => e.QuestionType).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.QuestionType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<BQuestionT2>(entity =>
@@ -472,10 +651,14 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T2");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.Number1).HasColumnType("INT");
             entity.Property(e => e.Number2).HasColumnType("INT");
-            entity.Property(e => e.Question).HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Question)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
         });
 
         modelBuilder.Entity<BQuestionT2A>(entity =>
@@ -484,10 +667,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T2_A");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
-            entity.Property(e => e.AnswerSort).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.Answer).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.AnswerSort)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Answer)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.IsTrue).HasColumnType("BIT");
         });
 
@@ -497,12 +686,16 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T2_Q");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
             entity.Property(e => e.QuestionQ1)
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_Q1");
             entity.Property(e => e.QuestionQ2)
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_Q2");
         });
@@ -513,14 +706,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Question_T3");
 
-            entity.Property(e => e.QuestionId).HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
             entity.Property(e => e.QuestionType).HasColumnType("BIT");
             entity.Property(e => e.QuestionSort).HasColumnType("INT");
             entity.Property(e => e.Level).HasColumnType("INT");
             entity.Property(e => e.QuestionA)
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_A");
             entity.Property(e => e.QuestionQ)
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Question_Q");
         });
@@ -531,10 +728,18 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_Questionnaire");
 
-            entity.Property(e => e.QuestionnaireId).HasColumnType("NVARCHAR(6)");
-            entity.Property(e => e.QuestionnaireName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
-            entity.Property(e => e.VersionName).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.QuestionnaireId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.QuestionnaireName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.VersionName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
         });
 
         modelBuilder.Entity<BUser>(entity =>
@@ -543,17 +748,35 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_User");
 
-            entity.Property(e => e.UserId).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.Account).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.Account)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.Age).HasColumnType("INT");
-            entity.Property(e => e.AvatarUrl).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.Gender).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.AvatarUrl)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Gender)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.IsDeveloper).HasColumnType("BIT");
-            entity.Property(e => e.Mobile).HasColumnType("NVARCHAR(11)");
-            entity.Property(e => e.NickName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.Password).HasColumnType("NVARCHAR(64)");
-            entity.Property(e => e.Role).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.UserName).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Mobile)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(11)");
+            entity.Property(e => e.NickName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Password)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(64)");
+            entity.Property(e => e.Role)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.UserName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
         });
 
         modelBuilder.Entity<BUserToken>(entity =>
@@ -562,9 +785,14 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("b_User_Token");
 
-            entity.Property(e => e.UserId).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.CreateStamp).HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.CreateStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.LoginExpires).HasColumnType("INT");
+            entity.Property(e => e.TokenData).HasDefaultValue("");
         });
 
         modelBuilder.Entity<LogApi>(entity =>
@@ -573,19 +801,106 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("log_API");
 
-            entity.Property(e => e.AbsoluteUri).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.AuthType).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.IpAddress).HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.AbsoluteUri)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.AuthType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Exception).HasDefaultValue("");
+            entity.Property(e => e.IpAddress)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsSuccess).HasColumnType("BIT");
-            entity.Property(e => e.PhysicalPath).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.SiteUrl).HasColumnType("NVARCHAR(200)");
-            entity.Property(e => e.TerminalId).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.PhysicalPath)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.SiteUrl)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.TerminalId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.TerminalSpan).HasColumnType("BIGINT");
-            entity.Property(e => e.TimeStamp).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.Token).HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.TimeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Token)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
             entity.Property(e => e.TokenSpan).HasColumnType("BIGINT");
-            entity.Property(e => e.UserAgent).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.UserLanguages).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.UserAgent)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.UserLanguages)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+        });
+
+        modelBuilder.Entity<LogDebug>(entity =>
+        {
+            entity.HasKey(e => e.LogId);
+
+            entity.ToTable("log_Debug");
+
+            entity.Property(e => e.Content)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.Data).HasDefaultValue("");
+            entity.Property(e => e.Message)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.TimeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+        });
+
+        modelBuilder.Entity<LogException>(entity =>
+        {
+            entity.HasKey(e => e.LogId);
+
+            entity.ToTable("log_Exception");
+
+            entity.Property(e => e.ActionKey)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.DebugData).HasDefaultValue("");
+            entity.Property(e => e.DisposeMessage)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.DisposeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.DisposeUserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.Exception).HasDefaultValue("");
+            entity.Property(e => e.ExceptionCode).HasColumnType("INT");
+            entity.Property(e => e.ExceptionName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ExceptionType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.FunctionName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.IsDispose).HasColumnType("BIT");
+            entity.Property(e => e.Message)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.PageKey)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.TimeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Token)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
         });
 
         modelBuilder.Entity<LogToken>(entity =>
@@ -594,17 +909,36 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("log_Token");
 
-            entity.Property(e => e.AppId).HasColumnType("NVARCHAR(18)");
-            entity.Property(e => e.AuthType).HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.AppId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(18)");
+            entity.Property(e => e.AuthType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsDeveloper).HasColumnType("BIT");
             entity.Property(e => e.IsStaff).HasColumnType("BIT");
-            entity.Property(e => e.Mobile).HasColumnType("NVARCHAR(11)");
-            entity.Property(e => e.NickName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.TerminalId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.TimeStamp).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.Token).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.UserId).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.UserName).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Mobile)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(11)");
+            entity.Property(e => e.NickName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.TerminalId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.TimeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Token)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.TokenData).HasDefaultValue("");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.UserName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
         });
 
         modelBuilder.Entity<LogUserLogin>(entity =>
@@ -613,23 +947,50 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("log_User_Login");
 
-            entity.Property(e => e.AppId).HasColumnType("NVARCHAR(18)");
+            entity.Property(e => e.AppId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(18)");
             entity.Property(e => e.BenchmarkLevel).HasColumnType("INT");
-            entity.Property(e => e.DeviceBrand).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.DeviceModel).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.IpAddress).HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.DebugData).HasDefaultValue("");
+            entity.Property(e => e.DeviceBrand)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.DeviceModel)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Exception).HasDefaultValue("");
+            entity.Property(e => e.IpAddress)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsSuccess).HasColumnType("BIT");
-            entity.Property(e => e.LoginMethod).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.NewToken).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.OsType).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.OsVersion).HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.LoginMethod)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.NewToken)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.OsType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.OsVersion)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.PixelRatio).HasColumnType("Float");
+            entity.Property(e => e.PostData).HasDefaultValue("");
             entity.Property(e => e.ScreenHeight).HasColumnType("INT");
             entity.Property(e => e.ScreenWidth).HasColumnType("INT");
-            entity.Property(e => e.TerminalId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.TimeStamp).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.UserAgent).HasColumnType("NVARCHAR(500)");
-            entity.Property(e => e.UserLanguages).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.TerminalId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.TimeStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.UserAgent)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.UserLanguages)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.WindowHeight).HasColumnType("INT");
             entity.Property(e => e.WindowWidth).HasColumnType("INT");
         });
@@ -640,11 +1001,45 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("s_Para");
 
-            entity.Property(e => e.ParaId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.ParaName).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.ParaType).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.ParaValue).HasColumnType("NVARCHAR(200)");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.ParaId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ParaName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ParaType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ParaValue)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+        });
+
+        modelBuilder.Entity<SSystem>(entity =>
+        {
+            entity.HasKey(e => e.SystemId);
+
+            entity.ToTable("s_System");
+
+            entity.Property(e => e.SystemId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.CreateStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.ModifyStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.SystemCode).HasColumnType("INT");
+            entity.Property(e => e.SystemName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.SystemType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         modelBuilder.Entity<STerminal>(entity =>
@@ -653,17 +1048,35 @@ public partial class AfasContext : DbContext
 
             entity.ToTable("s_Terminal");
 
-            entity.Property(e => e.TerminalId).HasColumnType("NVARCHAR(50)");
-            entity.Property(e => e.CreateStamp).HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.TerminalId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.CreateStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsSite).HasColumnType("BIT");
-            entity.Property(e => e.ModifyStamp).HasColumnType("NVARCHAR(20)");
-            entity.Property(e => e.Remark).HasColumnType("NVARCHAR(200)");
-            entity.Property(e => e.SystemId).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.ModifyStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.SystemId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.TerminalCode).HasColumnType("INT");
-            entity.Property(e => e.TerminalKey).HasColumnType("NVARCHAR(18)");
-            entity.Property(e => e.TerminalName).HasColumnType("NVARCHAR(10)");
-            entity.Property(e => e.TerminalSecret).HasColumnType("NVARCHAR(32)");
-            entity.Property(e => e.TerminalType).HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.TerminalKey)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(18)");
+            entity.Property(e => e.TerminalName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.TerminalSecret)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.TerminalType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
         });
 
         OnModelCreatingPartial(modelBuilder);

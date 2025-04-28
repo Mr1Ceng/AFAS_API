@@ -23,7 +23,7 @@ public partial class STerminal
 
     public string Remark { get; set; } = null!;
 
-    public string CreateStamp { get; set; } = null!;
+    public DateTime CreateStamp { get; set; }
 
-    public string ModifyStamp { get; set; } = null!;
+    public DateTime ModifyStamp { get; set; }
 }
