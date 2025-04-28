@@ -1,11 +1,8 @@
-using AFAS.Authorization.Models;
 using AFAS.Entity;
-using AFAS.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Data;
-using System.Reflection;
 
 namespace AFAS.Controllers
 {

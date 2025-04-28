@@ -12,7 +12,7 @@ public class PasswordHelper
     /// </summary>
     /// <param name="password">明文密码</param>
     /// <returns>加密后的密码</returns>
-    public static string Encrypt(string password) => Encrypt(password, "WaPxY3");
+    public static string Encrypt(string password) => Encrypt(password, "Mr1Ceng");
 
     /// <summary>
     /// 生成密码的密文
