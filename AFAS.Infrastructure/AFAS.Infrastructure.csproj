@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AFAS.Entity\AFAS.Entity.csproj" />
+    <ProjectReference Include="..\Mr1Ceng.Util.Extensions\Mr1Ceng.Util.Extensions.csproj" />
     <ProjectReference Include="..\Mr1Ceng.Util\Mr1Ceng.Util.csproj" />
   </ItemGroup>
 

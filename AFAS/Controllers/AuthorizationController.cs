@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using Newtonsoft.Json;
 using System.Reflection;
+using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(GroupName = WebApiConfig.Authorization)]
     [Route("[controller]/[action]")]
     public class AuthorizationController : ControllerBase
     {
@@ -94,6 +96,7 @@ namespace AFAS.Controllers
                                     = UnixTimeHelper.GetUnixSeconds(DateTime.Now.AddSeconds(AUTHORIZATION_REDIS_EXPIRE_SECONDS));
                                 bUserToken.TokenData = JsonConvert.SerializeObject(userToken);
                                 bUserToken.LoginExpires = AUTHORIZATION_REDIS_EXPIRE_SECONDS;
+                                context.BUserTokens.Update(bUserToken);
                             }
                         }
                         else
@@ -122,7 +125,7 @@ namespace AFAS.Controllers
                                 LoginExpires = AUTHORIZATION_REDIS_EXPIRE_SECONDS,
                                 CreateStamp = DateHelper.GetDateString()
                             };
-
+                            context.BUserTokens.Update(bUserToken);
                             #endregion
                         }
                     }
@@ -153,9 +156,10 @@ namespace AFAS.Controllers
                             CreateStamp = DateHelper.GetDateString()
                         };
 
+                        context.BUserTokens.Add(bUserToken);
                         #endregion
                     }
-
+                    await context.SaveChangesAsync();
                     //Éú³ÉAuthorization
                     var terminal = TerminalHelper.GetTerminalInfo(terminalId);
                     var authorization = WebApiAuthorization.GetString(terminal.TerminalKey, terminal.TerminalSecret,

@@ -1,12 +1,16 @@
+using AFAS.Authorization.Attributes;
 using AFAS.Business.Questionnaire;
 using AFAS.Entity;
 using AFAS.Models.Question;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
+using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
+    [UserToken]
     [ApiController]
+    [ApiExplorerSettings(GroupName = WebApiConfig.Questionnaire)]
     [Route("[controller]/[action]")]
     public class QuestionnaireController : ControllerBase
     {

@@ -1,12 +1,16 @@
+using AFAS.Authorization.Attributes;
 using AFAS.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Data;
+using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
+    [UserToken]
     [ApiController]
+    [ApiExplorerSettings(GroupName = WebApiConfig.Basic)]
     [Route("[controller]/[action]")]
     public class BasicController : ControllerBase
     {

@@ -10,12 +10,12 @@ using System.Reflection;
 namespace AFAS.Authorization.Attributes;
 
 /// <summary>
-/// Terminal认证方式
+/// 用户令牌身份认证
 /// </summary>
-public class TerminalAttribute : ActionFilterAttribute, IAllowAnonymousFilter
+public class UserTokenAttribute : ActionFilterAttribute, IAllowAnonymousFilter
 {
     /// <summary>
-    /// 执行Terminal认证（不验证客户端时间）
+    /// 执行UserToken认证
     /// </summary>
     /// <param name="context"></param>
     /// <param name="next"></param>
@@ -36,7 +36,7 @@ public class TerminalAttribute : ActionFilterAttribute, IAllowAnonymousFilter
 
             #endregion
 
-            TerminalIdentifier identifier = new(context.HttpContext);
+            UserTokenIdentifier identifier = new(context.HttpContext);
             try
             {
                 #region 获取 ActionHeadData
@@ -49,12 +49,32 @@ public class TerminalAttribute : ActionFilterAttribute, IAllowAnonymousFilter
 
                 #region 认证 Authorization
 
-                identifier.Terminal = AuthorizationHelper.AuthorizationTerminal(author);
+                identifier.Terminal = AuthorizationHelper.AuthorizationTerminal(author, identifier.ActionHead);
+
+                if (identifier.ActionHead.KeyId == "")
+                {
+                    throw ForbiddenException.Get(MethodBase.GetCurrentMethod(), "UserId不存在");
+                }
+                if (identifier.ActionHead.KeyId.Length != 32)
+                {
+                    throw ForbiddenException.Get(MethodBase.GetCurrentMethod(), "UserId格式错误");
+                }
+                if (identifier.ActionHead.Token == "")
+                {
+                    throw ForbiddenException.Get(MethodBase.GetCurrentMethod(), "Token不存在");
+                }
+                if (identifier.ActionHead.Token.Length != 32)
+                {
+                    throw ForbiddenException.Get(MethodBase.GetCurrentMethod(), "Token格式错误");
+                }
 
                 #endregion
 
                 #region 输出 Identifier
-
+                identifier.UserToken
+                    = await TokenHelper.GetUserTokenDataAsync(identifier.ActionHead.KeyId,
+                        identifier.ActionHead.Token);
+                //AuthorizationHelper.AuthorizationTimeStamp(identifier.Terminal.TimeSpan, identifier.UserToken.Token.TimeSpan); //验证客户端时间
                 context.HttpContext.User = new AuthorizationPrincipal(new AuthorizationIdentity(identifier));
 
                 #endregion
@@ -62,7 +82,7 @@ public class TerminalAttribute : ActionFilterAttribute, IAllowAnonymousFilter
             catch (Exception ex)
             {
                 identifier.RecordAPI(JsonConvert.SerializeObject(ex)); // 写API异常日志
-                BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "身份认证失败");
+                throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "身份认证失败");
             }
             identifier.RecordAPI(); // 写API访问日志
         }

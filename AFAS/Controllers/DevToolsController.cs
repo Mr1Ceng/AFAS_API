@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
+using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(GroupName = WebApiConfig.DevTools)]
     [Route("[controller]/[action]")]
     public class DevToolsController : ControllerBase
     {

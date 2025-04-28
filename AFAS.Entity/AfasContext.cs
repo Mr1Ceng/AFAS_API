@@ -95,6 +95,8 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<SPara> SParas { get; set; }
 
+    public virtual DbSet<SService> SServices { get; set; }
+
     public virtual DbSet<SSystem> SSystems { get; set; }
 
     public virtual DbSet<STerminal> STerminals { get; set; }
@@ -1016,6 +1018,46 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.Remark)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(200)");
+        });
+
+        modelBuilder.Entity<SService>(entity =>
+        {
+            entity.HasKey(e => e.ServiceId);
+
+            entity.ToTable("s_Service");
+
+            entity.Property(e => e.ServiceId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.CorsUrls)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.CreateStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.ModifyStamp)
+                .HasDefaultValueSql("''")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(200)");
+            entity.Property(e => e.RootUrl)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.ServiceCode).HasColumnType("INT");
+            entity.Property(e => e.ServiceName)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.ServiceType)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.SystemId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.Timeout).HasColumnType("INT");
+            entity.Property(e => e.VirtualPath)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
         });
 
         modelBuilder.Entity<SSystem>(entity =>

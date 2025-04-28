@@ -3,11 +3,13 @@ using AFAS.Business.Account;
 using AFAS.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
+using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
     [Terminal]
     [ApiController]
+    [ApiExplorerSettings(GroupName = WebApiConfig.Account)]
     [Route("[controller]/[action]")]
     public class AccountController : ControllerBase
     {

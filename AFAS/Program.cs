@@ -1,40 +1,40 @@
 using AFAS.Authorization;
-using AFAS.Business.Account;
-using AFAS.Business.Questionnaire;
 using AFAS.Infrastructure;
 using Microsoft.Extensions.FileProviders;
+using Mr1Ceng.Util.Swagger;
+using System.Reflection;
+using WingWell.Infrastructure;
+using WingWell.WebApi.Platform;
 
+SystemConfig.Setup(Assembly.GetExecutingAssembly().GetName().Name); //系统初始化
+
+#region 注册服务
 var builder = WebApplication.CreateBuilder(args);
-
-
 builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponseFilter>(); }); //异常处理
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", builder =>
-    {
-        builder.WithOrigins(["http://localhost:5173", "http://localhost:8123"]) // 允许的前端地址
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
+builder.Services.AddCors(options => options.AddPolicy(SystemConfig.SystemId,
+    p => p.WithOrigins(SystemConfig.CorsUrls).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader()
+        .WithMethods("GET", "POST"))); //跨域
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+#endregion
+
+#region 业务类注入
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IAuthInfo, AuthInfo>();
-builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
-builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+WebApiBuilderHelper.RegistBusinessInterface(builder.Services, WebApiConfig.BusinessAssemblyNames);
+
+#endregion
+
+#region Swagger
+
+//配置API服务
+SwaggerHelper.Config(builder.Services, WebApiConfig.SwaggerConfig);
+
+#endregion
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseCors("AllowFrontend");
-
+SwaggerHelper.Apply(app, WebApiConfig.SwaggerConfig);
 // 配置静态文件中间件
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -43,6 +43,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Static" // 自定义访问路径前缀
 });
 
+app.UseCors(SystemConfig.SystemId); //跨域
 app.UseAuthorization();
 
 app.MapControllers();
