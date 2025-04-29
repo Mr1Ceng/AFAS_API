@@ -5,9 +5,9 @@ namespace AFAS.Entity;
 
 public partial class BAnswerT3A
 {
-    public string AnswerId { get; set; } = null!;
+    public string AnswerId { get; set; } = "";
 
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
     public bool QuestionType { get; set; }
 
@@ -15,5 +15,5 @@ public partial class BAnswerT3A
 
     public int Level { get; set; }
 
-    public string Value { get; set; } = null!;
+    public string Value { get; set; } = "";
 }

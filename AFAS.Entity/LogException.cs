@@ -7,33 +7,33 @@ public partial class LogException
 {
     public int LogId { get; set; }
 
-    public string TimeStamp { get; set; } = null!;
+    public string TimeStamp { get; set; } = "";
 
-    public string Token { get; set; } = null!;
+    public string Token { get; set; } = "";
 
-    public string PageKey { get; set; } = null!;
+    public string PageKey { get; set; } = "";
 
-    public string ActionKey { get; set; } = null!;
+    public string ActionKey { get; set; } = "";
 
-    public string FunctionName { get; set; } = null!;
+    public string FunctionName { get; set; } = "";
 
     public int ExceptionCode { get; set; }
 
-    public string ExceptionType { get; set; } = null!;
+    public string ExceptionType { get; set; } = "";
 
-    public string ExceptionName { get; set; } = null!;
+    public string ExceptionName { get; set; } = "";
 
-    public string Message { get; set; } = null!;
+    public string Message { get; set; } = "";
 
-    public string DebugData { get; set; } = null!;
+    public string DebugData { get; set; } = "";
 
-    public string Exception { get; set; } = null!;
+    public string Exception { get; set; } = "";
 
     public bool IsDispose { get; set; }
 
-    public string DisposeMessage { get; set; } = null!;
+    public string DisposeMessage { get; set; } = "";
 
-    public string DisposeUserId { get; set; } = null!;
+    public string DisposeUserId { get; set; } = "";
 
-    public string DisposeStamp { get; set; } = null!;
+    public string DisposeStamp { get; set; } = "";
 }

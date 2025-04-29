@@ -26,7 +26,8 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResponseModel<List<BEvaluationStandard>>> GetEvaluationStandardListAsync(){
+        public async Task<ResponseModel<List<BEvaluationStandard>>> GetEvaluationStandardListAsync()
+        {
             var result = new List<BEvaluationStandard>();
             using (var context = new AfasContext())
             {

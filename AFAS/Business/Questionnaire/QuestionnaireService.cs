@@ -4,6 +4,7 @@ using AFAS.Models.Question;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AFAS.Business.Questionnaire;
 
@@ -310,6 +311,58 @@ public class QuestionnaireService : IQuestionnaireService
     #endregion
 
     #region Answer
+
+    /// <summary>
+    /// 获取题目答案
+    /// </summary>
+    /// <param name="answerId"></param>
+    /// <returns></returns>
+    public async Task<AnswerModel> GetAnswerListAsync(string answerId)
+    {
+        var answer = new AnswerModel();
+        using (var context = new AfasContext())
+        {
+            var bAnswer = await context.BAnswers.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            if(bAnswer == null)
+            {
+                return answer;
+            }
+            answer.AnswerId = bAnswer.AnswerId;
+            answer.QuestionnaireId = bAnswer.QuestionnaireId;
+            answer.UserId = bAnswer.UserId;
+            answer.QuestionnaireDate = bAnswer.QuestionnaireDate;
+            answer.TeacherId = bAnswer.TeacherId;
+            answer.Status = bAnswer.Status;
+            answer.RadarImage = bAnswer.RadarImage;
+            answer.SImage = bAnswer.Simage;
+            answer.SResult = bAnswer.Sresult;
+            answer.TImage = bAnswer.Timage;
+            answer.TResult = bAnswer.Tresult;
+            answer.Weak = bAnswer.Weak;
+            answer.Advantage = bAnswer.Advantage;
+            answer.Remark = bAnswer.Remark;
+            answer.SuggestedCourse = bAnswer.SuggestedCourse;
+            answer.LevelCode = bAnswer.LevelCode;
+
+            var bAnswerS1 = await context.BAnswerS1s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerS2 = await context.BAnswerS2s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerS3 = await context.BAnswerS3s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerS4 = await context.BAnswerS4s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerS5 = await context.BAnswerS5s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerT1 = await context.BAnswerT1s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerT2 = await context.BAnswerT2s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            var bAnswerT3 = await context.BAnswerT3s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
+            if (bAnswerS1 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "S1", Remark = bAnswerS1.Remark, StandardScore = bAnswerS1.StandardScore }); }
+            if (bAnswerS2 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "S2", Remark = bAnswerS2.Remark, StandardScore = bAnswerS2.StandardScore }); }
+            if (bAnswerS3 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "S3", Remark = bAnswerS3.Remark, StandardScore = bAnswerS3.StandardScore }); }
+            if (bAnswerS4 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "S4", Remark = bAnswerS4.Remark, StandardScore = bAnswerS4.StandardScore }); }
+            if (bAnswerS5 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "S5", Remark = bAnswerS5.Remark, StandardScore = bAnswerS5.StandardScore }); }
+            if (bAnswerT1 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "T1", Remark = bAnswerT1.Remark, StandardScore = bAnswerT1.StandardScore }); }
+            if (bAnswerT2 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "T2", Remark = bAnswerT2.Remark, StandardScore = bAnswerT2.StandardScore }); }
+            if (bAnswerT3 != null) { answer.answerList.Add(new AnswerItem() { QuestionCode = "T3", Remark = bAnswerT3.Remark, StandardScore = bAnswerT3.StandardScore }); }
+        }
+        return answer;
+    }
 
     /// <summary>
     /// 保存题目S1答案

@@ -5,9 +5,9 @@ namespace AFAS.Entity;
 
 public partial class BEvaluationStandard
 {
-    public string LevelCode { get; set; } = null!;
+    public string LevelCode { get; set; } = "";
 
-    public string LevelName { get; set; } = null!;
+    public string LevelName { get; set; } = "";
 
     public int S1 { get; set; }
 

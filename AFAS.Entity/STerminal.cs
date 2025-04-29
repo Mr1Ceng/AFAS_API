@@ -5,25 +5,25 @@ namespace AFAS.Entity;
 
 public partial class STerminal
 {
-    public string SystemId { get; set; } = null!;
+    public string SystemId { get; set; } = "";
 
-    public string TerminalId { get; set; } = null!;
+    public string TerminalId { get; set; } = "";
 
     public int TerminalCode { get; set; }
 
-    public string TerminalName { get; set; } = null!;
+    public string TerminalName { get; set; } = "";
 
-    public string TerminalType { get; set; } = null!;
+    public string TerminalType { get; set; } = "";
 
-    public string TerminalKey { get; set; } = null!;
+    public string TerminalKey { get; set; } = "";
 
-    public string TerminalSecret { get; set; } = null!;
+    public string TerminalSecret { get; set; } = "";
 
     public bool IsSite { get; set; }
 
-    public string Remark { get; set; } = null!;
+    public string Remark { get; set; } = "";
 
-    public DateTime CreateStamp { get; set; }
+    public string CreateStamp { get; set; } = "";
 
-    public DateTime ModifyStamp { get; set; }
+    public string ModifyStamp { get; set; } = "";
 }

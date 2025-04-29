@@ -152,6 +152,24 @@ namespace AFAS.Controllers
         #region Answer
 
         /// <summary>
+        /// 获取题目答案
+        /// </summary>
+        /// <param name="answerId"></param>
+        /// <returns></returns>
+        [HttpPost("{answerId}")]
+        public async Task<ResponseModel<AnswerModel>> GetAnswerListAsync(string answerId)
+            => new(await _questionnaireService.GetAnswerListAsync(answerId));
+
+        ///// <summary>
+        ///// 保存题目答案
+        ///// </summary>
+        ///// <param name="data"></param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<ResponseModel<string>> SaveAnswerAsync(AnswerForm data)
+        //    => new(await _questionnaireService.SaveAnswerAsync(data));
+
+        /// <summary>
         /// 保存题目S1答案
         /// </summary>
         /// <param name="data"></param>
@@ -232,5 +250,9 @@ namespace AFAS.Controllers
             => new(await _questionnaireService.SaveAnswerT3Async(data, userId));
         #endregion
 
+        #region Report
+
+
+        #endregion
     }
 }

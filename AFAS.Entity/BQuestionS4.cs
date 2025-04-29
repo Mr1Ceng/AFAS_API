@@ -5,5 +5,5 @@ namespace AFAS.Entity;
 
 public partial class BQuestionS4
 {
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 }

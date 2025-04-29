@@ -116,6 +116,13 @@ public interface IQuestionnaireService
     #region Answer
 
     /// <summary>
+    /// 获取题目答案
+    /// </summary>
+    /// <param name="answerId"></param>
+    /// <returns></returns>
+    Task<AnswerModel> GetAnswerListAsync(string answerId);
+
+    /// <summary>
     /// 保存题目S1答案
     /// </summary>
     /// <param name="data"></param>

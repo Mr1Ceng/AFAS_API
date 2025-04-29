@@ -103,7 +103,7 @@ public partial class AfasContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite("Data Source=../AFAS.Database/AFAS.db");
+        => optionsBuilder.UseSqlite("Data Source=../AFAS.Database/AFAS.db;Cache=Shared;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -119,12 +119,48 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.QuestionnaireId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.Advantage)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.LevelCode)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.QuestionnaireDate)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.RadarImage).HasDefaultValue("");
+            entity.Property(e => e.Remark)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Simage)
+                .HasDefaultValue("")
+                .HasColumnName("SImage");
+            entity.Property(e => e.Sresult)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)")
+                .HasColumnName("SResult");
             entity.Property(e => e.Status)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(10)");
+            entity.Property(e => e.SuggestedCourse)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.TeacherId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.Timage)
+                .HasDefaultValue("")
+                .HasColumnName("TImage");
+            entity.Property(e => e.Tresult)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(500)")
+                .HasColumnName("TResult");
             entity.Property(e => e.UserId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(32)");
+            entity.Property(e => e.Weak)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(50)");
         });
 
         modelBuilder.Entity<BAnswerS1>(entity =>
@@ -791,7 +827,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(32)");
             entity.Property(e => e.CreateStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.LoginExpires).HasColumnType("INT");
             entity.Property(e => e.TokenData).HasDefaultValue("");
@@ -825,7 +861,7 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.TerminalSpan).HasColumnType("BIGINT");
             entity.Property(e => e.TimeStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.Token)
                 .HasDefaultValue("")
@@ -929,7 +965,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.TimeStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.Token)
                 .HasDefaultValue("")
@@ -985,7 +1021,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.TimeStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.UserAgent)
                 .HasDefaultValue("")

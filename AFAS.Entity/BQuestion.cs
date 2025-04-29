@@ -5,21 +5,21 @@ namespace AFAS.Entity;
 
 public partial class BQuestion
 {
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
-    public string QuestionCode { get; set; } = null!;
+    public string QuestionCode { get; set; } = "";
 
-    public string QuestionName { get; set; } = null!;
+    public string QuestionName { get; set; } = "";
 
-    public string QuestionnaireId { get; set; } = null!;
+    public string QuestionnaireId { get; set; } = "";
 
-    public string Precautions { get; set; } = null!;
+    public string Precautions { get; set; } = "";
 
-    public string Instruction { get; set; } = null!;
+    public string Instruction { get; set; } = "";
 
-    public string Instruction2 { get; set; } = null!;
+    public string Instruction2 { get; set; } = "";
 
-    public string Instruction3 { get; set; } = null!;
+    public string Instruction3 { get; set; } = "";
 
-    public string Instruction4 { get; set; } = null!;
+    public string Instruction4 { get; set; } = "";
 }
