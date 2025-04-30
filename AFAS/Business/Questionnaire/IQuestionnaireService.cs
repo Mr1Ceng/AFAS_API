@@ -123,6 +123,13 @@ public interface IQuestionnaireService
     Task<AnswerModel> GetAnswerListAsync(string answerId);
 
     /// <summary>
+    /// 保存题目结果
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    Task<string> SaveAnswerResultAsync(AnswerForm data);
+
+    /// <summary>
     /// 保存题目S1答案
     /// </summary>
     /// <param name="data"></param>

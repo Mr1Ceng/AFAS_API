@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Microsoft.Office.Interop.Word;
+using System.Reflection;
 using System.Text;
 
 namespace Mr1Ceng.Util;
@@ -282,6 +283,64 @@ public class FileHelper
             return;
         }
         new DirectoryInfo(folder).Delete(recursive);
+    }
+
+    #endregion
+
+
+    #region Word转Pdf
+
+    /// <summary>
+    /// Word转Pdf
+    /// </summary>
+    /// <param name="path">word路径</param>
+    /// <param name="fileName">word文件名</param>
+    /// <param name="outPath">pdf路径</param>
+    /// <param name="outFileName">pdf文件名</param>
+    /// <returns></returns>
+    public static void Word2Pdf(string path, string fileName, string outPath, string outFileName)
+    {
+        if (!Directory.Exists(path))
+        {
+            throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件路径");
+        }
+        if (!Directory.Exists(outPath))
+        {
+            Directory.CreateDirectory(outPath);
+        }
+        string wordFileName = Path.Combine(path, fileName);// 导出的文件路径
+        if (!Path.Exists(wordFileName))
+        {
+            throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件");
+        }
+        string pdfFileName = Path.Combine(outPath, outFileName);// 导出的文件路径
+        if (!Path.Exists(pdfFileName))
+        {
+            using (FileStream fs = File.Create(pdfFileName))
+            {
+            }
+        }
+        Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+        Microsoft.Office.Interop.Word.Document wordDoc = null;
+
+        try
+        {
+            // 打开 Word 文档
+            wordDoc = wordApp.Documents.Open(wordFileName);
+
+            // 转换为 PDF
+            wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
+        }
+        catch (Exception ex)
+        {
+            throw MessageException.Get(MethodBase.GetCurrentMethod(), "word转pdf失败");
+        }
+        finally
+        {
+            // 关闭 Word
+            wordDoc?.Close();
+            wordApp.Quit();
+        }
     }
 
     #endregion

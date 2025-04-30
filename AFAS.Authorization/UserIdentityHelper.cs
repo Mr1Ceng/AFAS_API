@@ -20,7 +20,7 @@ public class UserIdentityHelper
     /// <param name="throwException">如果取不到，是否抛异常</param>
     /// <returns></returns>
     public static UserIdentity GetUserIdentityByUserId(string userId, bool throwException = false)
-        => new(GetUserByUserIdAsync(userId, throwException));
+        => new(GetUserByUserId(userId, throwException));
 
     /// <summary>
     /// 根据账号获取用户信息
@@ -65,7 +65,7 @@ public class UserIdentityHelper
     /// <param name="throwException">如果取不到，是否抛异常</param>
     /// <returns></returns>
     public static string GetUserNameByUserId(string userId, bool throwException = false)
-        => GetUserByUserIdAsync(userId, throwException).UserName;
+        => GetUserByUserId(userId, throwException).UserName;
 
     /// <summary>
     /// 获取用户的昵称
@@ -74,7 +74,7 @@ public class UserIdentityHelper
     /// <param name="throwException">如果取不到，是否抛异常</param>
     /// <returns></returns>
     public static string GetNickNameByUserId(string userId, bool throwException = false)
-        => GetUserByUserIdAsync(userId, throwException).NickName;
+        => GetUserByUserId(userId, throwException).NickName;
 
     /// <summary>
     /// 获取用户手机号
@@ -123,7 +123,7 @@ public class UserIdentityHelper
     /// <param name="userId"></param>
     /// <param name="throwException"></param>
     /// <returns></returns>
-    public static BUser GetUserByUserIdAsync(string userId, bool throwException)
+    public static BUser GetUserByUserId(string userId, bool throwException)
     {
         if (userId.ToUpper() == userId && userId.Length == 32)
         {

@@ -1,7 +1,7 @@
 ﻿namespace AFAS.Models.Question
 {
     /// <summary>
-    /// 试卷题目答案模型
+    /// 试卷题目结果表单
     /// </summary>
     public class AnswerForm
     {
@@ -79,6 +79,11 @@
         /// 建议课程
         /// </summary>
         public string SuggestedCourse { get; set; } = "";
+
+        /// <summary>
+        /// 评测标准
+        /// </summary>
+        public string LevelCode { get; set; } = "";
 
     }
 }
