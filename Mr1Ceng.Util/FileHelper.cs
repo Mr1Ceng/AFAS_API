@@ -308,20 +308,20 @@ public class FileHelper
         {
             Directory.CreateDirectory(outPath);
         }
-        string wordFileName = Path.Combine(path, fileName);// 导出的文件路径
+        string wordFileName = Path.GetFullPath(Path.Combine(path, fileName));// 导出的文件路径
         if (!Path.Exists(wordFileName))
         {
             throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件");
         }
-        string pdfFileName = Path.Combine(outPath, outFileName);// 导出的文件路径
+        string pdfFileName = Path.GetFullPath(Path.Combine(outPath, outFileName));// 导出的文件路径
         if (!Path.Exists(pdfFileName))
         {
             using (FileStream fs = File.Create(pdfFileName))
             {
             }
         }
-        Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-        Microsoft.Office.Interop.Word.Document wordDoc = null;
+        Application wordApp = new Application();
+        Document wordDoc = null;
 
         try
         {
