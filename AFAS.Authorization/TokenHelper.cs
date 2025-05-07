@@ -53,7 +53,7 @@ public class TokenHelper
         }
         catch (Exception ex)
         {
-            throw BusinessException.Get(MethodBase.GetCurrentMethod(), "获取UserTokenData失败", ex);
+            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "获取UserTokenData失败");
         }
     }
 
@@ -117,7 +117,7 @@ public class TokenHelper
         }
         catch (Exception ex)
         {
-            throw BusinessException.Get(MethodBase.GetCurrentMethod(), "更新用户身份信息失败", ex);
+            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "更新用户身份信息失败");
         }
     }
 
