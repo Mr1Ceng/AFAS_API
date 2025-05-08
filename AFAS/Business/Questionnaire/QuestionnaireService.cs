@@ -1,13 +1,16 @@
 ﻿using AFAS.Authorization;
+using AFAS.Authorization.Models;
 using AFAS.Entity;
 using AFAS.Enums;
 using AFAS.Infrastructure;
 using AFAS.Internals;
 using AFAS.Models.Question;
+using AFAS.Models.TestResult;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
+using System.Data;
 using System.Reflection;
 
 
@@ -1216,6 +1219,59 @@ public class QuestionnaireService : IQuestionnaireService
             return "";
         }
         return answerBasic.AnswerId;
+    }
+
+    #endregion
+
+    #region 结果查询
+
+    /// <summary>
+    /// 获取角色关联的用户列表
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="maxCount"></param>
+    /// <returns></returns>
+    public DataList<TestResultQueryRow> TestResultQuery(TableQueryModel<TestResultQueryFields> query)
+    {
+        var paras = new List<Parameter>();
+        var strsql = $@"
+            SELECT 
+                UserId,
+                Account AS UserAccount,
+                UserName,
+                NickName,
+                AvatarUrl,
+                Gender,
+                Mobile,
+                IsDeveloper,
+                iif(Role='TEACHER',1,0 ) AS IsStaff
+            FROM b_User
+            WHERE Role = @Role
+            ORDER BY b_User.UserName
+        ";
+        var sortors = new List<KeySorterValue>();
+        if (query.Sorter == null)
+        {
+            sortors.Add(new KeySorterValue());
+        }
+        else
+        {
+            sortors.Add(query.Sorter);
+        }
+        var resultData = new DataList<TestResultQueryRow>();
+        using (var context = new AfasContext())
+        {
+            if (query.Size == 0)
+            {
+                resultData = new EFCoreExtentions(context).ExecuteSortedQuery<TestResultQueryRow>(strsql, sortors, paras);
+            }
+            else
+            {
+                resultData = new EFCoreExtentions(context).ExecutePagedQuery<TestResultQueryRow>(strsql, sortors, query.Index, query.Size, paras);
+            }
+        }
+
+        return resultData;
     }
 
     #endregion

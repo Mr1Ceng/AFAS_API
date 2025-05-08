@@ -7,19 +7,20 @@ using WingWell.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
-    [Terminal]
     [ApiController]
     [ApiExplorerSettings(GroupName = WebApiConfig.Account)]
     [Route("[controller]/[action]")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserLoginService service;
+        private readonly IUserLoginService loginService;
+        private readonly IUserLogoutService logoutService;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IUserLoginService userLoginService,ILogger<AccountController> logger)
+        public AccountController(IUserLoginService userLoginService, IUserLogoutService userLogoutService, ILogger<AccountController> logger)
         {
             _logger = logger;
-            service = userLoginService;
+            loginService = userLoginService;
+            logoutService = userLogoutService;
         }
 
         /// <summary>
@@ -27,9 +28,21 @@ namespace AFAS.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Terminal]
         public async Task<ResponseModel<WebAppIdentityModel>> WebAppLoginByPassword(WebAppPasswordLoginPostData data)
-        => new(await service.WebAppLoginByPasswordAsync(data.Account, data.Password));
+        => new(await loginService.WebAppLoginByPasswordAsync(data.Account, data.Password));
 
 
+        /// <summary>
+        /// ÍøÒ³ÃÜÂëµÇÂ¼
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [UserToken]
+        public async Task<ResponseModel> WebAppLogout()
+        {
+            await logoutService.WebAppLogoutAsync();
+            return new(); 
+        }
     }
 }

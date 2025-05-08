@@ -215,5 +215,39 @@ public class UserTokenHelper
         identifier.UserToken = data;
         return data;
     }
+
+    /// <summary>
+    /// 根据 UserId 移除 UserToken
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public static async Task RemoveUserTokenByUserIdAsync(string userId)
+    {
+        #region 数据检查
+
+        if (userId == "")
+        {
+            throw BusinessException.Get(MethodBase.GetCurrentMethod(), "UserId不存在");
+        }
+
+        #endregion
+
+        #region 保存用户登录身份到数据库
+
+        using (var context = new AfasContext())
+        {
+            var userToken = context.BUserTokens.Where(x => x.UserId == userId).FirstOrDefault();
+            if (userToken != null)
+            {
+                userToken.TokenData = "";
+                userToken.LoginExpires = 0;
+                userToken.CreateStamp = DateHelper.GetDateString();
+                context.BUserTokens.Update(userToken);
+            }
+            await context.SaveChangesAsync();
+        };
+
+        #endregion
+    }
 }
 
