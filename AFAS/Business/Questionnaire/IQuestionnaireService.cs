@@ -1,5 +1,7 @@
 ﻿using AFAS.Entity;
 using AFAS.Models.Question;
+using AFAS.Models.TestResult;
+using Mr1Ceng.Util;
 
 namespace AFAS.Business.Questionnaire;
 
@@ -192,5 +194,15 @@ public interface IQuestionnaireService
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<string> SaveAnswerT3Async(AnswerT3Model data, string userId);
+    #endregion
+
+    #region 查询
+
+    /// <summary>
+    /// 测试结果查询
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    DataList<TestResultQueryRow> TestResultGridQuery(TableQueryModel<TestResultQueryFields> query);
     #endregion
 }

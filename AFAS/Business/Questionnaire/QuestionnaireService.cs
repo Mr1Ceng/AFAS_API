@@ -1223,32 +1223,79 @@ public class QuestionnaireService : IQuestionnaireService
 
     #endregion
 
-    #region 结果查询
+    #region 查询
 
     /// <summary>
     /// 获取角色关联的用户列表
     /// </summary>
-    /// <param name="role"></param>
-    /// <param name="maxCount"></param>
+    /// <param name="query"></param>
     /// <returns></returns>
-    public DataList<TestResultQueryRow> TestResultQuery(TableQueryModel<TestResultQueryFields> query)
+    public DataList<TestResultQueryRow> TestResultGridQuery(TableQueryModel<TestResultQueryFields> query)
     {
         var paras = new List<Parameter>();
         var strsql = $@"
-            SELECT 
-                UserId,
-                Account AS UserAccount,
-                UserName,
-                NickName,
-                AvatarUrl,
-                Gender,
-                Mobile,
-                IsDeveloper,
-                iif(Role='TEACHER',1,0 ) AS IsStaff
-            FROM b_User
-            WHERE Role = @Role
-            ORDER BY b_User.UserName
+            SELECT
+                AnswerId,
+                Answer.QuestionnaireId,
+                QuestionnaireName,
+                VersionName,
+                QuestionnaireDate,
+                Answer.UserId,
+                IFNULL(Student.UserName,'') AS UserName,
+                Answer.TeacherId,
+                IFNULL(Teacher.UserName,'') AS TeacherName,
+                Answer.Status,
+                RadarImage,
+                SImage,
+                SResult,
+                TImage,
+                TResult,
+                Weak,
+                Advantage,
+                Answer.Remark,
+                SuggestedCourse,
+                IFNULL(SCourse.ItemName,'') AS SuggestedCourseName,
+                Answer.LevelCode,
+                IFNULL(Standard.LevelName,'') AS LevelName
+            FROM b_Answer Answer
+            INNER JOIN b_Questionnaire Questionnaire ON Answer.QuestionnaireId = Questionnaire.QuestionnaireId
+            LEFT JOIN b_User Student ON Answer.UserId = Student.UserId
+            LEFT JOIN b_User Teacher ON Answer.TeacherId = Teacher.UserId
+            LEFT JOIN b_Evaluation_Standard Standard ON Answer.LevelCode = Standard.LevelCode
+            LEFT JOIN b_Dictionary_Item SCourse ON Answer.SuggestedCourse = SCourse.ItemId AND SCourse.DictionaryId = 'SuggestedCourse'
+            WHERE 1=1
         ";
+        if(query.Data != null)
+        {
+            #region 构建查询过滤条件
+
+            var startDay = GetString.FromObject(query.Data.StartDay);
+            if (startDay != "")
+            {
+                strsql += " AND QuestionnaireDate >= @StartDay ";
+                paras.Add(new Parameter("StartDay", startDay));
+            }
+            var endDay = GetString.FromObject(query.Data.EndDay);
+            if (endDay != "")
+            {
+                strsql += " AND QuestionnaireDate <= @EndDay";
+                paras.Add(new Parameter("EndDay", endDay));
+            }
+
+            //综合查询
+            var queryText = GetString.FromObject(query.Data?.QueryText, 50);
+            if (queryText != "")
+            {
+                strsql = GetString.SplitList(query.Data?.QueryText)
+                    .Aggregate(strsql, (current, text)
+                        => current + $@" AND (QuestionnaireName LIKE '%{text}%'
+                    OR IFNULL(Student.UserName,'') LIKE '%{text}%'
+                    OR IFNULL(Teacher.UserName,'') LIKE '%{text}%'
+                )");
+            }
+
+            #endregion
+        }
         var sortors = new List<KeySorterValue>();
         if (query.Sorter == null)
         {

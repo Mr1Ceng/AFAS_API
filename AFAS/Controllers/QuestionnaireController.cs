@@ -2,6 +2,7 @@ using AFAS.Authorization.Attributes;
 using AFAS.Business.Questionnaire;
 using AFAS.Entity;
 using AFAS.Models.Question;
+using AFAS.Models.TestResult;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
 using WingWell.WebApi.Platform;
@@ -250,8 +251,17 @@ namespace AFAS.Controllers
             => new(await _questionnaireService.SaveAnswerT3Async(data, userId));
         #endregion
 
-        #region Report
+        #region 查询
 
+
+        /// <summary>
+        /// 测试结果查询
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseModel<DataList<TestResultQueryRow>> TestResultGridQuery(TableQueryModel<TestResultQueryFields> query)
+            => new(_questionnaireService.TestResultGridQuery(query));
 
         #endregion
     }
