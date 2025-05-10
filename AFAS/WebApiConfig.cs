@@ -23,6 +23,8 @@ internal class WebApiConfig
 
     internal const string Questionnaire = "questionnaire";
 
+    internal const string User = "user";
+
     /// <summary>
     /// Swagger配置
     /// </summary>
@@ -37,6 +39,7 @@ internal class WebApiConfig
             new SwaggerGroupItem(Basic, "基础服务"),
             new SwaggerGroupItem(DevTools, "开发工具"),
             new SwaggerGroupItem(Questionnaire, "测试服务"),
+            new SwaggerGroupItem(User, "用户服务"),
         ]
     };
 }

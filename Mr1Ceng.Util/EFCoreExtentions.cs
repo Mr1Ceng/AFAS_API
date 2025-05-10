@@ -1,10 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Data.Common;
-using System.Globalization;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 
 namespace Mr1Ceng.Util
 {
@@ -54,7 +50,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             // 执行查询并加载结果到DataTable
@@ -154,7 +150,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             using var reader = command.ExecuteReader();
@@ -227,7 +223,7 @@ namespace Mr1Ceng.Util
             countCommand.CommandText = $"SELECT COUNT(*) FROM ({sql}) AS TotalCountQuery";  // 计算总行数
             foreach (Parameter parameter in parameters)
             {
-                countCommand.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                countCommand.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             totalRowCount = GetInt.FromObject(countCommand.ExecuteScalar()); // 获取总行数
@@ -262,7 +258,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             using var reader = command.ExecuteReader();
@@ -354,7 +350,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             using var reader = command.ExecuteReader();
@@ -439,7 +435,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             using var reader = command.ExecuteReader();
@@ -485,7 +481,7 @@ namespace Mr1Ceng.Util
             // 添加参数到命令
             foreach (Parameter parameter in parameters)
             {
-                command.Parameters.Add(new SqlParameter("@" + parameter.Name, parameter.Value));
+                command.Parameters.Add(new SqliteParameter("@" + parameter.Name, parameter.Value));
             }
 
             // 执行非查询操作

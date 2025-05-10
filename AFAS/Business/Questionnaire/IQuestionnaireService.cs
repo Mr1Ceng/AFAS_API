@@ -1,6 +1,7 @@
 ﻿using AFAS.Entity;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
+using AFAS.Models.User;
 using Mr1Ceng.Util;
 
 namespace AFAS.Business.Questionnaire;

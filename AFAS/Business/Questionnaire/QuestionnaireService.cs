@@ -1,4 +1,5 @@
 ﻿using AFAS.Authorization;
+using AFAS.Authorization.AuthInfos;
 using AFAS.Authorization.Models;
 using AFAS.Entity;
 using AFAS.Enums;
@@ -6,6 +7,7 @@ using AFAS.Infrastructure;
 using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
+using AFAS.Models.User;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +21,13 @@ namespace AFAS.Business.Questionnaire;
 /// <summary>
 /// 试卷-服务
 /// </summary>
-public class QuestionnaireService : IQuestionnaireService
+public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 {
     /// <summary>
     /// 构造函数
     /// </summary>
     /// <param name=""></param>
-    public QuestionnaireService() : base()
+    public QuestionnaireService(IAuthInfo authInfo) : base(authInfo)
     {
     }
 
@@ -69,7 +71,8 @@ public class QuestionnaireService : IQuestionnaireService
             questionnaire.bQuestionS3List = await context.BQuestionS3s.Where(x => x.QuestionId == s3).ToListAsync();
             questionnaire.bQuestionS4 = await context.BQuestionS4s.SingleAsync(x => x.QuestionId == s4);
             questionnaire.bQuestionS5List = await context.BQuestionS5s.Where(x => x.QuestionId == s5).ToListAsync();
-            questionnaire.bQuestionT1 = new QuestionT1Model() {
+            questionnaire.bQuestionT1 = new QuestionT1Model()
+            {
                 QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == t1),
                 AnswerInfo = await context.BQuestionT1s.SingleAsync(x => x.QuestionId == t1),
                 bQuestionT1QList = await context.BQuestionT1Qs.Where(x => x.QuestionId == t1).ToListAsync(),
@@ -174,7 +177,7 @@ public class QuestionnaireService : IQuestionnaireService
         var questions = new List<BQuestion>();
         using (var context = new AfasContext())
         {
-            questions = await context.BQuestions.Where(x=>x.QuestionnaireId == questionnaireId).ToListAsync();
+            questions = await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ToListAsync();
         }
         return questions;
     }
@@ -190,7 +193,7 @@ public class QuestionnaireService : IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderBy(x=>x.GridSort).ToListAsync();
+            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderBy(x => x.GridSort).ToListAsync();
         }
         return question;
     }
@@ -222,7 +225,7 @@ public class QuestionnaireService : IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).OrderBy(x=>x.GridRow).ThenBy(x=>x.GridColumn).ToListAsync();
+            question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).OrderBy(x => x.GridRow).ThenBy(x => x.GridColumn).ToListAsync();
         }
         return question;
     }
@@ -331,7 +334,7 @@ public class QuestionnaireService : IQuestionnaireService
         using (var context = new AfasContext())
         {
             var bAnswer = await context.BAnswers.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
-            if(bAnswer == null)
+            if (bAnswer == null)
             {
                 return answer;
             }
@@ -360,14 +363,14 @@ public class QuestionnaireService : IQuestionnaireService
             var bAnswerT1 = await context.BAnswerT1s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
             var bAnswerT2 = await context.BAnswerT2s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
             var bAnswerT3 = await context.BAnswerT3s.Where(x => x.AnswerId == answerId).FirstOrDefaultAsync();
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "S1", Remark = bAnswerS1?.Remark??"", StandardScore = bAnswerS1?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "S2", Remark = bAnswerS2?.Remark??"", StandardScore = bAnswerS2?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "S3", Remark = bAnswerS3?.Remark??"", StandardScore = bAnswerS3?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "S4", Remark = bAnswerS4?.Remark??"", StandardScore = bAnswerS4?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "S5", Remark = bAnswerS5?.Remark??"", StandardScore = bAnswerS5?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "T1", Remark = bAnswerT1?.Remark??"", StandardScore = bAnswerT1?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "T2", Remark = bAnswerT2?.Remark??"", StandardScore = bAnswerT2?.StandardScore??0 });
-            answer.answerList.Add(new AnswerItem() { QuestionCode = "T3", Remark = bAnswerT3?.Remark??"", StandardScore = bAnswerT3?.StandardScore??0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "S1", Remark = bAnswerS1?.Remark ?? "", StandardScore = bAnswerS1?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "S2", Remark = bAnswerS2?.Remark ?? "", StandardScore = bAnswerS2?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "S3", Remark = bAnswerS3?.Remark ?? "", StandardScore = bAnswerS3?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "S4", Remark = bAnswerS4?.Remark ?? "", StandardScore = bAnswerS4?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "S5", Remark = bAnswerS5?.Remark ?? "", StandardScore = bAnswerS5?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "T1", Remark = bAnswerT1?.Remark ?? "", StandardScore = bAnswerT1?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "T2", Remark = bAnswerT2?.Remark ?? "", StandardScore = bAnswerT2?.StandardScore ?? 0 });
+            answer.answerList.Add(new AnswerItem() { QuestionCode = "T3", Remark = bAnswerT3?.Remark ?? "", StandardScore = bAnswerT3?.StandardScore ?? 0 });
         }
         return answer;
     }
@@ -400,7 +403,7 @@ public class QuestionnaireService : IQuestionnaireService
                 answerBasic.RadarImage = GetString.FromObject(data.RadarImage);
                 answerBasic.Simage = GetString.FromObject(data.SImage);
                 answerBasic.Sresult = GetString.FromObject(data.SResult, 500);
-                answerBasic.Timage = GetString.FromObject(data.TImage );
+                answerBasic.Timage = GetString.FromObject(data.TImage);
                 answerBasic.Tresult = GetString.FromObject(data.TResult, 500);
                 answerBasic.Weak = GetString.FromObject(data.Weak, 50);
                 answerBasic.Advantage = GetString.FromObject(data.Advantage, 50);
@@ -441,24 +444,24 @@ public class QuestionnaireService : IQuestionnaireService
             // 替换标记内容
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true))
             {
-                if(wordDoc.MainDocumentPart == null|| wordDoc.MainDocumentPart.Document.Body == null)
+                if (wordDoc.MainDocumentPart == null || wordDoc.MainDocumentPart.Document.Body == null)
                 {
                     throw MessageException.Get(MethodBase.GetCurrentMethod(), "读取报告模板失败");
                 }
                 var mainPart = wordDoc.MainDocumentPart;
                 var body = wordDoc.MainDocumentPart.Document.Body;
-                var student = UserIdentityHelper.GetUserByUserId(answerBasic.UserId,false);
+                var student = UserIdentityHelper.GetUserByUserId(answerBasic.UserId, false);
                 var teacher = UserIdentityHelper.GetUserByUserId(answerBasic.TeacherId, false);
                 var suggestedCourse = DictionaryHelper.GetDictionaryItemName("SuggestedCourse", answerBasic.SuggestedCourse);
                 var evaluationStandard = new BEvaluationStandard() { };
                 using (var context = new AfasContext())
                 {
-                    evaluationStandard = await context.BEvaluationStandards.SingleAsync(x=>x.LevelCode == answerBasic.LevelCode);
+                    evaluationStandard = await context.BEvaluationStandards.SingleAsync(x => x.LevelCode == answerBasic.LevelCode);
                 }
                 var answerModel = await GetAnswerListAsync(answerBasic.AnswerId);
-                var spassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x=> EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                var sfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x=> EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                var tpassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x=> EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var spassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var sfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var tpassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
                 var tfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
                 // 遍历所有段落和替换标记
                 foreach (var text in body.Descendants<Text>())
@@ -541,11 +544,11 @@ public class QuestionnaireService : IQuestionnaireService
                     }
                     if (text.Text.Contains("{Advantage}"))
                     {
-                        text.Text = text.Text.Replace("{Advantage}", answerBasic.Advantage.ToString());
+                        text.Text = text.Text.Replace("{Advantage}", "孩子的优势是: " + answerBasic.Advantage.ToString());
                     }
                     if (text.Text.Contains("{Weak}"))
                     {
-                        text.Text = text.Text.Replace("{Weak}", answerBasic.Weak.ToString());
+                        text.Text = text.Text.Replace("{Weak}", "孩子的弱势是: "+ answerBasic.Weak.ToString());
                     }
                     if (text.Text.Contains("{Suggest Course}"))
                     {
@@ -579,7 +582,7 @@ public class QuestionnaireService : IQuestionnaireService
                                 break;
                         }
                         // 将 Base64 数据转换为字节数组
-                        byte[] imageBytes = Convert.FromBase64String(base64.Replace("data:image/png;base64,",""));
+                        byte[] imageBytes = Convert.FromBase64String(base64.Replace("data:image/png;base64,", ""));
                         // 用解码后的字节数组替换图片
                         using (Stream imageStream = imagePart.GetStream(FileMode.Create, FileAccess.Write))
                         {
@@ -597,7 +600,7 @@ public class QuestionnaireService : IQuestionnaireService
             }
 
             FileHelper.Word2Pdf(outputPath, "ELA学习能力测评报告.docx", outputPath, "ELA学习能力测评报告.pdf");
-                       
+
 
             #endregion
         }
@@ -622,7 +625,8 @@ public class QuestionnaireService : IQuestionnaireService
             using (var context = new AfasContext())
             {
                 var question = await context.BQuestions.FirstOrDefaultAsync(b => b.QuestionId == data.QuestionId);
-                if (question == null) {
+                if (question == null)
+                {
                     throw new Exception("问题不存在");
                 }
                 answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
@@ -632,6 +636,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -707,6 +712,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -790,6 +796,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -871,6 +878,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -938,6 +946,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -1007,6 +1016,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -1088,6 +1098,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -1165,6 +1176,7 @@ public class QuestionnaireService : IQuestionnaireService
                     {
                         AnswerId = NewCode.Ul25Key,
                         QuestionnaireId = question.QuestionnaireId,
+                        QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
                     };
                     context.BAnswers.Add(answerBasic);
@@ -1226,7 +1238,7 @@ public class QuestionnaireService : IQuestionnaireService
     #region 查询
 
     /// <summary>
-    /// 获取角色关联的用户列表
+    /// 测试结果查询
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
@@ -1265,7 +1277,7 @@ public class QuestionnaireService : IQuestionnaireService
             LEFT JOIN b_Dictionary_Item SCourse ON Answer.SuggestedCourse = SCourse.ItemId AND SCourse.DictionaryId = 'SuggestedCourse'
             WHERE 1=1
         ";
-        if(query.Data != null)
+        if (query.Data != null)
         {
             #region 构建查询过滤条件
 
@@ -1295,6 +1307,11 @@ public class QuestionnaireService : IQuestionnaireService
             }
 
             #endregion
+        }
+        if (!userIdentity.IsStaff)
+        {
+            strsql += " AND Answer.UserId <= @UserId";
+            paras.Add(new Parameter("UserId", userIdentity.UserId));
         }
         var sortors = new List<KeySorterValue>();
         if (query.Sorter == null)
