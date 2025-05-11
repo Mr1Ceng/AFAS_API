@@ -1,6 +1,7 @@
 ﻿using AFAS.Authorization;
 using AFAS.Authorization.AuthInfos;
 using AFAS.Entity;
+using AFAS.Internals;
 using AFAS.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
@@ -59,8 +60,8 @@ public class UserService : UserTokenAuthorization, IUserService
                     AvatarUrl = data.AvatarUrl,
                     Gender = data.Gender,
                     Age = data.Age,
-                    Password = PasswordHelper.Encrypt("gps"),
-                    Account = PinYinHelper.GetPinYin(data.UserName),
+                    Password = PasswordHelper.Encrypt(PinYinHelper.GetFirstPinYin(data.UserName)+"123"),
+                    Account = NewKey.NewAccount(data.UserName),
                     Mobile = data.Mobile,
                     Role = data.Role,
                 };

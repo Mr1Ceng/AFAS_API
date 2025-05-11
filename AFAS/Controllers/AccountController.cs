@@ -44,5 +44,30 @@ namespace AFAS.Controllers
             await logoutService.WebAppLogoutAsync();
             return new(); 
         }
+
+
+        /// <summary>
+        /// ÷ÿ÷√√‹¬Î
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{password}")]
+        [UserToken]
+        public async Task<ResponseModel> WebAppResetPassword(string password)
+        {
+            await logoutService.WebAppResetPasswordAsync(password,"");
+            return new();
+        }
+
+        /// <summary>
+        /// ÷ÿ÷√√‹¬Î
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{userId}/{password}")]
+        [UserToken]
+        public async Task<ResponseModel> WebAppResetPassword(string password,string userId)
+        {
+            await logoutService.WebAppResetPasswordAsync(password,userId);
+            return new();
+        }
     }
 }

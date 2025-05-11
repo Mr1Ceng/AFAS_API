@@ -9,7 +9,7 @@ public partial class BAnswerT2A
 
     public string QuestionId { get; set; } = "";
 
-    public int QuestionSort { get; set; }
+    public int QuestionSort { get; set; } = 0;
 
     public string AnswerSort { get; set; } = "";
 }

@@ -23,8 +23,36 @@ public class PinYinHelper
                 ChineseChar cc = new ChineseChar(item);
                 if (cc.Pinyins.Count > 0)
                 {
-                    string temp = cc.Pinyins[0];
-                    result += temp.Substring(0, temp.Length - 1); // 去掉声调数字
+                    string temp = cc.Pinyins[0].Remove(cc.Pinyins[0].Length -1);
+                    result += temp.Substring(0, 1) + temp.Substring(1, temp.Length - 1).ToLower();
+                }
+            }
+            catch
+            {
+                result += item; // 非汉字直接返回
+            }
+        }
+        return result;
+    }
+
+
+    /// <summary>
+    /// 中文转拼音
+    /// </summary>
+    /// <param name="chinese">中文</param>
+    /// <returns></returns>
+    public static string GetFirstPinYin(string chinese)
+    {
+        string result = "";
+        foreach (char item in chinese)
+        {
+            try
+            {
+                ChineseChar cc = new ChineseChar(item);
+                if (cc.Pinyins.Count > 0)
+                {
+                    string temp = cc.Pinyins[0].Remove(cc.Pinyins[0].Length - 1);
+                    result += temp.Substring(0, 1);
                 }
             }
             catch

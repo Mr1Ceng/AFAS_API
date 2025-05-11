@@ -24,4 +24,38 @@ public class NewKey
         }
         return newkey;
     }
+
+    /// <summary>
+    /// 获取新的账号
+    /// </summary>
+    /// <returns></returns>
+    public static string NewAccount(string userName)
+    {
+        var pinyin = PinYinHelper.GetPinYin(userName);
+        using (var context = new AfasContext())
+        {
+            var count = context.BUsers.Count(b => b.Account.StartsWith(pinyin));
+            if (count>0)
+            {
+                pinyin += count.ToString().PadLeft(3, '0');
+            }
+        }
+        return pinyin;
+    }
+
+
+    /// <summary>
+    /// 获取新的答案编码
+    /// </summary>
+    /// <returns></returns>
+    public static string NewAnswerId(string date)
+    {
+        var answerId = date.Replace("-", "");
+        using (var context = new AfasContext())
+        {
+            var count = context.BAnswers.Count(b => b.AnswerId.StartsWith(answerId));
+            answerId += (count + 1).ToString().PadLeft(3, '0');
+        }
+        return answerId;
+    }
 }

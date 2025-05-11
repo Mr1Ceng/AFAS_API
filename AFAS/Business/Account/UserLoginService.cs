@@ -4,6 +4,7 @@ using AFAS.Entity;
 using AFAS.Enums.Account;
 using AFAS.Infrastructure;
 using AFAS.Models.Account;
+using Microsoft.AspNetCore.Identity;
 using Mr1Ceng.Util;
 using Newtonsoft.Json;
 using System.Reflection;

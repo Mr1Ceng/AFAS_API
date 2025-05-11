@@ -18,4 +18,15 @@ public interface IUserLogoutService
     Task WebAppLogoutAsync();
 
     #endregion
+
+    #region 重置密码
+
+    /// <summary>
+    /// 根据用户Id重置密码
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="newPassword"></param>
+    Task WebAppResetPasswordAsync(string newPassword, string userId = "");
+
+    #endregion
 }

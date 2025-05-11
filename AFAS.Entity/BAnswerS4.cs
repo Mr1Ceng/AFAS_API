@@ -5,19 +5,19 @@ namespace AFAS.Entity;
 
 public partial class BAnswerS4
 {
-    public string AnswerId { get; set; } = "";
+    public string AnswerId { get; set; } = null!;
 
-    public string QuestionId { get; set; } = "";
+    public string QuestionId { get; set; } = null!;
 
-    public int TimeConsume { get; set; }
+    public int TimeConsume { get; set; } = 0;
 
-    public string QuestionImage { get; set; } = "";
+    public string QuestionImage { get; set; } = null!;
 
-    public string AnswerImage { get; set; } = "";
+    public string AnswerImage { get; set; } = null!;
 
-    public int CrossNumber { get; set; }
+    public int CrossNumber { get; set; } = 0;
 
-    public int StandardScore { get; set; }
+    public int StandardScore { get; set; } = 0;
 
-    public string Remark { get; set; } = "";
+    public string Remark { get; set; } = null!;
 }

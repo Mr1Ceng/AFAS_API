@@ -5,13 +5,13 @@ namespace AFAS.Entity;
 
 public partial class SSystem
 {
-    public string SystemId { get; set; } = "";
+    public string SystemId { get; set; } = null!;
 
-    public int SystemCode { get; set; }
+    public int SystemCode { get; set; } = 0;
 
-    public string SystemName { get; set; } = "";
+    public string SystemName { get; set; } = null!;
 
-    public string SystemType { get; set; } = "";
+    public string SystemType { get; set; } = null!;
 
     public string CreateStamp { get; set; } = "";
 

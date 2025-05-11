@@ -319,6 +319,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
         return question;
     }
+    
     #endregion
 
     #region Answer
@@ -634,7 +635,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -710,7 +711,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -794,7 +795,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -876,7 +877,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -944,7 +945,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -1014,7 +1015,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -1096,7 +1097,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
@@ -1174,7 +1175,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 {
                     answerBasic = new BAnswer()
                     {
-                        AnswerId = NewCode.Ul25Key,
+                        AnswerId = NewKey.NewAnswerId(DateHelper.GetDayString()),
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,

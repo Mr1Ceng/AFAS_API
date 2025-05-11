@@ -10,7 +10,7 @@ namespace AFAS.Controllers
 {
     [UserToken]
     [ApiController]
-    [ApiExplorerSettings(GroupName = WebApiConfig.User)]
+    [ApiExplorerSettings(GroupName = WebApiConfig.Setting)]
     [Route("[controller]/[action]")]
     public class UserController : ControllerBase
     {

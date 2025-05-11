@@ -79,6 +79,8 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<BQuestionnaire> BQuestionnaires { get; set; }
 
+    public virtual DbSet<BSpiralMaze> BSpiralMazes { get; set; }
+
     public virtual DbSet<BUser> BUsers { get; set; }
 
     public virtual DbSet<BUserToken> BUserTokens { get; set; }
@@ -126,7 +128,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.QuestionnaireDate)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.RadarImage).HasDefaultValue("");
             entity.Property(e => e.Remark)
@@ -780,6 +782,20 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(50)");
         });
 
+        modelBuilder.Entity<BSpiralMaze>(entity =>
+        {
+            entity.HasKey(e => e.Age);
+
+            entity.ToTable("b_Spiral_Maze");
+
+            entity.Property(e => e.Age)
+                .ValueGeneratedNever()
+                .HasColumnType("INT");
+            entity.Property(e => e.Perturbation).HasColumnType("INT");
+            entity.Property(e => e.RingNumber).HasColumnType("INT");
+            entity.Property(e => e.Spacing).HasColumnType("INT");
+        });
+
         modelBuilder.Entity<BUser>(entity =>
         {
             entity.HasKey(e => e.UserId);
@@ -793,9 +809,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.Age).HasColumnType("INT");
-            entity.Property(e => e.AvatarUrl)
-                .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(500)");
+            entity.Property(e => e.AvatarUrl).HasDefaultValue("");
             entity.Property(e => e.Gender)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(10)");

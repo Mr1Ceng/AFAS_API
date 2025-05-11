@@ -11,9 +11,9 @@ public partial class BAnswerT3A
 
     public bool QuestionType { get; set; }
 
-    public int QuestionSort { get; set; }
+    public int QuestionSort { get; set; } = 0;
 
-    public int Level { get; set; }
+    public int Level { get; set; } = 0;
 
     public string Value { get; set; } = "";
 }

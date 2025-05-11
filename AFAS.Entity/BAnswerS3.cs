@@ -9,13 +9,13 @@ public partial class BAnswerS3
 
     public string QuestionId { get; set; } = "";
 
-    public int TimeConsume { get; set; }
+    public int TimeConsume { get; set; } = 0;
 
-    public int RightNumber { get; set; }
+    public int RightNumber { get; set; } = 0;
 
-    public int ErrorNumber { get; set; }
+    public int ErrorNumber { get; set; } = 0;
 
-    public int StandardScore { get; set; }
+    public int StandardScore { get; set; } = 0;
 
     public string Remark { get; set; } = "";
 }

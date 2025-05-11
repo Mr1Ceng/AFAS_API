@@ -5,7 +5,7 @@ namespace AFAS.Entity;
 
 public partial class LogToken
 {
-    public int LogId { get; set; }
+    public int LogId { get; set; } = 0;
 
     public string TimeStamp { get; set; } = "";
 
