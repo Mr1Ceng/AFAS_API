@@ -19,6 +19,7 @@ public class UserIdentity
         NickName = "";
         AvatarUrl = "";
         Gender = "";
+        Age = 0;
         Mobile = "";
         IsDeveloper = false;
         IsStaff = false;
@@ -36,6 +37,7 @@ public class UserIdentity
         NickName = user.NickName;
         AvatarUrl = user.AvatarUrl;
         Gender = user.Gender;
+        Age = user.Age;
         Mobile = user.Mobile;
         IsDeveloper = user.IsDeveloper;
         IsStaff = user.Role == RoleEnum.TEACHER.ToString();
@@ -70,6 +72,11 @@ public class UserIdentity
     /// 性别
     /// </summary>
     public string Gender { get; set; }
+
+    /// <summary>
+    /// 年龄
+    /// </summary>
+    public int Age { get; set; }
 
     /// <summary>
     /// 手机号
