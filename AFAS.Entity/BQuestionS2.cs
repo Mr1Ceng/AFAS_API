@@ -5,7 +5,7 @@ namespace AFAS.Entity;
 
 public partial class BQuestionS2
 {
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
     public int GridRow { get; set; } = 0;
 

@@ -5,11 +5,11 @@ namespace AFAS.Entity;
 
 public partial class BQuestionT1
 {
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
-    public string NumberQuestion { get; set; } = null!;
+    public string NumberQuestion { get; set; } = "";
 
-    public string StoryQuestion { get; set; } = null!;
+    public string StoryQuestion { get; set; } = "";
 
     public int Number1 { get; set; } = 0;
 

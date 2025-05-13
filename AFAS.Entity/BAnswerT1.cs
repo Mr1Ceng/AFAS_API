@@ -5,9 +5,9 @@ namespace AFAS.Entity;
 
 public partial class BAnswerT1
 {
-    public string AnswerId { get; set; } = null!;
+    public string AnswerId { get; set; } = "";
 
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
     public int Number1 { get; set; } = 0;
 
@@ -19,5 +19,5 @@ public partial class BAnswerT1
 
     public int StandardScore { get; set; } = 0;
 
-    public string Remark { get; set; } = null!;
+    public string Remark { get; set; } = "";
 }

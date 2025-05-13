@@ -5,7 +5,7 @@ namespace AFAS.Entity;
 
 public partial class BQuestionT3
 {
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
     public bool QuestionType { get; set; }
 
@@ -13,7 +13,7 @@ public partial class BQuestionT3
 
     public int Level { get; set; } = 0;
 
-    public string QuestionQ { get; set; } = null!;
+    public string QuestionQ { get; set; } = "";
 
-    public string QuestionA { get; set; } = null!;
+    public string QuestionA { get; set; } = "";
 }

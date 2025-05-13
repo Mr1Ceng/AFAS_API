@@ -5,15 +5,15 @@ namespace AFAS.Entity;
 
 public partial class BAnswerS5
 {
-    public string AnswerId { get; set; } = null!;
+    public string AnswerId { get; set; } = "";
 
-    public string QuestionId { get; set; } = null!;
+    public string QuestionId { get; set; } = "";
 
     public int TimeConsume { get; set; } = 0;
 
-    public string QuestionImage { get; set; } = null!;
+    public string QuestionImage { get; set; } = "";
 
-    public string AnswerImage { get; set; } = null!;
+    public string AnswerImage { get; set; } = "";
 
     public int ShapeNumber { get; set; } = 0;
 
@@ -21,5 +21,5 @@ public partial class BAnswerS5
 
     public int StandardScore { get; set; } = 0;
 
-    public string Remark { get; set; } = null!;
+    public string Remark { get; set; } = "";
 }
