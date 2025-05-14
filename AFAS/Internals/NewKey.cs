@@ -1,4 +1,5 @@
 using AFAS.Entity;
+using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 
 namespace AFAS.Internals;
@@ -34,15 +35,36 @@ public class NewKey
         var pinyin = PinYinHelper.GetPinYin(userName);
         using (var context = new AfasContext())
         {
-            var count = context.BUsers.Count(b => b.Account.StartsWith(pinyin));
-            if (count>0)
+            var list = context.BUsers.Where(b => b.Account.StartsWith(pinyin)).OrderBy(x=>x.Account).ToList();
+            if (list.Count() > 0)
             {
-                pinyin += count.ToString().PadLeft(3, '0');
+                var maxNum = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var currentNum = GetInt.FromObject(item.Account.Replace(userName, ""));
+                    if (i == list.Count - 1)
+                    {
+                        maxNum = (currentNum + 1);
+                    }
+                    else
+                    {
+                        var nextItem = list[i + 1];
+
+                        var nextNum = GetInt.FromObject(nextItem.Account.Replace(userName, ""));
+                        if(nextNum != currentNum + 1)
+                        {
+                            maxNum = (currentNum + 1);
+                            break;
+                        }
+
+                    }
+                }
+                pinyin += maxNum.ToString().PadLeft(3, '0');
             }
         }
         return pinyin;
     }
-
 
     /// <summary>
     /// 获取新的答案编码
@@ -58,4 +80,46 @@ public class NewKey
         }
         return answerId;
     }
+
+    /// <summary>
+    /// 获取测评标准编码
+    /// </summary>
+    /// <returns></returns>
+    public static string NewLevelCode()
+    {
+        var result = "LEVEL";
+        using (var context = new AfasContext())
+        {
+            var list = context.BEvaluationStandards.Where(b => b.LevelCode.StartsWith(result)).OrderBy(x => x.LevelCode).ToList();
+            if (list.Count() > 0)
+            {
+                var maxNum = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var currentNum = GetInt.FromObject(item.LevelCode.Replace(result, ""));
+                    if (i == list.Count - 1)
+                    {
+                        maxNum = (currentNum + 1);
+                    }
+                    else
+                    {
+                        var nextItem = list[i + 1];
+
+                        var nextNum = GetInt.FromObject(nextItem.LevelCode.Replace(result, ""));
+                        if (nextNum != currentNum + 1)
+                        {
+                            maxNum = (currentNum + 1);
+                            break;
+                        }
+
+                    }
+                }
+                result += maxNum.ToString().PadLeft(2, '0');
+            }
+        }
+        return result;
+    }
+
+
 }

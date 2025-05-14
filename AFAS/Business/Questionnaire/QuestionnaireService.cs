@@ -1,5 +1,6 @@
 ﻿using AFAS.Authorization;
 using AFAS.Authorization.AuthInfos;
+using AFAS.Authorization.Enums;
 using AFAS.Authorization.Models;
 using AFAS.Entity;
 using AFAS.Enums;
@@ -8,6 +9,7 @@ using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Models.User;
+using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
@@ -374,242 +376,6 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             answer.answerList.Add(new AnswerItem() { QuestionCode = "T3", Remark = bAnswerT3?.Remark ?? "", StandardScore = bAnswerT3?.StandardScore ?? 0 });
         }
         return answer;
-    }
-
-    /// <summary>
-    /// 保存题目结果
-    /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    public async Task<string> SaveAnswerResultAsync(AnswerForm data)
-    {
-        var answerBasic = new BAnswer();
-        try
-        {
-            #region 保存结果
-
-            using (var context = new AfasContext())
-            {
-                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
-                if (answerBasic == null)
-                {
-                    throw MessageException.Get(MethodBase.GetCurrentMethod(), "请先答题，再保存结果");
-                }
-                answerBasic.AnswerId = GetString.FromObject(data.AnswerId, 25);
-                answerBasic.QuestionnaireId = GetString.FromObject(data.QuestionnaireId, 6);
-                answerBasic.UserId = GetString.FromObject(data.UserId, 32);
-                answerBasic.QuestionnaireDate = GetString.FromObject(data.QuestionnaireDate, 10);
-                answerBasic.TeacherId = GetString.FromObject(data.TeacherId, 32);
-                answerBasic.Status = GetString.FromObject(data.Status, 10);
-                answerBasic.RadarImage = GetString.FromObject(data.RadarImage);
-                answerBasic.Simage = GetString.FromObject(data.SImage);
-                answerBasic.Sresult = GetString.FromObject(data.SResult, 500);
-                answerBasic.Timage = GetString.FromObject(data.TImage);
-                answerBasic.Tresult = GetString.FromObject(data.TResult, 500);
-                answerBasic.Weak = GetString.FromObject(data.Weak, 50);
-                answerBasic.Advantage = GetString.FromObject(data.Advantage, 50);
-                answerBasic.Remark = GetString.FromObject(data.Remark, 50);
-                answerBasic.SuggestedCourse = GetString.FromObject(data.SuggestedCourse, 50);
-                answerBasic.LevelCode = GetString.FromObject(data.LevelCode, 50);
-                context.BAnswers.Update(answerBasic);
-                await context.SaveChangesAsync();
-            }
-
-            #endregion
-
-            #region 导出报告文件
-
-            string templatePath = "../AFAS.Static/Words/ELA学习能力测评报告模板.docx"; // 模板文件路径
-            string outputPath = $"../AFAS.Static/PDFs/{answerBasic.AnswerId}/";
-            if (!Directory.Exists(outputPath))
-            {
-                Directory.CreateDirectory(outputPath);
-            }
-            string fileName = Path.Combine(outputPath, "ELA学习能力测评报告.docx");// 导出的文件路径
-            if (!Path.Exists(fileName))
-            {
-                using (FileStream fs = File.Create(fileName))
-                {
-                }
-            }
-            string pdfFileName = Path.Combine(outputPath, "ELA学习能力测评报告.pdf");// 导出的文件路径
-            if (!Path.Exists(pdfFileName))
-            {
-                using (FileStream fs = File.Create(pdfFileName))
-                {
-                }
-            }
-            // 复制模板文件为输出文件
-            File.Copy(templatePath, fileName, true);
-
-            // 替换标记内容
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true))
-            {
-                if (wordDoc.MainDocumentPart == null || wordDoc.MainDocumentPart.Document.Body == null)
-                {
-                    throw MessageException.Get(MethodBase.GetCurrentMethod(), "读取报告模板失败");
-                }
-                var mainPart = wordDoc.MainDocumentPart;
-                var body = wordDoc.MainDocumentPart.Document.Body;
-                var student = UserIdentityHelper.GetUserByUserId(answerBasic.UserId, false);
-                var teacher = UserIdentityHelper.GetUserByUserId(answerBasic.TeacherId, false);
-                var suggestedCourse = DictionaryHelper.GetDictionaryItemName("SuggestedCourse", answerBasic.SuggestedCourse);
-                var evaluationStandard = new BEvaluationStandard() { };
-                using (var context = new AfasContext())
-                {
-                    evaluationStandard = await context.BEvaluationStandards.SingleAsync(x => x.LevelCode == answerBasic.LevelCode);
-                }
-                var answerModel = await GetAnswerListAsync(answerBasic.AnswerId);
-                var spassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                var sfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                var tpassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                var tfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
-                // 遍历所有段落和替换标记
-                foreach (var text in body.Descendants<Text>())
-                {
-                    if (text.Text.Contains("{Name}"))
-                    {
-                        text.Text = text.Text.Replace("{Name}", student.UserName.ToString());
-                    }
-                    if (text.Text.Contains("{Sex}"))
-                    {
-                        text.Text = text.Text.Replace("{Sex}", EnumHelper<GerderEnum>.GetDescription(student.Gender.ToString()));
-                    }
-                    if (text.Text.Contains("{Age}"))
-                    {
-                        text.Text = text.Text.Replace("{Age}", student.Age.ToString());
-                    }
-                    if (text.Text.Contains("{Test Date}"))
-                    {
-                        text.Text = text.Text.Replace("{Test Date}", answerBasic.QuestionnaireDate.ToString());
-                    }
-                    if (text.Text.Contains("{Tester}"))
-                    {
-                        text.Text = text.Text.Replace("{Tester}", teacher.UserName.ToString());
-                    }
-                    if (text.Text.Contains("{Test No}"))
-                    {
-                        text.Text = text.Text.Replace("{Test No}", answerBasic.AnswerId.ToString());
-                    }
-                    if (text.Text.Contains("{视知觉未达标}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉未达标}", (sfailList.Count() > 0 ? string.Join("、", sfailList) : ""));
-                    }
-                    if (text.Text.Contains("{视知觉未达标个数}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉未达标个数}", sfailList.Count().ToString());
-                    }
-                    if (text.Text.Contains("{视知觉未达标均}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉未达标均}", (sfailList.Count() > 1 ? "均" : ""));
-                    }
-                    if (text.Text.Contains("{视知觉达标}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉达标}", (spassList.Count() > 0 ? string.Join("、", spassList) : ""));
-                    }
-                    if (text.Text.Contains("{视知觉达标个数}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉达标个数}", spassList.Count().ToString());
-                    }
-                    if (text.Text.Contains("{视知觉达标均}"))
-                    {
-                        text.Text = text.Text.Replace("{视知觉达标均}", (spassList.Count() > 1 ? "均" : ""));
-                    }
-                    if (text.Text.Contains("{听知觉未达标}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉未达标}", (tfailList.Count() > 0 ? string.Join("、", tfailList) : ""));
-                    }
-                    if (text.Text.Contains("{听知觉未达标个数}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉未达标个数}", tfailList.Count().ToString());
-                    }
-                    if (text.Text.Contains("{听知觉未达标均}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉未达标均}", (tfailList.Count() > 1 ? "均" : ""));
-                    }
-                    if (text.Text.Contains("{听知觉达标}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉达标}", (tpassList.Count() > 0 ? string.Join("、", tpassList) : ""));
-                    }
-                    if (text.Text.Contains("{听知觉达标个数}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉达标个数}", tpassList.Count().ToString());
-                    }
-                    if (text.Text.Contains("{听知觉达标均}"))
-                    {
-                        text.Text = text.Text.Replace("{听知觉达标均}", (tpassList.Count() > 1 ? "均" : ""));
-                    }
-                    if (text.Text.Contains("{Remark}"))
-                    {
-                        text.Text = text.Text.Replace("{Remark}", answerBasic.Remark.ToString());
-                    }
-                    if (text.Text.Contains("{Advantage}"))
-                    {
-                        text.Text = text.Text.Replace("{Advantage}", "孩子的优势是: " + answerBasic.Advantage.ToString());
-                    }
-                    if (text.Text.Contains("{Weak}"))
-                    {
-                        text.Text = text.Text.Replace("{Weak}", "孩子的弱势是: "+ answerBasic.Weak.ToString());
-                    }
-                    if (text.Text.Contains("{Suggest Course}"))
-                    {
-                        text.Text = text.Text.Replace("{Suggest Course}", suggestedCourse.ToString());
-                    }
-                }
-                // 获取所有图片部分
-                var index = 0;
-                foreach (var imagePart in mainPart.ImageParts)
-                {
-                    if (index != 1 && index != 3 && index != 7)
-                    {
-                        index++;
-                        continue;
-                    }
-                    try
-                    {
-                        var base64 = "";
-                        switch (index)
-                        {
-                            case 3:
-                                base64 = answerModel.SImage;
-                                break;
-                            case 1:
-                                base64 = answerModel.TImage;
-                                break;
-                            case 7:
-                                base64 = answerModel.RadarImage;
-                                break;
-                            default:
-                                break;
-                        }
-                        // 将 Base64 数据转换为字节数组
-                        byte[] imageBytes = Convert.FromBase64String(base64.Replace("data:image/png;base64,", ""));
-                        // 用解码后的字节数组替换图片
-                        using (Stream imageStream = imagePart.GetStream(FileMode.Create, FileAccess.Write))
-                        {
-                            imageStream.Write(imageBytes, 0, imageBytes.Length);
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        throw;
-                    }
-
-                    index++;
-                }
-            }
-
-            FileHelper.Word2Pdf(outputPath, "ELA学习能力测评报告.docx", outputPath, "ELA学习能力测评报告.pdf");
-
-
-            #endregion
-        }
-        catch (Exception)
-        {
-            return "";
-        }
-        return answerBasic.AnswerId;
     }
 
     /// <summary>
@@ -1236,10 +1002,10 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
     #endregion
 
-    #region 查询
+    #region TestResult【测评结果】
 
     /// <summary>
-    /// 测试结果查询
+    /// 测评结果查询
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
@@ -1337,6 +1103,293 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
 
         return resultData;
+    }
+
+    /// <summary>
+    /// 保存测评结果
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public async Task<string> SaveTestResultAsync(AnswerForm data)
+    {
+        var answerBasic = new BAnswer();
+        try
+        {
+            #region 保存结果
+
+            using (var context = new AfasContext())
+            {
+                answerBasic = await context.BAnswers.FirstOrDefaultAsync(b => b.AnswerId == data.AnswerId);
+                if (answerBasic == null)
+                {
+                    throw MessageException.Get(MethodBase.GetCurrentMethod(), "请先答题，再保存结果");
+                }
+                answerBasic.AnswerId = GetString.FromObject(data.AnswerId, 25);
+                answerBasic.QuestionnaireId = GetString.FromObject(data.QuestionnaireId, 6);
+                answerBasic.UserId = GetString.FromObject(data.UserId, 32);
+                answerBasic.QuestionnaireDate = GetString.FromObject(data.QuestionnaireDate, 10);
+                answerBasic.TeacherId = GetString.FromObject(data.TeacherId, 32);
+                answerBasic.Status = GetString.FromObject(data.Status, 10);
+                answerBasic.RadarImage = GetString.FromObject(data.RadarImage);
+                answerBasic.Simage = GetString.FromObject(data.SImage);
+                answerBasic.Sresult = GetString.FromObject(data.SResult, 500);
+                answerBasic.Timage = GetString.FromObject(data.TImage);
+                answerBasic.Tresult = GetString.FromObject(data.TResult, 500);
+                answerBasic.Weak = GetString.FromObject(data.Weak, 50);
+                answerBasic.Advantage = GetString.FromObject(data.Advantage, 50);
+                answerBasic.Remark = GetString.FromObject(data.Remark, 50);
+                answerBasic.SuggestedCourse = GetString.FromObject(data.SuggestedCourse, 50);
+                answerBasic.LevelCode = GetString.FromObject(data.LevelCode, 50);
+                context.BAnswers.Update(answerBasic);
+                await context.SaveChangesAsync();
+            }
+
+            #endregion
+
+            #region 导出报告文件
+
+            string templatePath = "../AFAS.Static/Words/ELA学习能力测评报告模板.docx"; // 模板文件路径
+            string outputPath = $"../AFAS.Static/PDFs/{answerBasic.AnswerId}/";
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+            string fileName = Path.Combine(outputPath, "ELA学习能力测评报告.docx");// 导出的文件路径
+            if (!Path.Exists(fileName))
+            {
+                using (FileStream fs = File.Create(fileName))
+                {
+                }
+            }
+            string pdfFileName = Path.Combine(outputPath, "ELA学习能力测评报告.pdf");// 导出的文件路径
+            if (!Path.Exists(pdfFileName))
+            {
+                using (FileStream fs = File.Create(pdfFileName))
+                {
+                }
+            }
+            // 复制模板文件为输出文件
+            File.Copy(templatePath, fileName, true);
+
+            // 替换标记内容
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true))
+            {
+                if (wordDoc.MainDocumentPart == null || wordDoc.MainDocumentPart.Document.Body == null)
+                {
+                    throw MessageException.Get(MethodBase.GetCurrentMethod(), "读取报告模板失败");
+                }
+                var mainPart = wordDoc.MainDocumentPart;
+                var body = wordDoc.MainDocumentPart.Document.Body;
+                var student = UserIdentityHelper.GetUserByUserId(answerBasic.UserId, false);
+                var teacher = UserIdentityHelper.GetUserByUserId(answerBasic.TeacherId, false);
+                var suggestedCourse = DictionaryHelper.GetDictionaryItemName("SuggestedCourse", answerBasic.SuggestedCourse);
+                var evaluationStandard = new BEvaluationStandard() { };
+                using (var context = new AfasContext())
+                {
+                    evaluationStandard = await context.BEvaluationStandards.SingleAsync(x => x.LevelCode == answerBasic.LevelCode);
+                }
+                var answerModel = await GetAnswerListAsync(answerBasic.AnswerId);
+                var spassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var sfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("S") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var tpassList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore >= GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                var tfailList = answerModel.answerList.FindAll(x => x.QuestionCode.StartsWith("T") && x.StandardScore < GetInt.FromObject(GetObject.FromProperty(evaluationStandard, x.QuestionCode))).Select(x => EnumHelper<QuestionCodeEnum>.GetDescription(x.QuestionCode));
+                // 遍历所有段落和替换标记
+                foreach (var text in body.Descendants<Text>())
+                {
+                    if (text.Text.Contains("{Name}"))
+                    {
+                        text.Text = text.Text.Replace("{Name}", student.UserName.ToString());
+                    }
+                    if (text.Text.Contains("{Sex}"))
+                    {
+                        text.Text = text.Text.Replace("{Sex}", EnumHelper<GerderEnum>.GetDescription(student.Gender.ToString()));
+                    }
+                    if (text.Text.Contains("{Age}"))
+                    {
+                        text.Text = text.Text.Replace("{Age}", student.Age.ToString());
+                    }
+                    if (text.Text.Contains("{Test Date}"))
+                    {
+                        text.Text = text.Text.Replace("{Test Date}", answerBasic.QuestionnaireDate.ToString());
+                    }
+                    if (text.Text.Contains("{Tester}"))
+                    {
+                        text.Text = text.Text.Replace("{Tester}", teacher.UserName.ToString());
+                    }
+                    if (text.Text.Contains("{Test No}"))
+                    {
+                        text.Text = text.Text.Replace("{Test No}", answerBasic.AnswerId.ToString());
+                    }
+                    if (text.Text.Contains("{视知觉未达标}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉未达标}", (sfailList.Count() > 0 ? string.Join("、", sfailList) : ""));
+                    }
+                    if (text.Text.Contains("{视知觉未达标个数}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉未达标个数}", sfailList.Count().ToString());
+                    }
+                    if (text.Text.Contains("{视知觉未达标均}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉未达标均}", (sfailList.Count() > 1 ? "均" : ""));
+                    }
+                    if (text.Text.Contains("{视知觉达标}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉达标}", (spassList.Count() > 0 ? string.Join("、", spassList) : ""));
+                    }
+                    if (text.Text.Contains("{视知觉达标个数}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉达标个数}", spassList.Count().ToString());
+                    }
+                    if (text.Text.Contains("{视知觉达标均}"))
+                    {
+                        text.Text = text.Text.Replace("{视知觉达标均}", (spassList.Count() > 1 ? "均" : ""));
+                    }
+                    if (text.Text.Contains("{听知觉未达标}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉未达标}", (tfailList.Count() > 0 ? string.Join("、", tfailList) : ""));
+                    }
+                    if (text.Text.Contains("{听知觉未达标个数}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉未达标个数}", tfailList.Count().ToString());
+                    }
+                    if (text.Text.Contains("{听知觉未达标均}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉未达标均}", (tfailList.Count() > 1 ? "均" : ""));
+                    }
+                    if (text.Text.Contains("{听知觉达标}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉达标}", (tpassList.Count() > 0 ? string.Join("、", tpassList) : ""));
+                    }
+                    if (text.Text.Contains("{听知觉达标个数}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉达标个数}", tpassList.Count().ToString());
+                    }
+                    if (text.Text.Contains("{听知觉达标均}"))
+                    {
+                        text.Text = text.Text.Replace("{听知觉达标均}", (tpassList.Count() > 1 ? "均" : ""));
+                    }
+                    if (text.Text.Contains("{Remark}"))
+                    {
+                        text.Text = text.Text.Replace("{Remark}", answerBasic.Remark.ToString());
+                    }
+                    if (text.Text.Contains("{Advantage}"))
+                    {
+                        text.Text = text.Text.Replace("{Advantage}", "孩子的优势是: " + answerBasic.Advantage.ToString());
+                    }
+                    if (text.Text.Contains("{Weak}"))
+                    {
+                        text.Text = text.Text.Replace("{Weak}", "孩子的弱势是: " + answerBasic.Weak.ToString());
+                    }
+                    if (text.Text.Contains("{Suggest Course}"))
+                    {
+                        text.Text = text.Text.Replace("{Suggest Course}", suggestedCourse.ToString());
+                    }
+                }
+                // 获取所有图片部分
+                var index = 0;
+                foreach (var imagePart in mainPart.ImageParts)
+                {
+                    if (index != 1 && index != 3 && index != 7)
+                    {
+                        index++;
+                        continue;
+                    }
+                    try
+                    {
+                        var base64 = "";
+                        switch (index)
+                        {
+                            case 3:
+                                base64 = answerModel.SImage;
+                                break;
+                            case 1:
+                                base64 = answerModel.TImage;
+                                break;
+                            case 7:
+                                base64 = answerModel.RadarImage;
+                                break;
+                            default:
+                                break;
+                        }
+                        // 将 Base64 数据转换为字节数组
+                        byte[] imageBytes = Convert.FromBase64String(base64.Replace("data:image/png;base64,", ""));
+                        // 用解码后的字节数组替换图片
+                        using (Stream imageStream = imagePart.GetStream(FileMode.Create, FileAccess.Write))
+                        {
+                            imageStream.Write(imageBytes, 0, imageBytes.Length);
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+
+                    index++;
+                }
+            }
+
+            FileHelper.Word2Pdf(outputPath, "ELA学习能力测评报告.docx", outputPath, "ELA学习能力测评报告.pdf");
+
+
+            #endregion
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+        return answerBasic.AnswerId;
+    }
+
+    /// <summary>
+    /// 删除测评结果
+    /// </summary>
+    /// <param name="answerId"></param>
+    /// <returns></returns>
+    public void RemoveTestResult(string answerId)
+    {
+        var paras = new List<Parameter>();
+        try
+        {
+            using (var context = new AfasContext())
+            {
+                var strsql = @"
+                DELETE FROM b_Answer WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S1 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S1_A WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S2 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S2_A WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S3 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S3_A WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S4 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_S5 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T1 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T1_A WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T2 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T2_A WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T3 WHERE AnswerId = @AnswerId;
+                DELETE FROM b_Answer_T3_A WHERE AnswerId = @AnswerId;            
+                ";
+
+                paras.Add(new Parameter("AnswerId", answerId));
+                var res = new EFCoreExtentions(context).ExecuteSqlNonQuery(strsql, paras);
+                string outputPath = $"../AFAS.Static/PDFs/{answerId}/ELA学习能力测评报告.docx";
+                if (Path.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+                string outputPath1 = $"../AFAS.Static/PDFs/{answerId}/ELA学习能力测评报告.pdf";
+                if (Path.Exists(outputPath1))
+                {
+                    File.Delete(outputPath1);
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "删除测试结果报错");
+        }
     }
 
     #endregion

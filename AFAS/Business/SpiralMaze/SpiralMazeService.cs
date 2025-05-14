@@ -1,7 +1,9 @@
 ﻿using AFAS.Authorization;
 using AFAS.Authorization.AuthInfos;
 using AFAS.Entity;
+using AFAS.Internals;
 using AFAS.Models.SpiralMaze;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Reflection;
@@ -55,6 +57,10 @@ public class SpiralMazeService : UserTokenAuthorization, ISpiralMazeService
         using (var context = new AfasContext())
         {
             spiralMaze = await context.BSpiralMazes.FirstOrDefaultAsync(b => b.Age == age);
+            if (spiralMaze == null)
+            {
+                throw BusinessException.Get(MethodBase.GetCurrentMethod(), "漩涡迷宫配置不存在！");
+            }
         }
         return spiralMaze ?? new BSpiralMaze();
     }
@@ -72,7 +78,15 @@ public class SpiralMazeService : UserTokenAuthorization, ISpiralMazeService
             spiralMaze = await context.BSpiralMazes.FirstOrDefaultAsync(b => b.Age == data.Age);
             if (spiralMaze == null)
             {
-                throw BusinessException.Get(MethodBase.GetCurrentMethod(), "漩涡迷宫配置不存在！");
+                spiralMaze = new BSpiralMaze()
+                {
+                    Age = data.Age,
+                    Spacing = data.Spacing,
+                    Perturbation = data.Perturbation,
+                    RingNumber = data.RingNumber,
+
+                };
+                context.BSpiralMazes.Add(spiralMaze);
             }
             else
             {

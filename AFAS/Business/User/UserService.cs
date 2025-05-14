@@ -1,5 +1,6 @@
 ﻿using AFAS.Authorization;
 using AFAS.Authorization.AuthInfos;
+using AFAS.Authorization.Enums;
 using AFAS.Entity;
 using AFAS.Internals;
 using AFAS.Models.User;
@@ -101,10 +102,24 @@ public class UserService : UserTokenAuthorization, IUserService
             }
             else
             {
+                if(user.UserId == userIdentity.UserId)
+                {
+                    throw BusinessException.Get(MethodBase.GetCurrentMethod(), "【逻辑错误】不能删除自己！");
+                }
+                if (user.Role != RoleEnum.STUDENT.ToString() && !userIdentity.IsDeveloper) 
+                {
+                    throw BusinessException.Get(MethodBase.GetCurrentMethod(), "【权限不足】非管理员只能删除学生！");
+                }
+                if(context.BAnswers.Any(b => b.UserId == user.UserId))
+                {
+                    throw BusinessException.Get(MethodBase.GetCurrentMethod(), "【逻辑错误】已参加测评，请先删除测评数据！");
+                }
                 context.BUsers.Remove(user);
             }
 
             await context.SaveChangesAsync();
+
+            await UserTokenHelper.RemoveUserTokenByUserIdAsync(user.UserId);
         }
     }
 

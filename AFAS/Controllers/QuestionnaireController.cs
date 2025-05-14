@@ -164,15 +164,6 @@ namespace AFAS.Controllers
             => new(await _questionnaireService.GetAnswerListAsync(answerId));
 
         /// <summary>
-        /// 保存题目结果
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ResponseModel<string>> SaveAnswerResultAsync(AnswerForm data)
-            => new(await _questionnaireService.SaveAnswerResultAsync(data));
-
-        /// <summary>
         /// 保存题目S1答案
         /// </summary>
         /// <param name="data"></param>
@@ -253,11 +244,10 @@ namespace AFAS.Controllers
             => new(await _questionnaireService.SaveAnswerT3Async(data, userId));
         #endregion
 
-        #region 查询
-
+        #region TestResult【测评结果】
 
         /// <summary>
-        /// 测试结果查询
+        /// 测评结果查询
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -265,6 +255,26 @@ namespace AFAS.Controllers
         public ResponseModel<DataList<TestResultQueryRow>> TestResultGridQuery(TableQueryModel<TestResultQueryFields> query)
             => new(_questionnaireService.TestResultGridQuery(query));
 
+        /// <summary>
+        /// 保存测评结果
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveTestResultAsync(AnswerForm data)
+            => new(await _questionnaireService.SaveTestResultAsync(data));
+
+        /// <summary>
+        /// 删除测评结果
+        /// </summary>
+        /// <param name="answerId"></param>
+        /// <returns></returns>
+        [HttpPost("{answerId}")]
+        public ResponseModel RemoveTestResult(string answerId)
+        {
+            _questionnaireService.RemoveTestResult(answerId);
+            return new ResponseModel();
+        }
         #endregion
     }
 }

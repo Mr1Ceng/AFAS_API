@@ -126,13 +126,6 @@ public interface IQuestionnaireService
     Task<AnswerModel> GetAnswerListAsync(string answerId);
 
     /// <summary>
-    /// 保存题目结果
-    /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    Task<string> SaveAnswerResultAsync(AnswerForm data);
-
-    /// <summary>
     /// 保存题目S1答案
     /// </summary>
     /// <param name="data"></param>
@@ -197,13 +190,27 @@ public interface IQuestionnaireService
     Task<string> SaveAnswerT3Async(AnswerT3Model data, string userId);
     #endregion
 
-    #region 查询
+    #region TestResult【测评结果】
 
     /// <summary>
-    /// 测试结果查询
+    /// 测评结果查询
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
     DataList<TestResultQueryRow> TestResultGridQuery(TableQueryModel<TestResultQueryFields> query);
+
+    /// <summary>
+    /// 保存测评结果
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    Task<string> SaveTestResultAsync(AnswerForm data);
+
+    /// <summary>
+    /// 删除测评结果
+    /// </summary>
+    /// <param name="answerId"></param>
+    /// <returns></returns>
+    void RemoveTestResult(string answerId);
     #endregion
 }

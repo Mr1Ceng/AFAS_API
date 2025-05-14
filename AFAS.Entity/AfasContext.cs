@@ -104,7 +104,6 @@ public partial class AfasContext : DbContext
     public virtual DbSet<STerminal> STerminals { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlite("Data Source=../AFAS.Database/AFAS.db;Cache=Shared;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -117,7 +116,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionnaireId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -126,14 +125,12 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.LevelCode)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(10)");
+                .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.QuestionnaireDate)
-                .HasDefaultValueSql("''")
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.RadarImage).HasDefaultValue("");
-            entity.Property(e => e.Remark)
-                .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(50)");
+            entity.Property(e => e.Remark).HasDefaultValue("");
             entity.Property(e => e.Simage)
                 .HasDefaultValue("")
                 .HasColumnName("SImage");
@@ -173,7 +170,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -192,7 +189,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -210,7 +207,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -232,7 +229,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -249,7 +246,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -270,7 +267,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -287,7 +284,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -309,7 +306,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -332,7 +329,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -354,7 +351,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -372,7 +369,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -392,7 +389,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -410,7 +407,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
@@ -430,7 +427,7 @@ public partial class AfasContext : DbContext
 
             entity.Property(e => e.AnswerId)
                 .HasDefaultValue("")
-                .HasColumnType("NVARCHAR(25)");
+                .HasColumnType("NVARCHAR(11)");
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
