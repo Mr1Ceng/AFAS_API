@@ -148,3 +148,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*s
+
+
+
+/AFAS.Static/PDFs/*
