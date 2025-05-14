@@ -405,6 +405,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -481,6 +482,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -565,6 +567,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -647,6 +650,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -715,6 +719,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -785,6 +790,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -867,6 +873,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -945,6 +952,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         QuestionnaireId = question.QuestionnaireId,
                         QuestionnaireDate = DateHelper.GetDayString(),
                         UserId = userId,
+                        Status = DataStatus.DRAFT.ToString(),
                     };
                     context.BAnswers.Add(answerBasic);
                 }
@@ -1021,6 +1029,8 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 QuestionnaireDate,
                 Answer.UserId,
                 IFNULL(Student.UserName,'') AS UserName,
+                IFNULL(Student.Gender,'') AS Gender,
+                IFNULL(Student.Age,0) AS Age,
                 Answer.TeacherId,
                 IFNULL(Teacher.UserName,'') AS TeacherName,
                 Answer.Status,
@@ -1047,7 +1057,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         if (query.Data != null)
         {
             #region 构建查询过滤条件
-
+            //测评日期
             var startDay = GetString.FromObject(query.Data.StartDay);
             if (startDay != "")
             {
@@ -1059,6 +1069,14 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 strsql += " AND QuestionnaireDate <= @EndDay";
                 paras.Add(new Parameter("EndDay", endDay));
+            }
+
+            //测评状态
+            var status = GetString.FromObject(query.Data.Status);
+            if (status != "")
+            {
+                strsql += " AND Answer.Status = @Status";
+                paras.Add(new Parameter("Status", status));
             }
 
             //综合查询
@@ -1077,7 +1095,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
         if (!userIdentity.IsStaff)
         {
-            strsql += " AND Answer.UserId <= @UserId";
+            strsql += " AND Answer.UserId = @UserId";
             paras.Add(new Parameter("UserId", userIdentity.UserId));
         }
         var sortors = new List<KeySorterValue>();
@@ -1129,7 +1147,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 answerBasic.UserId = GetString.FromObject(data.UserId, 32);
                 answerBasic.QuestionnaireDate = GetString.FromObject(data.QuestionnaireDate, 10);
                 answerBasic.TeacherId = GetString.FromObject(data.TeacherId, 32);
-                answerBasic.Status = GetString.FromObject(data.Status, 10);
+                answerBasic.Status = DataStatus.ACTIVE.ToString();
                 answerBasic.RadarImage = GetString.FromObject(data.RadarImage);
                 answerBasic.Simage = GetString.FromObject(data.SImage);
                 answerBasic.Sresult = GetString.FromObject(data.SResult, 500);
@@ -1137,7 +1155,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 answerBasic.Tresult = GetString.FromObject(data.TResult, 500);
                 answerBasic.Weak = GetString.FromObject(data.Weak, 50);
                 answerBasic.Advantage = GetString.FromObject(data.Advantage, 50);
-                answerBasic.Remark = GetString.FromObject(data.Remark, 50);
+                answerBasic.Remark = GetString.FromObject(data.Remark);
                 answerBasic.SuggestedCourse = GetString.FromObject(data.SuggestedCourse, 50);
                 answerBasic.LevelCode = GetString.FromObject(data.LevelCode, 50);
                 context.BAnswers.Update(answerBasic);

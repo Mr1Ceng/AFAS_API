@@ -40,7 +40,11 @@ app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "../AFAS.Static/")),
-    RequestPath = "/Static" // 自定义访问路径前缀
+    RequestPath = "/Static", // 自定义访问路径前缀
+    OnPrepareResponse = context =>
+    {
+        context.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+    }
 });
 
 app.UseCors(SystemConfig.SystemId); //跨域

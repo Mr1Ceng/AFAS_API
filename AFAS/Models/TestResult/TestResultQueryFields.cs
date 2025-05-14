@@ -11,6 +11,11 @@
         public string QueryText { get; set; } = "";
 
         /// <summary> 
+        /// 状态 
+        /// </summary>
+        public string Status { get; set; } = "";
+
+        /// <summary> 
         /// 开始日期 
         /// </summary>
         public string StartDay { get; set; } = "";

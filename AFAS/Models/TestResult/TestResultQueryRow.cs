@@ -37,6 +37,16 @@
         /// </summary>
         public string UserName { get; set; } = "";
 
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string Gender { get; set; } = "";
+
+        /// <summary>
+        /// 年龄
+        /// </summary>
+        public int Age { get; set; } = 0;
+
         /// <summary> 
         /// 测评日期 
         /// </summary>
