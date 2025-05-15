@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mr1Ceng.Util.Extensions", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mr1Ceng.Util.Swagger", "Mr1Ceng.Util.Swagger\Mr1Ceng.Util.Swagger.csproj", "{1FE9E45C-859C-4533-8250-B90EB0954BE1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mr1Ceng.Util.Excel", "Mr1Ceng.Util.Excel\Mr1Ceng.Util.Excel.csproj", "{279E6FCB-62E5-43F3-A494-8F44152B4C4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{1FE9E45C-859C-4533-8250-B90EB0954BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FE9E45C-859C-4533-8250-B90EB0954BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FE9E45C-859C-4533-8250-B90EB0954BE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{279E6FCB-62E5-43F3-A494-8F44152B4C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{279E6FCB-62E5-43F3-A494-8F44152B4C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{279E6FCB-62E5-43F3-A494-8F44152B4C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{279E6FCB-62E5-43F3-A494-8F44152B4C4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

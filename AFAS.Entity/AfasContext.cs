@@ -95,6 +95,10 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<LogUserLogin> LogUserLogins { get; set; }
 
+    public virtual DbSet<RAnswerImport> RAnswerImports { get; set; }
+
+    public virtual DbSet<RAnswerImportDetail> RAnswerImportDetails { get; set; }
+
     public virtual DbSet<SPara> SParas { get; set; }
 
     public virtual DbSet<SService> SServices { get; set; }
@@ -104,6 +108,7 @@ public partial class AfasContext : DbContext
     public virtual DbSet<STerminal> STerminals { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlite("Data Source=../AFAS.Database/AFAS.db;Cache=Shared;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -127,7 +132,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.QuestionnaireDate)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.RadarImage).HasDefaultValue("");
             entity.Property(e => e.Remark).HasDefaultValue("");
@@ -1042,6 +1047,39 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.WindowHeight).HasColumnType("INT");
             entity.Property(e => e.WindowWidth).HasColumnType("INT");
+        });
+
+        modelBuilder.Entity<RAnswerImport>(entity =>
+        {
+            entity.HasKey(e => e.ImportId);
+
+            entity.ToTable("r_Answer_Import");
+
+            entity.Property(e => e.ImportId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.ImportResult).HasDefaultValue("");
+            entity.Property(e => e.ImportStamp)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(20)");
+            entity.Property(e => e.IsSuccess).HasColumnType("BIT");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(32)");
+        });
+
+        modelBuilder.Entity<RAnswerImportDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.ImportId, e.AnswerId });
+
+            entity.ToTable("r_Answer_Import_Detail");
+
+            entity.Property(e => e.ImportId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(25)");
+            entity.Property(e => e.AnswerId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(11)");
         });
 
         modelBuilder.Entity<SPara>(entity =>

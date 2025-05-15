@@ -1,4 +1,5 @@
 ﻿using AFAS.Entity;
+using AFAS.Infrastructure.Models;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Models.User;
@@ -205,6 +206,20 @@ public interface IQuestionnaireService
     /// <param name="data"></param>
     /// <returns></returns>
     Task<string> SaveTestResultAsync(AnswerForm data);
+
+    /// <summary>
+    /// 测评结果导入查询
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    DataList<TestResultImportQueryRow> TestResultImportGridQuery(TableQueryModel<TestResultImportQueryFields> query);
+
+    /// <summary>
+    /// 导入测评结果
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    DataImportResult TestResultImport(Stream stream);
 
     /// <summary>
     /// 删除测评结果

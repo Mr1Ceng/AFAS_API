@@ -91,10 +91,10 @@ public class UserIdentityHelper
     /// <param name="role"></param>
     /// <param name="maxCount"></param>
     /// <returns></returns>
-    public static IList<UserIdentity> GetUserListByRoleId(string role, int maxCount = 50)
+    public static IList<UserIdentity> GetUserListByRoleId(string role, int maxCount = 0)
     {
         var strsql = $@"
-            SELECT TOP {maxCount}
+            SELECT 
                 UserId,
                 Account AS UserAccount,
                 UserName,
@@ -106,6 +106,7 @@ public class UserIdentityHelper
                 iif(Role='TEACHER',1,0 ) AS IsStaff
             FROM b_User
             WHERE Role = @Role
+            {(maxCount == 0 ? "" : $" LIMIT {maxCount.ToString()}")}
             ORDER BY b_User.UserName
         ";
         var dt = new DataTable();

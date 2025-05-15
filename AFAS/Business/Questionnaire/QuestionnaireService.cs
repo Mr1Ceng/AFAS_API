@@ -1,19 +1,20 @@
 ﻿using AFAS.Authorization;
 using AFAS.Authorization.AuthInfos;
 using AFAS.Authorization.Enums;
-using AFAS.Authorization.Models;
 using AFAS.Entity;
 using AFAS.Enums;
 using AFAS.Infrastructure;
+using AFAS.Infrastructure.Models;
 using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
-using AFAS.Models.User;
-using DocumentFormat.OpenXml.InkML;
+using AFAS.Service;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
+using Mr1Ceng.Util.Excel;
+using Newtonsoft.Json;
 using System.Data;
 using System.Reflection;
 
@@ -40,14 +41,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
     /// </summary>
     /// <returns></returns>
     public async Task<List<BQuestionnaire>> GetQuestionnaireListAsync()
-    {
-        var questionnaries = new List<BQuestionnaire>();
-        using (var context = new AfasContext())
-        {
-            questionnaries = await context.BQuestionnaires.ToListAsync();
-        }
-        return questionnaries;
-    }
+     => await QuestionnaireHelper.GetQuestionnaireListAsync();
 
     /// <summary>
     /// 获取题目模型
@@ -1088,6 +1082,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         => current + $@" AND (QuestionnaireName LIKE '%{text}%'
                     OR IFNULL(Student.UserName,'') LIKE '%{text}%'
                     OR IFNULL(Teacher.UserName,'') LIKE '%{text}%'
+                    OR IFNULL(AnswerId,'') LIKE '%{text}%'
                 )");
             }
 
@@ -1166,7 +1161,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
             #region 导出报告文件
 
-            string templatePath = "../AFAS.Static/Words/ELA学习能力测评报告模板.docx"; // 模板文件路径
+            string templatePath = "../AFAS.Static/Template/ELA学习能力测评报告模板.docx"; // 模板文件路径
             string outputPath = $"../AFAS.Static/PDFs/{answerBasic.AnswerId}/";
             if (!Directory.Exists(outputPath))
             {
@@ -1357,6 +1352,764 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             return "";
         }
         return answerBasic.AnswerId;
+    }
+
+    /// <summary>
+    /// 测评结果导入查询
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    public DataList<TestResultImportQueryRow> TestResultImportGridQuery(TableQueryModel<TestResultImportQueryFields> query)
+    {
+        var paras = new List<Parameter>();
+        var strsql = $@"
+            SELECT
+                Import.ImportId,
+                ImportResult,
+                ImportStamp,
+                IsSuccess,
+                IFNULL(ImportCount,'') AS ImportCount,
+                ImportUser.UserId,
+                IFNULL(ImportUser.UserName,'') AS ImportUserName
+            FROM r_Answer_Import Import
+            LEFT JOIN (
+                SELECT ImportId, COUNT(AnswerId) AS ImportCount FROM r_Answer_Import_Detail
+                GROUP BY ImportId
+            ) ImportDetail ON ImportDetail.ImportId = Import.ImportId
+            LEFT JOIN b_User ImportUser ON ImportUser.UserId = Import.UserId
+            WHERE 1=1
+        ";
+        if (query.Data != null)
+        {
+            #region 构建查询过滤条件
+            //测评日期
+            var startDay = GetString.FromObject(query.Data.StartDay);
+            if (startDay != "")
+            {
+                strsql += " AND ImportStamp >= @StartDay ";
+                paras.Add(new Parameter("StartDay", startDay));
+            }
+            var endDay = GetString.FromObject(query.Data.EndDay);
+            if (endDay != "")
+            {
+                strsql += " AND ImportStamp <= @EndDay";
+                paras.Add(new Parameter("EndDay", endDay));
+            }
+
+            //导入结果状态
+            var status = GetInt.FromObject(query.Data.Status);
+            if (status != -1)
+            {
+                strsql += $" AND IsSuccess = {status.ToString()}";
+            }
+
+            //综合查询
+            var queryText = GetString.FromObject(query.Data?.QueryText, 50);
+            if (queryText != "")
+            {
+                strsql = GetString.SplitList(query.Data?.QueryText)
+                    .Aggregate(strsql, (current, text)
+                        => current + $@" AND (Import.ImportId LIKE '%{text}%'
+                    OR IFNULL(ImportUser.UserName,'') LIKE '%{text}%'
+                )");
+            }
+
+            #endregion
+        }
+        var sortors = new List<KeySorterValue>();
+        if (query.Sorter == null)
+        {
+            sortors.Add(new KeySorterValue());
+        }
+        else
+        {
+            sortors.Add(query.Sorter);
+        }
+        var resultData = new DataList<TestResultImportQueryRow>();
+        using (var context = new AfasContext())
+        {
+            if (query.Size == 0)
+            {
+                resultData = new EFCoreExtentions(context).ExecuteSortedQuery<TestResultImportQueryRow>(strsql, sortors, paras);
+            }
+            else
+            {
+                resultData = new EFCoreExtentions(context).ExecutePagedQuery<TestResultImportQueryRow>(strsql, sortors, query.Index, query.Size, paras);
+            }
+        }
+
+        return resultData;
+    }
+
+    /// <summary>
+    /// 导入测评结果
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public DataImportResult TestResultImport(Stream stream)
+    {
+        var result = new DataImportResult();
+        try
+        {
+            var dt = ExcelHelper.GetDataTableFromExcelStream(stream);
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "导入数据为空");
+            }
+
+            var valid = CheckImportDataValid(dt, out var errorMessages, out var testResultList, out var addStudentlist);
+
+            if (valid)
+            {
+                #region 执行导入操作
+                var answerList = new List<BAnswer>();
+                var answerS1List = new List<BAnswerS1>();
+                var answerS2List = new List<BAnswerS2>();
+                var answerS3List = new List<BAnswerS3>();
+                var answerS4List = new List<BAnswerS4>();
+                var answerS5List = new List<BAnswerS5>();
+                var answerT1List = new List<BAnswerT1>();
+                var answerT2List = new List<BAnswerT2>();
+                var answerT3List = new List<BAnswerT3>();
+
+                foreach (var item in testResultList)
+                {
+                    answerList.Add(new BAnswer()
+                    {
+                        AnswerId = item.AnswerId,
+                        QuestionnaireDate = item.QuestionnaireDate,
+                        QuestionnaireId = item.QuestionnaireId,
+                        UserId = item.UserId,
+                        LevelCode = item.LevelCode,
+                        SuggestedCourse = item.SuggestedCourse,
+                        Status = item.Status,
+                        TeacherId = item.TeacherId
+                    });
+                    var s1 = item.answerList.Find(x => x.QuestionCode == "S1"); if (s1 != null) answerS1List.Add(new BAnswerS1() { AnswerId = item.AnswerId, StandardScore = s1.StandardScore, Remark = s1.Remark });
+                    var s2 = item.answerList.Find(x => x.QuestionCode == "S2"); if (s2 != null) answerS2List.Add(new BAnswerS2() { AnswerId = item.AnswerId, StandardScore = s2.StandardScore, Remark = s2.Remark });
+                    var s3 = item.answerList.Find(x => x.QuestionCode == "S3"); if (s3 != null) answerS3List.Add(new BAnswerS3() { AnswerId = item.AnswerId, StandardScore = s3.StandardScore, Remark = s3.Remark });
+                    var s4 = item.answerList.Find(x => x.QuestionCode == "S4"); if (s4 != null) answerS4List.Add(new BAnswerS4() { AnswerId = item.AnswerId, StandardScore = s4.StandardScore, Remark = s4.Remark });
+                    var s5 = item.answerList.Find(x => x.QuestionCode == "S5"); if (s5 != null) answerS5List.Add(new BAnswerS5() { AnswerId = item.AnswerId, StandardScore = s5.StandardScore, Remark = s5.Remark });
+                    var t1 = item.answerList.Find(x => x.QuestionCode == "T1"); if (t1 != null) answerT1List.Add(new BAnswerT1() { AnswerId = item.AnswerId, StandardScore = t1.StandardScore, Remark = t1.Remark });
+                    var t2 = item.answerList.Find(x => x.QuestionCode == "T2"); if (t2 != null) answerT2List.Add(new BAnswerT2() { AnswerId = item.AnswerId, StandardScore = t2.StandardScore, Remark = t2.Remark });
+                    var t3 = item.answerList.Find(x => x.QuestionCode == "T3"); if (t3 != null) answerT3List.Add(new BAnswerT3() { AnswerId = item.AnswerId, StandardScore = t3.StandardScore, Remark = t3.Remark });
+                }
+                using(var context = new AfasContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            context.BAnswers.AddRange(answerList);
+                            context.BAnswerS1s.AddRange(answerS1List);
+                            context.BAnswerS2s.AddRange(answerS2List);
+                            context.BAnswerS3s.AddRange(answerS3List);
+                            context.BAnswerS4s.AddRange(answerS4List);
+                            context.BAnswerS5s.AddRange(answerS5List);
+                            context.BAnswerT1s.AddRange(answerT1List);
+                            context.BAnswerT2s.AddRange(answerT2List);
+                            context.BAnswerT3s.AddRange(answerT3List);
+                            context.BUsers.AddRange(addStudentlist);
+                            context.SaveChanges(); // 保存数据
+
+                            transaction.Commit(); // 提交事务
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // 发生异常时回滚事务
+                        }
+                    }
+                }
+                
+                #endregion
+
+                result.Success = true;
+                result.SuccessCount = testResultList.Count;
+                result.Data = testResultList;
+
+                var answerImport = new RAnswerImport()
+                {
+                    ImportId = NewCode.Ul25Key,
+                    ImportStamp = DateHelper.GetDateString(),
+                    ImportResult = JsonConvert.SerializeObject(result),
+                    IsSuccess = result.Success,
+                    UserId = userIdentity.UserId,
+                };
+                var answerImportDetail = testResultList.Select(x => new RAnswerImportDetail() 
+                { 
+                    ImportId = answerImport.ImportId, 
+                    AnswerId = x.AnswerId 
+                });
+
+                using (var context = new AfasContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            context.RAnswerImports.AddRange(answerImport);
+                            context.RAnswerImportDetails.AddRange(answerImportDetail);
+                            context.SaveChanges(); // 保存数据
+
+                            transaction.Commit(); // 提交事务
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // 发生异常时回滚事务
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                result.Success = false;
+                result.ErrorCount = dt.AsEnumerable().Count(x => !string.IsNullOrWhiteSpace(GetString.FromObject(x["校验备注"])));
+                result.ErrorMessages = errorMessages;
+
+                //导出错误提示
+                var fileName = $"测评结果导入_错误文件_{DateHelper.GetDateStringMark2()}.xlsx";
+                result.OutputUrl = $"Excels/{fileName}";
+
+                var answerImport = new RAnswerImport()
+                {
+                    ImportId = NewCode.Ul25Key,
+                    ImportStamp = DateHelper.GetDateString(),
+                    ImportResult = JsonConvert.SerializeObject(result),
+                    IsSuccess = result.Success,
+                    UserId = userIdentity.UserId,
+                };
+                using (var context = new AfasContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            context.RAnswerImports.AddRange(answerImport);
+                            context.SaveChanges(); // 保存数据
+
+                            transaction.Commit(); // 提交事务
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // 发生异常时回滚事务
+                        }
+                    }
+                }
+            }
+        }
+        catch (BusinessException ex)
+        {
+            result.Success = false;
+            result.SuccessCount = 0;
+            result.ErrorMessages.Add(ex.Message);
+        }
+        finally
+        {
+            LogHelper.Debug($"导入测评结果{(result.Success ? "成功" : "失败")}: ", result);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 检查导入数据是否有效
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <param name="errorMessages"></param>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    private static bool CheckImportDataValid(DataTable dt,
+        out List<string> errorMessages,
+        out List<AnswerModel> list,
+        out List<BUser> addStudentlist)
+    {
+        var success = true;
+        errorMessages = [];
+        list = new List<AnswerModel>();
+        addStudentlist = new List<BUser>();
+
+        #region 检查导入模版格式
+
+        if (dt.Columns[0].ColumnName != "测评版本")
+        {
+            throw new Exception("导入数据第一列必须为测评版本");
+        }
+
+        if (!dt.Columns.Contains("姓名"))
+        {
+            throw new Exception("导入数据必须包含姓名列");
+        }
+
+        if (!dt.Columns.Contains("评测标准"))
+        {
+            throw new Exception("导入数据必须包含评测标准列");
+        }
+
+        if (!dt.Columns.Contains("测评日期"))
+        {
+            throw new Exception("导入数据必须包含测评日期列");
+        }
+
+        if (!dt.Columns.Contains("性别"))
+        {
+            throw new Exception("导入数据必须包含性别列");
+        }
+
+        if (!dt.Columns.Contains("年龄"))
+        {
+            throw new Exception("导入数据必须包含年龄列");
+        }
+
+        if (!dt.Columns.Contains("视觉广度"))
+        {
+            throw new Exception("导入数据必须包含视觉广度列");
+        }
+
+        if (!dt.Columns.Contains("视觉广度_备注"))
+        {
+            throw new Exception("导入数据必须包含视觉广度_备注列");
+        }
+
+        if (!dt.Columns.Contains("视觉稳定性"))
+        {
+            throw new Exception("导入数据必须包含视觉稳定性列");
+        }
+
+        if (!dt.Columns.Contains("视觉稳定性_备注"))
+        {
+            throw new Exception("导入数据必须包视觉稳定性_备注列");
+        }
+
+        if (!dt.Columns.Contains("视觉转移"))
+        {
+            throw new Exception("导入数据必须包含视觉转移列");
+        }
+
+        if (!dt.Columns.Contains("视觉转移_备注"))
+        {
+            throw new Exception("导入数据必须包含视觉转移_备注列");
+        }
+
+        if (!dt.Columns.Contains("手眼协调"))
+        {
+            throw new Exception("导入数据必须包含手眼协调列");
+        }
+
+        if (!dt.Columns.Contains("手眼协调_备注"))
+        {
+            throw new Exception("导入数据必须包含手眼协调_备注列");
+        }
+
+        if (!dt.Columns.Contains("视觉工作记忆"))
+        {
+            throw new Exception("导入数据必须包含视觉工作记忆列");
+        }
+
+        if (!dt.Columns.Contains("视觉工作记忆_备注"))
+        {
+            throw new Exception("导入数据必须包含视觉工作记忆_备注列");
+        }
+
+        if (!dt.Columns.Contains("听觉集中"))
+        {
+            throw new Exception("导入数据必须包含听觉集中列");
+        }
+
+        if (!dt.Columns.Contains("听觉集中_备注"))
+        {
+            throw new Exception("导入数据必须包含听觉集中_备注列");
+        }
+
+        if (!dt.Columns.Contains("听觉分辨"))
+        {
+            throw new Exception("导入数据必须包含听觉分辨列");
+        }
+
+        if (!dt.Columns.Contains("听觉分辨_备注"))
+        {
+            throw new Exception("导入数据必须包含听觉分辨_备注列");
+        }
+
+        if (!dt.Columns.Contains("听觉记忆"))
+        {
+            throw new Exception("导入数据必须包含听觉记忆列");
+        }
+
+        if (!dt.Columns.Contains("听觉记忆_备注"))
+        {
+            throw new Exception("导入数据必须包含听觉记忆_备注列");
+        }
+
+        if (!dt.Columns.Contains("建议课程"))
+        {
+            throw new Exception("导入数据必须包含建议课程列");
+        }
+
+        if (!dt.Columns.Contains("测评老师"))
+        {
+            throw new Exception("导入数据必须包含测评老师列");
+        }
+
+        if (dt.Columns.Contains("校验备注"))
+        {
+            dt.Columns.Remove("校验备注");
+        }
+        dt.Columns.Add("校验备注");
+
+        #endregion
+
+        #region 校验数据
+
+        var studentList = UserIdentityHelper.GetUserListByRoleId(RoleEnum.STUDENT.ToString()).ToList();
+        var teacherList = UserIdentityHelper.GetUserListByRoleId(RoleEnum.TEACHER.ToString()).ToList(); 
+        var evaluationStandardList = EvaluationStandardHelper.GetEvaluationStandardListAsync().GetAwaiter().GetResult();
+        var suggestedCourseList = DictionaryHelper.GetDictionaryList("SuggestedCourse").ToList();
+        var questionnaireList = QuestionnaireHelper.GetQuestionnaireListAsync().GetAwaiter().GetResult();
+
+        #endregion
+
+        #region 导入数据赋值
+        var dayStr = DateHelper.GetDayString().Replace("-", "");
+        var currentAnswerIndex = GetInt.FromObject(NewKey.NewAnswerId(dayStr).Replace(dayStr, ""));
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            DataRow dr = dt.Rows[i];   
+            var checkEmptyRow = true;
+            foreach (DataColumn column in dt.Columns)
+            {
+                if (GetString.FromObject(dr[column.ColumnName]) != "")
+                {
+                    checkEmptyRow = false;
+                    break;
+                }
+            }
+            if (checkEmptyRow)
+                continue;
+
+            var tips = new List<string>();
+
+            var item = new AnswerModel
+            {
+                AnswerId = dayStr + currentAnswerIndex + i,
+                Status = DataStatus.DRAFT.ToString() 
+            };
+
+            var versionName = GetString.FromObject(dr["测评版本"]);
+            var questionnaire = questionnaireList.Find(x => x.VersionName == versionName);
+            if (questionnaire == null)
+            {
+                tips.Add("测评版本不存在");
+            }
+            else 
+            {
+                item.QuestionnaireId = questionnaire.QuestionnaireId;
+            }
+
+            var userName = GetString.FromObject(dr["姓名"]);
+            var student = addStudentlist.Find(x => x.UserName == userName);
+            if (student == null)
+            {
+                var gerder = GetString.FromObject(dr["性别"]);
+                var age = GetInt.FromObject(dr["年龄"]);
+                //按姓名和年龄控制唯一测评对象
+                student = addStudentlist.Find(x => x.UserName == userName && x.Age == age);
+                //不存在时新增
+                if (student == null)
+                {
+                    student = new BUser()
+                    {
+                        UserId = NewCode.KeyId,
+                        UserName = userName,
+                        Gender = gerder == "男" ? GerderEnum.MALE.ToString() : GerderEnum.FEMALE.ToString(),
+                        Age = age,
+                        Account = NewKey.NewAccount(userName),
+                        NickName = userName,
+                        Password = PasswordHelper.Encrypt(PinYinHelper.GetFirstPinYin(userName) + "123"),
+                        Role = RoleEnum.STUDENT.ToString(),
+                    };
+                    addStudentlist.Add(student);
+                }
+                item.UserId = student.UserId;
+            }
+            else
+            {
+                item.UserId = student.UserId;
+            }
+
+            var levelName = GetString.FromObject(dr["评测标准"]);
+            var evaluationStandard = evaluationStandardList.Find(x => x.LevelName == levelName);
+            if (evaluationStandard == null)
+            {
+                tips.Add("评测标准不存在");
+            }
+            else
+            {
+                item.LevelCode = evaluationStandard.LevelCode;
+            }
+
+            var questionnaireDate = GetString.FromObject(dr["测评日期"]);
+            questionnaireDate = DateHelper.GetDayString(DateHelper.GetDateTime(questionnaireDate, DateTime.MinValue));
+            if (questionnaireDate == DateHelper.GetDayString(DateTime.MinValue))
+            {
+                tips.Add("测评日期格式不正确");
+            }
+            else
+            {
+                item.QuestionnaireDate = questionnaireDate;
+            }
+
+            var suggestedCourseName = GetString.FromObject(dr["建议课程"]);
+            var suggestedCourse = suggestedCourseList.Find(x => x.ItemName == suggestedCourseName);
+            if (suggestedCourse == null)
+            {
+                tips.Add("建议课程不存在");
+            }
+            else
+            {
+                item.SuggestedCourse = suggestedCourse.ItemId;
+            }
+
+            var teacherName = GetString.FromObject(dr["测评老师"]);
+            var teacher = teacherList.Find(x => x.UserName == teacherName);
+            if (teacher == null)
+            {
+                tips.Add("测评老师不存在");
+            }
+            else
+            {
+                item.TeacherId = teacher.UserId;
+            }
+
+            var s1 = GetInt.FromObject(dr["视觉广度"], -1);
+            if (s1 == -1)
+            {
+                tips.Add("视觉广度格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["视觉广度_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "S1",
+                    Remark = remark,
+                    StandardScore = s1
+                });
+            }
+
+            var s2 = GetInt.FromObject(dr["视觉稳定性"], -1);
+            if (s2 == -1)
+            {
+                tips.Add("视觉稳定性格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["视觉稳定性_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "S2",
+                    Remark = remark,
+                    StandardScore = s2
+                });
+            }
+
+            var s3 = GetInt.FromObject(dr["视觉转移"], -1);
+            if (s3 == -1)
+            {
+                tips.Add("视觉转移格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["视觉转移_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "S3",
+                    Remark = remark,
+                    StandardScore = s3
+                });
+            }
+
+            var s4 = GetInt.FromObject(dr["手眼协调"], -1);
+            if (s4 == -1)
+            {
+                tips.Add("手眼协调格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["手眼协调_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "S4",
+                    Remark = remark,
+                    StandardScore = s4
+                });
+            }
+
+            var s5 = GetInt.FromObject(dr["视觉工作记忆"], -1);
+            if (s5 == -1)
+            {
+                tips.Add("视觉工作记忆格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["视觉工作记忆_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "S5",
+                    Remark = remark,
+                    StandardScore = s5
+                });
+            }
+
+            var t1 = GetInt.FromObject(dr["听觉集中"], -1);
+            if (t1 == -1)
+            {
+                tips.Add("听觉集中格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["听觉集中_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "T1",
+                    Remark = remark,
+                    StandardScore = t1
+                });
+            }
+
+            var t2 = GetInt.FromObject(dr["听觉分辨"], -1);
+            if (t2 == -1)
+            {
+                tips.Add("听觉分辨格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["听觉分辨_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "T2",
+                    Remark = remark,
+                    StandardScore = t2
+                });
+            }
+
+            var t3 = GetInt.FromObject(dr["听觉记忆"], -1);
+            if (t3 == -1)
+            {
+                tips.Add("听觉记忆格式不正确");
+            }
+            else
+            {
+                var remark = GetString.FromObject(dr["听觉记忆_备注"]);
+                item.answerList.Add(new AnswerItem()
+                {
+                    QuestionCode = "T3",
+                    Remark = remark,
+                    StandardScore = t3
+                });
+            }
+
+
+            if (tips.Count == 0)
+            {
+                
+            }
+            else
+            {
+                success = false;
+                dr["校验备注"] = string.Join("、", tips);
+            }
+        }
+
+        #endregion
+
+        #region 提炼错误信息
+
+        var errorRows = dt.AsEnumerable()
+            .Where(dr => !string.IsNullOrWhiteSpace(GetString.FromObject(dr["校验备注"])))
+            .Select(dr => GetString.FromObject(dr["校验备注"])).ToList();
+
+        var errorCount = errorRows.Count(x => x.Contains("测评版本不存在"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"测评版本不存在:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("评测标准不存在"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"评测标准不存在:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("测评日期格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"测评日期格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("建议课程不存在"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"建议课程不存在:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("测评老师不存在"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"测评老师不存在:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("视觉广度格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"视觉广度格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("视觉稳定性格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"视觉稳定性格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("视觉转移格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"视觉转移格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("手眼协调格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"手眼协调格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("视觉工作记忆格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"视觉工作记忆格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("听觉集中格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"听觉集中格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("听觉分辨格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"听觉分辨格式不正确:{errorCount}行");
+        }
+
+        errorCount = errorRows.Count(x => x.Contains("听觉记忆格式不正确"));
+        if (errorCount > 0)
+        {
+            errorMessages.Add($"听觉记忆格式不正确:{errorCount}行");
+        }
+
+        #endregion
+
+        return success;
     }
 
     /// <summary>

@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AFAS.Authorization\AFAS.Authorization.csproj" />
     <ProjectReference Include="..\AFAS.Entity\AFAS.Entity.csproj" />
+    <ProjectReference Include="..\Mr1Ceng.Util.Excel\Mr1Ceng.Util.Excel.csproj" />
     <ProjectReference Include="..\Mr1Ceng.Util.Swagger\Mr1Ceng.Util.Swagger.csproj" />
     <ProjectReference Include="..\Mr1Ceng.Util\Mr1Ceng.Util.csproj" />
   </ItemGroup>

@@ -15,7 +15,7 @@ public partial class BAnswerS2
 
     public int ErrorNumber { get; set; } = 0;
 
-    public decimal ErrorRate { get; set; }
+    public decimal ErrorRate { get; set; } = 0;
 
     public int StandardScore { get; set; } = 0;
 
