@@ -4,9 +4,9 @@ using AFAS.Entity;
 using AFAS.Enums.Account;
 using AFAS.Infrastructure;
 using AFAS.Models.Account;
-using Microsoft.AspNetCore.Identity;
 using Mr1Ceng.Util;
 using Newtonsoft.Json;
+using System.Management;
 using System.Reflection;
 
 namespace AFAS.Business.Account;
@@ -33,6 +33,24 @@ public class UserLoginService : TerminalAuthorization, IUserLoginService
     /// <returns></returns>
     public async Task<WebAppIdentityModel> WebAppLoginByPasswordAsync(string account, string password)
     {
+        //var serialNumber = new List<string>();
+
+        //ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT ProcessorId FROM Win32_Processor");
+        //foreach (ManagementObject obj in searcher.Get())
+        //{
+        //    serialNumber.Add(GetString.FromObject(obj["ProcessorId"]));
+        //}
+        //ManagementObjectSearcher searcher1 = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BaseBoard");
+        //foreach (ManagementObject obj in searcher1.Get())
+        //{
+        //    serialNumber.Add(GetString.FromObject(obj["SerialNumber"]));
+        //}
+        //ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_DiskDrive");
+        //foreach (ManagementObject obj in searcher2.Get())
+        //{
+        //    serialNumber.Add(GetString.FromObject(obj["SerialNumber"]));
+        //}
+
         #region 数据检查
 
         var data = new
