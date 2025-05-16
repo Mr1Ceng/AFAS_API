@@ -6,6 +6,7 @@ using AFAS.Infrastructure.Models;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
 using System.Reflection;
@@ -281,7 +282,7 @@ namespace AFAS.Controllers
         /// <param name="month"></param>
         /// <returns></returns>
         [HttpPost]
-        public ResponseModel<DataImportResult> SalesDataImport()
+        public ResponseModel<DataImportResult> TestResultImport()
         {
             if (Request.Form.Files.Count == 0)
             {
