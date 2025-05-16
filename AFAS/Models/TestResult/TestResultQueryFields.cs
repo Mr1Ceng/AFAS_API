@@ -24,5 +24,10 @@
         /// 结束日期 
         /// </summary>
         public string EndDay { get; set; } = "";
+
+        /// <summary> 
+        /// 导入编码 
+        /// </summary>
+        public string ImportId { get; set; } = "";
     }
 }

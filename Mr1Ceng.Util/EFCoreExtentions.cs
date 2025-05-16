@@ -55,7 +55,10 @@ namespace Mr1Ceng.Util
 
             // 执行查询并加载结果到DataTable
             using var reader = command.ExecuteReader();
-            var dataTable = new DataTable();
+            DataSet dataSet = new DataSet();
+            DataTable dataTable = new DataTable();
+            dataSet.EnforceConstraints = false; // 关闭约束检查
+            dataSet.Tables.Add(dataTable);
             dataTable.Load(reader);
 
             return dataTable;
@@ -154,7 +157,10 @@ namespace Mr1Ceng.Util
             }
 
             using var reader = command.ExecuteReader();
-            var dataTable = new DataTable();
+            DataSet dataSet = new DataSet();
+            DataTable dataTable = new DataTable();
+            dataSet.EnforceConstraints = false; // 关闭约束检查
+            dataSet.Tables.Add(dataTable);
             dataTable.Load(reader);
 
             return dataTable;
@@ -262,8 +268,12 @@ namespace Mr1Ceng.Util
             }
 
             using var reader = command.ExecuteReader();
-            var dataTable = new DataTable();
+            DataSet dataSet = new DataSet();
+            DataTable dataTable = new DataTable();
+            dataSet.EnforceConstraints = false; // 关闭约束检查
+            dataSet.Tables.Add(dataTable);
             dataTable.Load(reader);
+
 
             return new DataList<T>()
             {
@@ -354,7 +364,10 @@ namespace Mr1Ceng.Util
             }
 
             using var reader = command.ExecuteReader();
-            var dataTable = new DataTable();
+            DataSet dataSet = new DataSet();
+            DataTable dataTable = new DataTable();
+            dataSet.EnforceConstraints = false; // 关闭约束检查
+            dataSet.Tables.Add(dataTable);
             dataTable.Load(reader);
 
             return dataTable;
@@ -439,7 +452,10 @@ namespace Mr1Ceng.Util
             }
 
             using var reader = command.ExecuteReader();
-            var dataTable = new DataTable();
+            DataSet dataSet = new DataSet();
+            DataTable dataTable = new DataTable();
+            dataSet.EnforceConstraints = false; // 关闭约束检查
+            dataSet.Tables.Add(dataTable);
             dataTable.Load(reader);
 
             return new DataList<T>()

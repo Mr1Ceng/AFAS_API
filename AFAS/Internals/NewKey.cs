@@ -75,7 +75,7 @@ public class NewKey
         var answerId = date.Replace("-", "");
         using (var context = new AfasContext())
         {
-            var maxAnswer = context.BAnswers.MaxBy(b => b.AnswerId.StartsWith(answerId));
+            var maxAnswer = context.BAnswers.Where(x=> x.AnswerId.StartsWith(answerId)).ToList().MaxBy(b => b.AnswerId);
             if (maxAnswer != null)
             {
                 answerId += (GetInt.FromObject(maxAnswer.AnswerId.Replace(answerId, "")) + 1).ToString().PadLeft(3, '0');

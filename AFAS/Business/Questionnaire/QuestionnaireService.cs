@@ -1016,7 +1016,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         var paras = new List<Parameter>();
         var strsql = $@"
             SELECT
-                AnswerId,
+                Answer.AnswerId,
                 Answer.QuestionnaireId,
                 QuestionnaireName,
                 VersionName,
@@ -1046,6 +1046,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             LEFT JOIN b_User Teacher ON Answer.TeacherId = Teacher.UserId
             LEFT JOIN b_Evaluation_Standard Standard ON Answer.LevelCode = Standard.LevelCode
             LEFT JOIN b_Dictionary_Item SCourse ON Answer.SuggestedCourse = SCourse.ItemId AND SCourse.DictionaryId = 'SuggestedCourse'
+            LEFT JOIN r_Answer_Import_Detail Import ON Answer.AnswerId = Import.AnswerId
             WHERE 1=1
         ";
         if (query.Data != null)
@@ -1071,6 +1072,14 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 strsql += " AND Answer.Status = @Status";
                 paras.Add(new Parameter("Status", status));
+            }
+
+            //测评状态
+            var importId = GetString.FromObject(query.Data.ImportId);
+            if (importId != "")
+            {
+                strsql += " AND ImportId = @ImportId";
+                paras.Add(new Parameter("ImportId", importId));
             }
 
             //综合查询
@@ -1370,7 +1379,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 IsSuccess,
                 IFNULL(ImportCount,'') AS ImportCount,
                 ImportUser.UserId,
-                IFNULL(ImportUser.UserName,'') AS ImportUserName
+                IFNULL(ImportUser.UserName,'') AS UserName
             FROM r_Answer_Import Import
             LEFT JOIN (
                 SELECT ImportId, COUNT(AnswerId) AS ImportCount FROM r_Answer_Import_Detail
@@ -1641,9 +1650,9 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             throw new Exception("导入数据必须包含姓名列");
         }
 
-        if (!dt.Columns.Contains("评测标准"))
+        if (!dt.Columns.Contains("测评标准"))
         {
-            throw new Exception("导入数据必须包含评测标准列");
+            throw new Exception("导入数据必须包含测评标准列");
         }
 
         if (!dt.Columns.Contains("测评日期"))
@@ -1791,7 +1800,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
             var item = new AnswerModel
             {
-                AnswerId = dayStr + currentAnswerIndex + i,
+                AnswerId = dayStr + (currentAnswerIndex + i).ToString().PadLeft(3, '0'),
                 Status = DataStatus.DRAFT.ToString() 
             };
 
@@ -1807,41 +1816,41 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             }
 
             var userName = GetString.FromObject(dr["姓名"]);
-            var student = addStudentlist.Find(x => x.UserName == userName);
+            var gerder = GetString.FromObject(dr["性别"]) == "男" ? GerderEnum.MALE.ToString() : GerderEnum.FEMALE.ToString();
+            var age = GetInt.FromObject(dr["年龄"]);
+            var student = studentList.Find(x => x.UserName == userName && x.Age == age && x.Gender == gerder);
             if (student == null)
             {
-                var gerder = GetString.FromObject(dr["性别"]);
-                var age = GetInt.FromObject(dr["年龄"]);
-                //按姓名和年龄控制唯一测评对象
-                student = addStudentlist.Find(x => x.UserName == userName && x.Age == age);
+                //按姓名和年龄、性别控制唯一测评对象
+                var addStudent = addStudentlist.Find(x => x.UserName == userName && x.Age == age && x.Gender == gerder);
                 //不存在时新增
-                if (student == null)
+                if (addStudent == null)
                 {
-                    student = new BUser()
+                    addStudent = new BUser()
                     {
                         UserId = NewCode.KeyId,
                         UserName = userName,
-                        Gender = gerder == "男" ? GerderEnum.MALE.ToString() : GerderEnum.FEMALE.ToString(),
+                        Gender = gerder,
                         Age = age,
                         Account = NewKey.NewAccount(userName),
                         NickName = userName,
                         Password = PasswordHelper.Encrypt(PinYinHelper.GetFirstPinYin(userName) + "123"),
                         Role = RoleEnum.STUDENT.ToString(),
                     };
-                    addStudentlist.Add(student);
+                    addStudentlist.Add(addStudent);
                 }
-                item.UserId = student.UserId;
+                item.UserId = addStudent.UserId;
             }
             else
             {
                 item.UserId = student.UserId;
             }
 
-            var levelName = GetString.FromObject(dr["评测标准"]);
+            var levelName = GetString.FromObject(dr["测评标准"]);
             var evaluationStandard = evaluationStandardList.Find(x => x.LevelName == levelName);
             if (evaluationStandard == null)
             {
-                tips.Add("评测标准不存在");
+                tips.Add("测评标准不存在");
             }
             else
             {
@@ -2012,7 +2021,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
             if (tips.Count == 0)
             {
-                
+                list.Add(item);
             }
             else
             {
@@ -2035,10 +2044,10 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             errorMessages.Add($"测评版本不存在:{errorCount}行");
         }
 
-        errorCount = errorRows.Count(x => x.Contains("评测标准不存在"));
+        errorCount = errorRows.Count(x => x.Contains("测评标准不存在"));
         if (errorCount > 0)
         {
-            errorMessages.Add($"评测标准不存在:{errorCount}行");
+            errorMessages.Add($"测评标准不存在:{errorCount}行");
         }
 
         errorCount = errorRows.Count(x => x.Contains("测评日期格式不正确"));

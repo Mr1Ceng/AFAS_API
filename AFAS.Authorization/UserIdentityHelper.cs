@@ -100,14 +100,15 @@ public class UserIdentityHelper
                 UserName,
                 NickName,
                 AvatarUrl,
+                Age,
                 Gender,
                 Mobile,
                 IsDeveloper,
                 iif(Role='TEACHER',1,0 ) AS IsStaff
             FROM b_User
             WHERE Role = @Role
-            {(maxCount == 0 ? "" : $" LIMIT {maxCount.ToString()}")}
             ORDER BY b_User.UserName
+            {(maxCount == 0 ? "" : $" LIMIT {maxCount.ToString()}")}
         ";
         var dt = new DataTable();
         using (var context = new AfasContext())
