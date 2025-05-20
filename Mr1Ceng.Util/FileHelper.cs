@@ -333,7 +333,7 @@ public class FileHelper
         }
         catch (Exception ex)
         {
-            throw MessageException.Get(MethodBase.GetCurrentMethod(), "word转pdf失败");
+            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "word转pdf失败");
         }
         finally
         {

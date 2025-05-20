@@ -1,4 +1,7 @@
-﻿using Mr1Ceng.Util;
+﻿using AFAS.Entity;
+using Mr1Ceng.Util;
+using Newtonsoft.Json;
+using System.Reflection;
 
 namespace AFAS.Infrastructure;
 
@@ -102,21 +105,26 @@ public class LogHelper
     /// <param name="data"></param>
     public static void Debug(string message, string remark, string content, object? data)
     {
-            //try
-            //{
-            //    new log_Debug
-            //    {
-            //        TimeStamp = DateHelper.GetDateString(),
-            //        Message = GetString.FromObject(message, 50),
-            //        Remark = GetString.FromObject(remark, 200),
-            //        Content = GetString.FromObject(content, 500),
-            //        Data = data == null ? "" : JsonConvert.SerializeObject(data)
-            //    }.Insert();
-            //}
-            //catch (Exception ex)
-            //{
-            //    RecordException(new BusinessException(ExceptionType.DatabaseError, "写调试日志失败", ex));
-            //}
+        try
+        {
+            var log =new LogDebug
+            {
+                TimeStamp = DateHelper.GetDateString(),
+                Message = GetString.FromObject(message, 50),
+                Remark = GetString.FromObject(remark, 200),
+                Content = GetString.FromObject(content, 500),
+                Data = data == null ? "" : JsonConvert.SerializeObject(data)
+            };
+            using (var context = new AfasContext()) 
+            {
+                context.Add(log);
+                context.SaveChanges();
+            }
+        }
+        catch (Exception ex)
+        {
+            RecordException(BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(),"写调试日志失败", ex));
+        }
     }
 
     #endregion

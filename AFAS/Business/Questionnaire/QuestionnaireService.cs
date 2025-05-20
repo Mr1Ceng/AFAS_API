@@ -1356,9 +1356,10 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
             #endregion
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return "";
+            LogHelper.Debug("保存测评结果", "", JsonConvert.SerializeObject(data), ex);
+            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "word转pdf失败");
         }
         return answerBasic.AnswerId;
     }
