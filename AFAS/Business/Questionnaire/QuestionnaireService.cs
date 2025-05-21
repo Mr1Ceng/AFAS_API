@@ -161,7 +161,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
 
     #endregion
 
-    #region Question
+    #region Question 获取
 
     /// <summary>
     /// 获取题目列表
@@ -315,7 +315,233 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
         return question;
     }
-    
+
+    #endregion
+
+    #region Question 管理
+
+    /// <summary>
+    /// 保存题目S1信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionS1Async(QuestionS1Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+            }
+            else
+            { 
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            _ = context.BQuestionS1s.Where(x=>x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionS1s.AddRange(question.QuestionList.OrderBy(x => x.GridSort).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+
+    /// <summary>
+    /// 保存题目S2信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionS2Async(QuestionS2Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            _ = context.BQuestionS2s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionS2s.AddRange(question.QuestionList.OrderBy(x => x.GridRow).ThenBy(x=>x.GridColumn).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+
+    /// <summary>
+    /// 保存题目S3信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionS3Async(QuestionS3Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            _ = context.BQuestionS3s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionS3s.AddRange(question.QuestionList.OrderBy(x => x.GridRow).ThenBy(x => x.GridColumn).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+
+    /// <summary>
+    /// 保存题目S4信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionS4Async(QuestionS4Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+                question.QuestionList.QuestionId = question.QuestionInfo.QuestionId;
+                context.BQuestionS4s.Add(question.QuestionList);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+
+    /// <summary>
+    /// 保存题目S5信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionS5Async(QuestionS5Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            _ = context.BQuestionS5s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionS5s.AddRange(question.QuestionList.OrderBy(x => x.ImageId).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+    /// <summary>
+    /// 保存题目T1信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionT1Async(QuestionT1Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+                question.AnswerInfo.QuestionId = question.QuestionInfo.QuestionId;
+                context.BQuestionT1s.Add(question.AnswerInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+                context.BQuestionT1s.Update(question.AnswerInfo);
+            }
+            _ = context.BQuestionT1Qs.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            _ = context.BQuestionT1As.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.bQuestionT1QList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            question.bQuestionT1AList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionT1Qs.AddRange(question.bQuestionT1QList.OrderBy(x => x.QuestionSort).ToList());
+            context.BQuestionT1As.AddRange(question.bQuestionT1AList.OrderBy(x => x.QuestionSort).ThenBy(x => x.AnswerSort).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+    /// <summary>
+    /// 保存题目T2信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionT2Async(QuestionT2Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+                question.AnswerInfo.QuestionId = question.QuestionInfo.QuestionId;
+                context.BQuestionT2s.Add(question.AnswerInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+                context.BQuestionT2s.Update(question.AnswerInfo);
+            }
+            _ = context.BQuestionT2Qs.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            _ = context.BQuestionT2As.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.bQuestionT2QList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            question.bQuestionT2AList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionT2Qs.AddRange(question.bQuestionT2QList.OrderBy(x => x.QuestionSort).ToList());
+            context.BQuestionT2As.AddRange(question.bQuestionT2AList.OrderBy(x => x.QuestionSort).ThenBy(x => x.AnswerSort).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
+
+    /// <summary>
+    /// 保存题目T3信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    public async Task<string> SaveQuestionT3Async(QuestionT3Model question)
+    {
+        using (var context = new AfasContext())
+        {
+            if (question.QuestionInfo.QuestionId == "")
+            {
+                question.QuestionInfo.QuestionId = NewKey.NewQuestionId();
+                context.BQuestions.Add(question.QuestionInfo);
+            }
+            else
+            {
+                context.BQuestions.Update(question.QuestionInfo);
+            }
+            _ = context.BQuestionT3s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionT3s.AddRange(question.QuestionList.OrderBy(x => x.QuestionType).ThenBy(x=>x.QuestionSort).ToList());
+            await context.SaveChangesAsync();
+        }
+        return question.QuestionInfo.QuestionId;
+    }
     #endregion
 
     #region Answer

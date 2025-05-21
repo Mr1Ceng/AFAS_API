@@ -155,6 +155,81 @@ namespace AFAS.Controllers
 
         #endregion
 
+        #region Qusetion 管理
+
+        /// <summary>
+        /// 保存题目S1信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionS1Async(QuestionS1Model data)
+            => new(await _service.SaveQuestionS1Async(data));
+
+        /// <summary>
+        /// 保存题目S2信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionS2Async(QuestionS2Model data)
+            => new(await _service.SaveQuestionS2Async(data));
+
+        /// <summary>
+        /// 保存题目S3信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionS3Async(QuestionS3Model data)
+            => new(await _service.SaveQuestionS3Async(data));
+
+        /// <summary>
+        /// 保存题目S4信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionS4Async(QuestionS4Model data)
+            => new(await _service.SaveQuestionS4Async(data));
+
+        /// <summary>
+        /// 保存题目S5信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionS5Async(QuestionS5Model data)
+            => new(await _service.SaveQuestionS5Async(data));
+
+        /// <summary>
+        /// 保存题目T1信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionT1Async(QuestionT1Model data)
+            => new(await _service.SaveQuestionT1Async(data));
+
+        /// <summary>
+        /// 保存题目T2信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionT2Async(QuestionT2Model data)
+            => new(await _service.SaveQuestionT2Async(data));
+
+        /// <summary>
+        /// 保存题目T3信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseModel<string>> SaveQuestionT3Async(QuestionT3Model data)
+            => new(await _service.SaveQuestionT3Async(data));
+        #endregion
+
         #region Answer
 
         /// <summary>

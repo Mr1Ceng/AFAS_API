@@ -27,6 +27,23 @@ public class NewKey
     }
 
     /// <summary>
+    /// 获取新的试卷题目编号
+    /// </summary>
+    /// <returns></returns>
+    public static string NewQuestionId()
+    {
+        var newkey = "QS" + NewCode.GetUpper(4);
+        using (var context = new AfasContext())
+        {
+            if (context.BQuestions.Any(b => b.QuestionId == newkey))
+            {
+                newkey = NewQuestionId();
+            }
+        }
+        return newkey;
+    }
+
+    /// <summary>
     /// 获取新的账号
     /// </summary>
     /// <returns></returns>

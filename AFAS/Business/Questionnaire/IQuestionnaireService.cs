@@ -1,8 +1,10 @@
 ﻿using AFAS.Entity;
 using AFAS.Infrastructure.Models;
+using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Models.User;
+using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 
 namespace AFAS.Business.Questionnaire;
@@ -51,7 +53,7 @@ public interface IQuestionnaireService
     Task RemoveQuestionnaireAsync(string questionnaireId);
     #endregion
 
-    #region Question
+    #region Question 获取
 
     /// <summary>
     /// 获取题目列表
@@ -115,6 +117,69 @@ public interface IQuestionnaireService
     /// <param name="questionId"></param>
     /// <returns></returns>
     Task<QuestionT3Model> GetQuestionT3Async(string questionId);
+    #endregion
+
+    #region Question 管理
+
+    /// <summary>
+    /// 保存题目S1信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionS1Async(QuestionS1Model question);
+
+
+    /// <summary>
+    /// 保存题目S2信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionS2Async(QuestionS2Model question);
+
+
+    /// <summary>
+    /// 保存题目S3信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionS3Async(QuestionS3Model question);
+
+
+    /// <summary>
+    /// 保存题目S4信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionS4Async(QuestionS4Model question);
+
+
+    /// <summary>
+    /// 保存题目S5信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionS5Async(QuestionS5Model question);
+
+    /// <summary>
+    /// 保存题目T1信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionT1Async(QuestionT1Model question);
+
+    /// <summary>
+    /// 保存题目T2信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionT2Async(QuestionT2Model question);
+
+    /// <summary>
+    /// 保存题目T3信息
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns></returns>
+    Task<string> SaveQuestionT3Async(QuestionT3Model question);
     #endregion
 
     #region Answer
