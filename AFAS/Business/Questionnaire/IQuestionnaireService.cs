@@ -180,6 +180,13 @@ public interface IQuestionnaireService
     /// <param name="question"></param>
     /// <returns></returns>
     Task<string> SaveQuestionT3Async(QuestionT3Model question);
+
+    /// <summary>
+    /// 删除题目
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    Task RemoveQuestionAsync(string questionId);
     #endregion
 
     #region Answer

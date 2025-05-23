@@ -228,6 +228,19 @@ namespace AFAS.Controllers
         [HttpPost]
         public async Task<ResponseModel<string>> SaveQuestionT3Async(QuestionT3Model data)
             => new(await _service.SaveQuestionT3Async(data));
+
+        /// <summary>
+        /// É¾³ýÌâÄ¿
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        public async Task<ResponseModel> RemoveQuestionAsync(string questionId)
+        {
+            await _service.RemoveQuestionAsync(questionId);
+            return new ResponseModel();
+        }
+
         #endregion
 
         #region Answer

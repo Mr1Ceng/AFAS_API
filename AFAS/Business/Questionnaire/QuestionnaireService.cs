@@ -9,6 +9,7 @@ using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Service;
+using DocumentFormat.OpenXml.Office.SpreadSheetML.Y2023.MsForms;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
@@ -154,8 +155,34 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 context.BQuestionnaires.Remove(questionnarie);
             }
-
-            await context.SaveChangesAsync();
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var questions = await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ToListAsync();
+                    await context.BQuestionS1s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionS2s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionS3s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionS4s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionS5s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT1s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT1As.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT1Qs.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT2s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT2As.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT2Qs.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestionT3s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
+                    await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ExecuteDeleteAsync();
+                    context.BQuestionnaires.Remove(questionnarie);
+                    await context.SaveChangesAsync();// 保存数据
+                    transaction.Commit(); // 提交事务
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback(); // 发生异常时回滚事务
+                    throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "删除题目失败");
+                }
+            }
         }
     }
 
@@ -542,6 +569,52 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
         return question.QuestionInfo.QuestionId;
     }
+
+    /// <summary>
+    /// 删除题目
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <returns></returns>
+    public async Task RemoveQuestionAsync(string questionId)
+    {
+        var question = new BQuestion();
+        using (var context = new AfasContext())
+        {
+            question = context.BQuestions.AsNoTracking().FirstOrDefault(b => b.QuestionId == questionId);
+            if (question == null)
+            {
+                throw BusinessException.Get(MethodBase.GetCurrentMethod(), "试卷不存在！");
+            }
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    context.BQuestions.Remove(question); 
+                    await context.SaveChangesAsync();// 保存数据
+                    await context.BQuestionS1s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionS2s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionS3s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionS4s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionS5s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT1s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT1As.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT1Qs.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT2s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT2As.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT2Qs.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    await context.BQuestionT3s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
+                    transaction.Commit(); // 提交事务
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback(); // 发生异常时回滚事务
+                    throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "删除题目失败");
+                }
+            }
+
+        }
+    }
+
     #endregion
 
     #region Answer
@@ -1753,6 +1826,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         catch (Exception ex)
                         {
                             transaction.Rollback(); // 发生异常时回滚事务
+                            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "保存导入测评结果失败");
                         }
                     }
                 }
@@ -1792,6 +1866,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         catch (Exception ex)
                         {
                             transaction.Rollback(); // 发生异常时回滚事务
+                            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "生成导入测评结果记录失败");
                         }
                     }
                 }
@@ -1829,6 +1904,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         catch (Exception ex)
                         {
                             transaction.Rollback(); // 发生异常时回滚事务
+                            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "生成导入测评结果记录失败");
                         }
                     }
                 }
