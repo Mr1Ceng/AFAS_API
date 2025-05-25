@@ -249,6 +249,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
             question.QuestionList = await context.BQuestionS3s.Where(x => x.QuestionId == questionId).OrderBy(x => x.GridRow).ThenBy(x => x.GridColumn).ToListAsync();
+            question.bQuestionS3AList = await context.BQuestionS3As.Where(x => x.QuestionId == questionId).ToListAsync();
         }
         return question;
     }

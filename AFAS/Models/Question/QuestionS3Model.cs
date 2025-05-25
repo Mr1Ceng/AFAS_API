@@ -17,5 +17,10 @@ namespace AFAS.Models.Question
         /// </summary>
         public List<BQuestionS3> QuestionList { get; set; } = new();
 
+        /// <summary>
+        /// 题目S3答案列表
+        /// </summary>
+        public List<BQuestionS3A> bQuestionS3AList { get; set; } = new();
+
     }
 }

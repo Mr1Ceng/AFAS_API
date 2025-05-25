@@ -59,6 +59,8 @@ public partial class AfasContext : DbContext
 
     public virtual DbSet<BQuestionS3> BQuestionS3s { get; set; }
 
+    public virtual DbSet<BQuestionS3A> BQuestionS3As { get; set; }
+
     public virtual DbSet<BQuestionS4> BQuestionS4s { get; set; }
 
     public virtual DbSet<BQuestionS5> BQuestionS5s { get; set; }
@@ -603,6 +605,21 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.GridValue).HasColumnType("INT");
         });
 
+        modelBuilder.Entity<BQuestionS3A>(entity =>
+        {
+            entity.HasKey(e => new { e.QuestionId, e.GridValue });
+
+            entity.ToTable("b_Question_S3_A");
+
+            entity.Property(e => e.QuestionId)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.GridValue).HasColumnType("INT");
+            entity.Property(e => e.GridIcon)
+                .HasDefaultValue("")
+                .HasColumnType("NVARCHAR(10)");
+        });
+
         modelBuilder.Entity<BQuestionS4>(entity =>
         {
             entity.HasKey(e => e.QuestionId);
@@ -908,7 +925,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.TimeStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
         });
 
@@ -1060,7 +1077,7 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(25)");
             entity.Property(e => e.ImportResult).HasDefaultValue("");
             entity.Property(e => e.ImportStamp)
-                .HasDefaultValue("")
+                .HasDefaultValueSql("''")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsSuccess).HasColumnType("BIT");
             entity.Property(e => e.UserId)
