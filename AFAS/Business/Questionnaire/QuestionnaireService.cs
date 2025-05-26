@@ -1391,7 +1391,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         => current + $@" AND (QuestionnaireName LIKE '%{text}%'
                     OR IFNULL(Student.UserName,'') LIKE '%{text}%'
                     OR IFNULL(Teacher.UserName,'') LIKE '%{text}%'
-                    OR IFNULL(AnswerId,'') LIKE '%{text}%'
+                    OR IFNULL(Answer.AnswerId,'') LIKE '%{text}%'
                 )");
             }
 
