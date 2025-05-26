@@ -159,20 +159,27 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 try
                 {
-                    var questions = await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ToListAsync();
-                    await context.BQuestionS1s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionS2s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionS3s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionS4s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionS5s.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT1s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT1As.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT1Qs.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT2s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT2As.Where(x => questions.Exists(y=>x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT2Qs.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestionT3s.Where(x => questions.Exists(y => x.QuestionId == y.QuestionId)).ExecuteDeleteAsync();
-                    await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ExecuteDeleteAsync();
+                    // 获取所有需要删除的 `QuestionId`
+                    var questionIds = await context.BQuestions
+                        .Where(x => x.QuestionnaireId == questionnaireId)
+                        .Select(x => x.QuestionId)
+                        .ToListAsync();
+                    if (questionIds.Any()) // 确保有数据需要删除
+                    {
+                        await context.BQuestionS1s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionS2s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionS3s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionS4s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionS5s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT1s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT1As.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT1Qs.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT2s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT2As.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT2Qs.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionT3s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestions.Where(x => x.QuestionnaireId == questionnaireId).ExecuteDeleteAsync();
+                    }
                     context.BQuestionnaires.Remove(questionnarie);
                     await context.SaveChangesAsync();// 保存数据
                     transaction.Commit(); // 提交事务
