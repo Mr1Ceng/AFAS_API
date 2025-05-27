@@ -134,7 +134,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(50)");
             entity.Property(e => e.QuestionnaireDate)
-                .HasDefaultValueSql("''")
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(10)");
             entity.Property(e => e.RadarImage).HasDefaultValue("");
             entity.Property(e => e.Remark).HasDefaultValue("");
@@ -629,6 +629,9 @@ public partial class AfasContext : DbContext
             entity.Property(e => e.QuestionId)
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(6)");
+            entity.Property(e => e.Perturbation).HasColumnType("INT");
+            entity.Property(e => e.RingNumber).HasColumnType("INT");
+            entity.Property(e => e.Spacing).HasColumnType("INT");
         });
 
         modelBuilder.Entity<BQuestionS5>(entity =>
@@ -925,7 +928,7 @@ public partial class AfasContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(200)");
             entity.Property(e => e.TimeStamp)
-                .HasDefaultValueSql("''")
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(20)");
         });
 
@@ -1077,7 +1080,7 @@ public partial class AfasContext : DbContext
                 .HasColumnType("NVARCHAR(25)");
             entity.Property(e => e.ImportResult).HasDefaultValue("");
             entity.Property(e => e.ImportStamp)
-                .HasDefaultValueSql("''")
+                .HasDefaultValue("")
                 .HasColumnType("NVARCHAR(20)");
             entity.Property(e => e.IsSuccess).HasColumnType("BIT");
             entity.Property(e => e.UserId)

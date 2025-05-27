@@ -1,0 +1,15 @@
+﻿cd AFAS.Entity
+dotnet ef dbcontext scaffold "Data Source=../AFAS.Database/AFAS.db;Cache=Shared;" Microsoft.EntityFrameworkCore.Sqlite -o ./ -f
+
+= null!;
+= "";
+
+int (.*) { get; set; } = 0;
+int $1 { get; set; } = 0;
+
+public DateTime (.*) { get; set; }
+public string $1 { get; set; } = "";
+
+public decimal (.*) { get; set; }
+public decimal $1 { get; set; } = 0m;
+

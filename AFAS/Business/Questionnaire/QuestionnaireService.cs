@@ -430,6 +430,9 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             _ = context.BQuestionS3s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
             question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
             context.BQuestionS3s.AddRange(question.QuestionList.OrderBy(x => x.GridRow).ThenBy(x => x.GridColumn).ToList());
+            _ = context.BQuestionS3As.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            question.bQuestionS3AList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
+            context.BQuestionS3As.AddRange(question.bQuestionS3AList.OrderBy(x => x.GridValue).ToList());
             await context.SaveChangesAsync();
         }
         return question.QuestionInfo.QuestionId;
