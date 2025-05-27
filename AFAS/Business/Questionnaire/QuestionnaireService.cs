@@ -458,6 +458,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             else
             {
                 context.BQuestions.Update(question.QuestionInfo);
+                context.BQuestionS4s.Update(question.QuestionList);
             }
             await context.SaveChangesAsync();
         }
