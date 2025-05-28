@@ -1,5 +1,6 @@
 using AFAS.Authorization;
 using AFAS.Infrastructure;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using Mr1Ceng.Util.Swagger;
 using System.Reflection;
@@ -14,7 +15,14 @@ builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponse
 builder.Services.AddCors(options => options.AddPolicy(SystemConfig.SystemId,
     p => p.WithOrigins(SystemConfig.CorsUrls).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader()
         .WithMethods("GET", "POST"))); //跨域
-
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100MB
+});
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 104857600; // 100MB
+});
 #endregion
 
 #region 业务类注入

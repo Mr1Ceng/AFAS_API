@@ -209,7 +209,28 @@ namespace AFAS.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<ResponseModel<string>> SaveQuestionT1Async(QuestionT1Model data)
-            => new(await _service.SaveQuestionT1Async(data));
+        {
+            var result = await _service.SaveQuestionT1Async(data);
+            return new(result);
+        }
+
+        /// <summary>
+        /// 保存题目T1录音文件
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        [RequestSizeLimit(104857600)] // 100MB
+        public ResponseModel SaveQuestionT1Audio(string questionId)
+        {
+            if (Request.Form.Files.Count == 0)
+            {
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "没有找到要上传的数据文件");
+            }
+            List<Stream> fileStreams = Request.Form.Files.Select(file => file.OpenReadStream()).ToList();
+            _service.SaveQuestionT1Audio(questionId, fileStreams);
+            return new ResponseModel();
+        }
 
         /// <summary>
         /// 保存题目T2信息

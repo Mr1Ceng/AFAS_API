@@ -223,7 +223,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderBy(x => x.GridSort).ToListAsync();
+            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderByDescending(x => x.GridType).ThenBy(x=>x.GridSort).ToListAsync();
         }
         return question;
     }
@@ -522,6 +522,19 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             await context.SaveChangesAsync();
         }
         return question.QuestionInfo.QuestionId;
+    }
+
+    /// <summary>
+    /// 保存题目T1录音文件
+    /// </summary>
+    /// <param name="streams"></param>
+    /// <returns></returns>
+    public void SaveQuestionT1Audio(string questionId, List<Stream> streams)
+    {
+        foreach (var stream in streams) 
+        {
+
+        }
     }
 
     /// <summary>

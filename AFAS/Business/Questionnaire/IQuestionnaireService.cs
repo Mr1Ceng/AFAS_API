@@ -168,6 +168,13 @@ public interface IQuestionnaireService
     Task<string> SaveQuestionT1Async(QuestionT1Model question);
 
     /// <summary>
+    /// 保存题目T1录音文件
+    /// </summary>
+    /// <param name="streams"></param>
+    /// <returns></returns>
+    void SaveQuestionT1Audio(string questionId,List<Stream> streams);
+
+    /// <summary>
     /// 保存题目T2信息
     /// </summary>
     /// <param name="question"></param>
