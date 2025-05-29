@@ -128,14 +128,12 @@ public interface IQuestionnaireService
     /// <returns></returns>
     Task<string> SaveQuestionS1Async(QuestionS1Model question);
 
-
     /// <summary>
     /// 保存题目S2信息
     /// </summary>
     /// <param name="question"></param>
     /// <returns></returns>
     Task<string> SaveQuestionS2Async(QuestionS2Model question);
-
 
     /// <summary>
     /// 保存题目S3信息
@@ -144,14 +142,12 @@ public interface IQuestionnaireService
     /// <returns></returns>
     Task<string> SaveQuestionS3Async(QuestionS3Model question);
 
-
     /// <summary>
     /// 保存题目S4信息
     /// </summary>
     /// <param name="question"></param>
     /// <returns></returns>
     Task<string> SaveQuestionS4Async(QuestionS4Model question);
-
 
     /// <summary>
     /// 保存题目S5信息
@@ -168,13 +164,6 @@ public interface IQuestionnaireService
     Task<string> SaveQuestionT1Async(QuestionT1Model question);
 
     /// <summary>
-    /// 保存题目T1录音文件
-    /// </summary>
-    /// <param name="streams"></param>
-    /// <returns></returns>
-    void SaveQuestionT1Audio(string questionId,List<Stream> streams);
-
-    /// <summary>
     /// 保存题目T2信息
     /// </summary>
     /// <param name="question"></param>
@@ -187,6 +176,13 @@ public interface IQuestionnaireService
     /// <param name="question"></param>
     /// <returns></returns>
     Task<string> SaveQuestionT3Async(QuestionT3Model question);
+
+    /// <summary>
+    /// 保存题目录音文件
+    /// </summary>
+    /// <param name="streams"></param>
+    /// <returns></returns>
+    void SaveQuestionAudio(string questionId, IFormFileCollection files);
 
     /// <summary>
     /// 删除题目

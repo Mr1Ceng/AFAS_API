@@ -215,24 +215,6 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// 保存题目T1录音文件
-        /// </summary>
-        /// <param name="month"></param>
-        /// <returns></returns>
-        [HttpPost("{questionId}")]
-        [RequestSizeLimit(104857600)] // 100MB
-        public ResponseModel SaveQuestionT1Audio(string questionId)
-        {
-            if (Request.Form.Files.Count == 0)
-            {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(), "没有找到要上传的数据文件");
-            }
-            List<Stream> fileStreams = Request.Form.Files.Select(file => file.OpenReadStream()).ToList();
-            _service.SaveQuestionT1Audio(questionId, fileStreams);
-            return new ResponseModel();
-        }
-
-        /// <summary>
         /// 保存题目T2信息
         /// </summary>
         /// <param name="data"></param>
@@ -249,6 +231,23 @@ namespace AFAS.Controllers
         [HttpPost]
         public async Task<ResponseModel<string>> SaveQuestionT3Async(QuestionT3Model data)
             => new(await _service.SaveQuestionT3Async(data));
+
+        /// <summary>
+        /// 保存题目录音文件
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpPost("{questionId}")]
+        [RequestSizeLimit(104857600)] // 100MB
+        public ResponseModel SaveQuestionAudio(string questionId)
+        {
+            if (Request.Form.Files.Count == 0)
+            {
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "没有找到要上传的数据文件");
+            }
+            _service.SaveQuestionAudio(questionId, Request.Form.Files);
+            return new ResponseModel();
+        }
 
         /// <summary>
         /// 删除题目

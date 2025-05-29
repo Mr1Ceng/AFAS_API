@@ -9,7 +9,6 @@ using AFAS.Internals;
 using AFAS.Models.Question;
 using AFAS.Models.TestResult;
 using AFAS.Service;
-using DocumentFormat.OpenXml.Office.SpreadSheetML.Y2023.MsForms;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +24,7 @@ namespace AFAS.Business.Questionnaire;
 /// <summary>
 /// 试卷-服务
 /// </summary>
-public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
+public class QuestionnaireService : UserTokenAuthorization, IQuestionnaireService
 {
     /// <summary>
     /// 构造函数
@@ -169,6 +168,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         await context.BQuestionS1s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
                         await context.BQuestionS2s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
                         await context.BQuestionS3s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
+                        await context.BQuestionS3As.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
                         await context.BQuestionS4s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
                         await context.BQuestionS5s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
                         await context.BQuestionT1s.Where(x => questionIds.Contains(x.QuestionId)).ExecuteDeleteAsync();
@@ -223,7 +223,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderByDescending(x => x.GridType).ThenBy(x=>x.GridSort).ToListAsync();
+            question.QuestionList = await context.BQuestionS1s.Where(x => x.QuestionId == questionId).OrderByDescending(x => x.GridType).ThenBy(x => x.GridSort).ToListAsync();
         }
         return question;
     }
@@ -346,7 +346,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         using (var context = new AfasContext())
         {
             question.QuestionInfo = await context.BQuestions.SingleAsync(x => x.QuestionId == questionId);
-            question.QuestionList = await context.BQuestionT3s.Where(x => x.QuestionId == questionId).ToListAsync();
+            question.QuestionList = await context.BQuestionT3s.Where(x => x.QuestionId == questionId).OrderByDescending(x=>x.QuestionType).ThenBy(x=>x.Level).ThenBy(x=>x.QuestionSort).ToListAsync();
         }
         return question;
     }
@@ -370,17 +370,16 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                 context.BQuestions.Add(question.QuestionInfo);
             }
             else
-            { 
+            {
                 context.BQuestions.Update(question.QuestionInfo);
             }
-            _ = context.BQuestionS1s.Where(x=>x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
+            _ = context.BQuestionS1s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
             question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
             context.BQuestionS1s.AddRange(question.QuestionList.OrderBy(x => x.GridSort).ToList());
             await context.SaveChangesAsync();
         }
         return question.QuestionInfo.QuestionId;
     }
-
 
     /// <summary>
     /// 保存题目S2信息
@@ -402,12 +401,11 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             }
             _ = context.BQuestionS2s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
             question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
-            context.BQuestionS2s.AddRange(question.QuestionList.OrderBy(x => x.GridRow).ThenBy(x=>x.GridColumn).ToList());
+            context.BQuestionS2s.AddRange(question.QuestionList.OrderBy(x => x.GridRow).ThenBy(x => x.GridColumn).ToList());
             await context.SaveChangesAsync();
         }
         return question.QuestionInfo.QuestionId;
     }
-
 
     /// <summary>
     /// 保存题目S3信息
@@ -438,7 +436,6 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         return question.QuestionInfo.QuestionId;
     }
 
-
     /// <summary>
     /// 保存题目S4信息
     /// </summary>
@@ -464,7 +461,6 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         }
         return question.QuestionInfo.QuestionId;
     }
-
 
     /// <summary>
     /// 保存题目S5信息
@@ -525,19 +521,6 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
     }
 
     /// <summary>
-    /// 保存题目T1录音文件
-    /// </summary>
-    /// <param name="streams"></param>
-    /// <returns></returns>
-    public void SaveQuestionT1Audio(string questionId, List<Stream> streams)
-    {
-        foreach (var stream in streams) 
-        {
-
-        }
-    }
-
-    /// <summary>
     /// 保存题目T2信息
     /// </summary>
     /// <param name="question"></param>
@@ -589,10 +572,32 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             }
             _ = context.BQuestionT3s.Where(x => x.QuestionId == question.QuestionInfo.QuestionId).ExecuteDelete();
             question.QuestionList.ForEach(x => x.QuestionId = question.QuestionInfo.QuestionId);
-            context.BQuestionT3s.AddRange(question.QuestionList.OrderBy(x => x.QuestionType).ThenBy(x=>x.QuestionSort).ToList());
+            context.BQuestionT3s.AddRange(question.QuestionList.OrderBy(x => x.QuestionType).ThenBy(x => x.QuestionSort).ToList());
             await context.SaveChangesAsync();
         }
         return question.QuestionInfo.QuestionId;
+    }
+
+    /// <summary>
+    /// 保存题目录音文件
+    /// </summary>
+    /// <param name="questionId"></param>
+    /// <param name="files"></param>
+    /// <returns></returns>
+    public void SaveQuestionAudio(string questionId, IFormFileCollection files)
+    {
+        string directoryPath = Path.Combine("../AFAS.Static/Audios/", questionId);
+        Directory.CreateDirectory(directoryPath);
+        for (int i = 0; i < files.Count; i++)
+        {
+            Stream stream = files[i].OpenReadStream();
+            string filePath = Path.Combine(directoryPath, $"{files[i].Name}");
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                stream.CopyTo(fileStream);
+            }
+        }
+
     }
 
     /// <summary>
@@ -614,7 +619,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 try
                 {
-                    context.BQuestions.Remove(question); 
+                    context.BQuestions.Remove(question);
                     await context.SaveChangesAsync();// 保存数据
                     await context.BQuestionS1s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
                     await context.BQuestionS2s.Where(x => x.QuestionId == questionId).ExecuteDeleteAsync();
@@ -1828,7 +1833,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                     var t2 = item.answerList.Find(x => x.QuestionCode == "T2"); if (t2 != null) answerT2List.Add(new BAnswerT2() { AnswerId = item.AnswerId, StandardScore = t2.StandardScore, Remark = t2.Remark });
                     var t3 = item.answerList.Find(x => x.QuestionCode == "T3"); if (t3 != null) answerT3List.Add(new BAnswerT3() { AnswerId = item.AnswerId, StandardScore = t3.StandardScore, Remark = t3.Remark });
                 }
-                using(var context = new AfasContext())
+                using (var context = new AfasContext())
                 {
                     using (var transaction = context.Database.BeginTransaction())
                     {
@@ -1855,7 +1860,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                         }
                     }
                 }
-                
+
                 #endregion
 
                 result.Success = true;
@@ -1870,10 +1875,10 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
                     IsSuccess = result.Success,
                     UserId = userIdentity.UserId,
                 };
-                var answerImportDetail = testResultList.Select(x => new RAnswerImportDetail() 
-                { 
-                    ImportId = answerImport.ImportId, 
-                    AnswerId = x.AnswerId 
+                var answerImportDetail = testResultList.Select(x => new RAnswerImportDetail()
+                {
+                    ImportId = answerImport.ImportId,
+                    AnswerId = x.AnswerId
                 });
 
                 using (var context = new AfasContext())
@@ -2099,7 +2104,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         #region 校验数据
 
         var studentList = UserIdentityHelper.GetUserListByRoleId(RoleEnum.STUDENT.ToString()).ToList();
-        var teacherList = UserIdentityHelper.GetUserListByRoleId(RoleEnum.TEACHER.ToString()).ToList(); 
+        var teacherList = UserIdentityHelper.GetUserListByRoleId(RoleEnum.TEACHER.ToString()).ToList();
         var evaluationStandardList = EvaluationStandardHelper.GetEvaluationStandardListAsync().GetAwaiter().GetResult();
         var suggestedCourseList = DictionaryHelper.GetDictionaryList("SuggestedCourse").ToList();
         var questionnaireList = QuestionnaireHelper.GetQuestionnaireListAsync().GetAwaiter().GetResult();
@@ -2111,7 +2116,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
         var currentAnswerIndex = GetInt.FromObject(NewKey.NewAnswerId(dayStr).Replace(dayStr, ""));
         for (int i = 0; i < dt.Rows.Count; i++)
         {
-            DataRow dr = dt.Rows[i];   
+            DataRow dr = dt.Rows[i];
             var checkEmptyRow = true;
             foreach (DataColumn column in dt.Columns)
             {
@@ -2129,7 +2134,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             var item = new AnswerModel
             {
                 AnswerId = dayStr + (currentAnswerIndex + i).ToString().PadLeft(3, '0'),
-                Status = DataStatus.DRAFT.ToString() 
+                Status = DataStatus.DRAFT.ToString()
             };
 
             var versionName = GetString.FromObject(dr["测评版本"]);
@@ -2138,7 +2143,7 @@ public class QuestionnaireService :UserTokenAuthorization, IQuestionnaireService
             {
                 tips.Add("测评版本不存在");
             }
-            else 
+            else
             {
                 item.QuestionnaireId = questionnaire.QuestionnaireId;
             }
