@@ -13,8 +13,12 @@ SystemConfig.Setup(Assembly.GetExecutingAssembly().GetName().Name); //系统初始化
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponseFilter>(); }); //异常处理
 builder.Services.AddCors(options => options.AddPolicy(SystemConfig.SystemId,
-    p => p.WithOrigins(SystemConfig.CorsUrls).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader()
-        .WithMethods("GET", "POST"))); //跨域
+    p => p
+    //.WithOrigins(SystemConfig.CorsUrls)
+    .AllowAnyOrigin()
+    .SetIsOriginAllowedToAllowWildcardSubdomains()
+    .AllowAnyHeader()
+    .WithMethods("GET", "POST"))); //跨域
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 104857600; // 100MB
