@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Word;
+﻿//using Microsoft.Office.Interop.Word;
 using System.Reflection;
 using System.Text;
 
@@ -300,47 +300,47 @@ public class FileHelper
     /// <returns></returns>
     public static void Word2Pdf(string path, string fileName, string outPath, string outFileName)
     {
-        if (!Directory.Exists(path))
-        {
-            throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件路径");
-        }
-        if (!Directory.Exists(outPath))
-        {
-            Directory.CreateDirectory(outPath);
-        }
-        string wordFileName = Path.GetFullPath(Path.Combine(path, fileName));// 导出的文件路径
-        if (!Path.Exists(wordFileName))
-        {
-            throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件");
-        }
-        string pdfFileName = Path.GetFullPath(Path.Combine(outPath, outFileName));// 导出的文件路径
-        if (!Path.Exists(pdfFileName))
-        {
-            using (FileStream fs = File.Create(pdfFileName))
-            {
-            }
-        }
-        Application wordApp = new Application();
-        Document wordDoc = null;
+        //if (!Directory.Exists(path))
+        //{
+        //    throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件路径");
+        //}
+        //if (!Directory.Exists(outPath))
+        //{
+        //    Directory.CreateDirectory(outPath);
+        //}
+        //string wordFileName = Path.GetFullPath(Path.Combine(path, fileName));// 导出的文件路径
+        //if (!Path.Exists(wordFileName))
+        //{
+        //    throw MessageException.Get(MethodBase.GetCurrentMethod(), "未找到Word文件");
+        //}
+        //string pdfFileName = Path.GetFullPath(Path.Combine(outPath, outFileName));// 导出的文件路径
+        //if (!Path.Exists(pdfFileName))
+        //{
+        //    using (FileStream fs = File.Create(pdfFileName))
+        //    {
+        //    }
+        //}
+        //Application wordApp = new Application();
+        //Document wordDoc = null;
 
-        try
-        {
-            // 打开 Word 文档
-            wordDoc = wordApp.Documents.Open(wordFileName);
+        //try
+        //{
+        //    // 打开 Word 文档
+        //    wordDoc = wordApp.Documents.Open(wordFileName);
 
-            // 转换为 PDF
-            wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
-        }
-        catch (Exception ex)
-        {
-            throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "word转pdf失败");
-        }
-        finally
-        {
-            // 关闭 Word
-            wordDoc?.Close();
-            wordApp.Quit();
-        }
+        //    // 转换为 PDF
+        //    wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
+        //}
+        //catch (Exception ex)
+        //{
+        //    throw BusinessException.Get(ex).AddMessage(MethodBase.GetCurrentMethod(), "word转pdf失败");
+        //}
+        //finally
+        //{
+        //    // 关闭 Word
+        //    wordDoc?.Close();
+        //    wordApp.Quit();
+        //}
     }
 
     #endregion
