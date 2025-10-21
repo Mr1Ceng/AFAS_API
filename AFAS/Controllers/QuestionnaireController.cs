@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
 using System.Reflection;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -33,7 +33,7 @@ namespace AFAS.Controllers
         #region Questionnaire
 
         /// <summary>
-        /// »ñÈ¡ÊÔ¾íÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½Ô¾ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -41,7 +41,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionnaireListAsync());
 
         /// <summary>
-        /// »ñÈ¡ÊÔ¾íÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½Ô¾ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionnaireId}")]
@@ -49,7 +49,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionnaireModelAsync(questionnaireId));
 
         /// <summary>
-        /// »ñÈ¡ÊÔ¾í
+        /// ï¿½ï¿½È¡ï¿½Ô¾ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionnaireId}")]
@@ -57,7 +57,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionnaireAsync(questionnaireId));
 
         /// <summary>
-        /// ±£´æÊÔ¾í
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -66,7 +66,7 @@ namespace AFAS.Controllers
         => new(await _service.SaveQuestionnaireAsync(data));
 
         /// <summary>
-        /// É¾³ýÊÔ¾í
+        /// É¾ï¿½ï¿½ï¿½Ô¾ï¿½
         /// </summary>
         /// <param name="questionnaireId"></param>
         /// <returns></returns>
@@ -82,7 +82,7 @@ namespace AFAS.Controllers
         #region Question
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿ÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionnaireId}")]
@@ -90,7 +90,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionListAsync(questionnaireId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿S1ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿S1ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -98,7 +98,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionS1Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿S2ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿S2ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -106,7 +106,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionS2Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿S3ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿S3ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -114,7 +114,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionS3Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿S4ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿S4ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -122,7 +122,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionS4Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿S5ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿S5ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -130,7 +130,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionS5Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿T1ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿T1ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -138,7 +138,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionT1Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿T2ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿T2ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -146,7 +146,7 @@ namespace AFAS.Controllers
         => new(await _service.GetQuestionT2Async(questionId));
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿T3ÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿T3ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{questionId}")]
@@ -155,10 +155,10 @@ namespace AFAS.Controllers
 
         #endregion
 
-        #region Qusetion ¹ÜÀí
+        #region Qusetion ï¿½ï¿½ï¿½ï¿½
 
         /// <summary>
-        /// ±£´æÌâÄ¿S1ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S1ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -167,7 +167,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionS1Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S2ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S2ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -176,7 +176,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionS2Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S3ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S3ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -185,7 +185,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionS3Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S4ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S4ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -194,7 +194,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionS4Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S5ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S5ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -203,7 +203,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionS5Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿T1ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T1ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -215,7 +215,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// ±£´æÌâÄ¿T2ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T2ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -224,7 +224,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionT2Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿T3ÐÅÏ¢
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T3ï¿½ï¿½Ï¢
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -233,7 +233,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveQuestionT3Async(data));
 
         /// <summary>
-        /// ±£´æÌâÄ¿Â¼ÒôÎÄ¼þ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½Ä¼ï¿½
         /// </summary>
         /// <param name="month"></param>
         /// <returns></returns>
@@ -243,14 +243,14 @@ namespace AFAS.Controllers
         {
             if (Request.Form.Files.Count == 0)
             {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Ã»ÓÐÕÒµ½ÒªÉÏ´«µÄÊý¾ÝÎÄ¼þ");
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Ã»ï¿½ï¿½ï¿½Òµï¿½Òªï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½");
             }
             _service.SaveQuestionAudio(questionId, Request.Form.Files);
             return new ResponseModel();
         }
 
         /// <summary>
-        /// É¾³ýÌâÄ¿
+        /// É¾ï¿½ï¿½ï¿½ï¿½Ä¿
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>
@@ -266,7 +266,7 @@ namespace AFAS.Controllers
         #region Answer
 
         /// <summary>
-        /// »ñÈ¡ÌâÄ¿´ð°¸
+        /// ï¿½ï¿½È¡ï¿½ï¿½Ä¿ï¿½ï¿½
         /// </summary>
         /// <param name="answerId"></param>
         /// <returns></returns>
@@ -275,7 +275,7 @@ namespace AFAS.Controllers
             => new(await _service.GetAnswerListAsync(answerId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S1´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S1ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -285,7 +285,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerS1Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S2´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S2ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -295,7 +295,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerS2Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S3´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S3ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -305,7 +305,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerS3Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S4´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S4ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -315,7 +315,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerS4Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿S5´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿S5ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -325,7 +325,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerS5Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿T1´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T1ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -335,7 +335,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerT1Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿T2´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T2ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -345,7 +345,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerT2Async(data, userId));
 
         /// <summary>
-        /// ±£´æÌâÄ¿T3´ð°¸
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿T3ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <param name="userId"></param>
@@ -355,10 +355,10 @@ namespace AFAS.Controllers
             => new(await _service.SaveAnswerT3Async(data, userId));
         #endregion
 
-        #region TestResult¡¾²âÆÀ½á¹û¡¿
+        #region TestResultï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         /// <summary>
-        /// ²âÆÀ½á¹û²éÑ¯
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -367,7 +367,7 @@ namespace AFAS.Controllers
             => new(_service.TestResultGridQuery(query));
 
         /// <summary>
-        /// ±£´æ²âÆÀ½á¹û
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -376,7 +376,7 @@ namespace AFAS.Controllers
             => new(await _service.SaveTestResultAsync(data));
 
         /// <summary>
-        /// ²âÆÀ½á¹ûµ¼Èë²éÑ¯
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -385,7 +385,7 @@ namespace AFAS.Controllers
             => new(_service.TestResultImportGridQuery(query));
 
         /// <summary>
-        /// µ¼Èë²âÆÀ½á¹û
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="month"></param>
         /// <returns></returns>
@@ -394,13 +394,13 @@ namespace AFAS.Controllers
         {
             if (Request.Form.Files.Count == 0)
             {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Ã»ÓÐÕÒµ½ÒªÉÏ´«µÄÊý¾ÝÎÄ¼þ");
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Ã»ï¿½ï¿½ï¿½Òµï¿½Òªï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½");
             }
             return new ResponseModel<DataImportResult>(_service.TestResultImport(Request.Form.Files[0].OpenReadStream()));
         }
 
         /// <summary>
-        /// É¾³ý²âÆÀ½á¹û
+        /// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="answerId"></param>
         /// <returns></returns>

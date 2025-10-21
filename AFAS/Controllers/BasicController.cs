@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using System.Data;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -22,7 +22,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// »ñÈ¡ÆÀ¹À±ê×¼ÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -37,7 +37,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// »ñÈ¡×ÖµäÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½Öµï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -53,7 +53,7 @@ namespace AFAS.Controllers
 
 
         /// <summary>
-        /// »ñÈ¡×ÖµäÐÅÏ¢
+        /// ï¿½ï¿½È¡ï¿½Öµï¿½ï¿½ï¿½Ï¢
         /// </summary>
         /// <returns></returns>
         [HttpPost("{dictionaryId}")]
@@ -68,7 +68,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// »ñÈ¡ÓÃ»§ÁÐ±íby½ÇÉ«
+        /// ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½Ð±ï¿½byï¿½ï¿½É«
         /// </summary>
         /// <returns></returns>
         [HttpPost("{role}")]
@@ -84,7 +84,7 @@ namespace AFAS.Controllers
 
 
         /// <summary>
-        /// »ñÈ¡ÓÃ»§ÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½Ã»ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost]

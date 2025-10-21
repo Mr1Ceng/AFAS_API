@@ -4,7 +4,7 @@ using AFAS.Entity;
 using AFAS.Models.EvaluationStandard;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -27,7 +27,7 @@ namespace AFAS.Controllers
         #region EvaluationStandard
 
         /// <summary>
-        /// »ñÈ¡²âÆÀ±ê×¼ÅäÖÃÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace AFAS.Controllers
             => new(await _service.GetEvaluationStandardListAsync());
 
         /// <summary>
-        /// »ñÈ¡²âÆÀ±ê×¼ÅäÖÃ
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{levelCode}")]
@@ -44,7 +44,7 @@ namespace AFAS.Controllers
         => new(await _service.GetEvaluationStandardAsync(levelCode));
 
         /// <summary>
-        /// ±£´æ²âÆÀ±ê×¼ÅäÖÃ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace AFAS.Controllers
         => new(await _service.SaveEvaluationStandardAsync(data));
 
         /// <summary>
-        /// É¾³ý²âÆÀ±ê×¼ÅäÖÃ
+        /// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="levelCode"></param>
         /// <returns></returns>

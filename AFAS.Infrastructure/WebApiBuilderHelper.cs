@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Mr1Ceng.Util;
 using System.Reflection;
 
-namespace WingWell.Infrastructure;
+namespace AFAS.Infrastructure;
 
 /// <summary>
 /// WebApi Builder Helper

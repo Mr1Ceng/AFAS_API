@@ -1,7 +1,7 @@
 using AFAS.Infrastructure;
 using Mr1Ceng.Util.Swagger;
 
-namespace WingWell.WebApi.Platform;
+namespace AFAS.WebApi.Platform;
 
 /// <summary>
 /// WebApi的分组名称

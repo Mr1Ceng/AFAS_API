@@ -3,7 +3,7 @@ using AFAS.Business.Account;
 using AFAS.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -24,7 +24,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// ÍøÒ³ÃÜÂëµÇÂ¼
+        /// ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Â¼
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -34,7 +34,7 @@ namespace AFAS.Controllers
 
 
         /// <summary>
-        /// ÍøÒ³ÃÜÂëµÇÂ¼
+        /// ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Â¼
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -47,7 +47,7 @@ namespace AFAS.Controllers
 
 
         /// <summary>
-        /// ÖØÖÃÃÜÂë
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{password}")]
@@ -59,7 +59,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// ÖØÖÃÃÜÂë
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{userId}/{password}")]

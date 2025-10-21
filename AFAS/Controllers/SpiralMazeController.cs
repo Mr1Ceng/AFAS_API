@@ -4,7 +4,7 @@ using AFAS.Entity;
 using AFAS.Models.SpiralMaze;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -27,7 +27,7 @@ namespace AFAS.Controllers
         #region SpiralMaze
 
         /// <summary>
-        /// »ñÈ¡äöÎÐÃÔ¹¬ÅäÖÃÁÐ±í
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace AFAS.Controllers
             => new(await _service.GetSpiralMazeListAsync());
 
         /// <summary>
-        /// »ñÈ¡äöÎÐÃÔ¹¬ÅäÖÃ
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{age}")]
@@ -44,7 +44,7 @@ namespace AFAS.Controllers
         => new(await _service.GetSpiralMazeAsync(age));
 
         /// <summary>
-        /// ±£´æäöÎÐÃÔ¹¬ÅäÖÃ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace AFAS.Controllers
         => new(await _service.SaveSpiralMazeAsync(data));
 
         /// <summary>
-        /// É¾³ýäöÎÐÃÔ¹¬ÅäÖÃ
+        /// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         /// <param name="age"></param>
         /// <returns></returns>

@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using Mr1Ceng.Util.Swagger;
 using System.Reflection;
-using WingWell.Infrastructure;
-using WingWell.WebApi.Platform;
+using AFAS.Infrastructure;
+using AFAS.WebApi.Platform;
 
-SystemConfig.Setup(Assembly.GetExecutingAssembly().GetName().Name); //ÏµÍ³³õÊ¼»¯
+SystemConfig.Setup(Assembly.GetExecutingAssembly().GetName().Name); //ÏµÍ³ï¿½ï¿½Ê¼ï¿½ï¿½
 
-#region ×¢²á·þÎñ
+#region ×¢ï¿½ï¿½ï¿½ï¿½ï¿½
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponseFilter>(); }); //Òì³£´¦Àí
+builder.Services.AddControllers(option => { option.Filters.Add<ExceptionResponseFilter>(); }); //ï¿½ì³£ï¿½ï¿½ï¿½ï¿½
 builder.Services.AddCors(options => options.AddPolicy(SystemConfig.SystemId,
     p => p
     //.WithOrigins(SystemConfig.CorsUrls)
     .AllowAnyOrigin()
     .SetIsOriginAllowedToAllowWildcardSubdomains()
     .AllowAnyHeader()
-    .WithMethods("GET", "POST"))); //¿çÓò
+    .WithMethods("GET", "POST"))); //ï¿½ï¿½ï¿½ï¿½
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 104857600; // 100MB
@@ -29,7 +29,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 #endregion
 
-#region ÒµÎñÀà×¢Èë
+#region Òµï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IAuthInfo, AuthInfo>();
@@ -39,7 +39,7 @@ WebApiBuilderHelper.RegistBusinessInterface(builder.Services, WebApiConfig.Busin
 
 #region Swagger
 
-//ÅäÖÃAPI·þÎñ
+//ï¿½ï¿½ï¿½ï¿½APIï¿½ï¿½ï¿½ï¿½
 SwaggerHelper.Config(builder.Services, WebApiConfig.SwaggerConfig);
 
 #endregion
@@ -47,19 +47,19 @@ SwaggerHelper.Config(builder.Services, WebApiConfig.SwaggerConfig);
 var app = builder.Build();
 
 SwaggerHelper.Apply(app, WebApiConfig.SwaggerConfig);
-// ÅäÖÃ¾²Ì¬ÎÄ¼þÖÐ¼ä¼þ
+// ï¿½ï¿½ï¿½Ã¾ï¿½Ì¬ï¿½Ä¼ï¿½ï¿½Ð¼ï¿½ï¿½
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "../AFAS.Static/")),
-    RequestPath = "/Static", // ×Ô¶¨Òå·ÃÎÊÂ·¾¶Ç°×º
+    RequestPath = "/Static", // ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½Ç°×º
     OnPrepareResponse = context =>
     {
         context.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
     }
 });
 
-app.UseCors(SystemConfig.SystemId); //¿çÓò
+app.UseCors(SystemConfig.SystemId); //ï¿½ï¿½ï¿½ï¿½
 app.UseAuthorization();
 
 app.MapControllers();

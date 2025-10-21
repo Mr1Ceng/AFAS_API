@@ -4,7 +4,7 @@ using AFAS.Entity;
 using AFAS.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -27,7 +27,7 @@ namespace AFAS.Controllers
         #region User
 
         /// <summary>
-        /// »ñÈ¡ÓÃ»§
+        /// ï¿½ï¿½È¡ï¿½Ã»ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{userId}")]
@@ -35,7 +35,7 @@ namespace AFAS.Controllers
         => new(await _userService.GetUserAsync(userId));
 
         /// <summary>
-        /// ±£´æÓÃ»§
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -44,7 +44,7 @@ namespace AFAS.Controllers
         => new(await _userService.SaveUserAsync(data));
 
         /// <summary>
-        /// É¾³ýÓÃ»§
+        /// É¾ï¿½ï¿½ï¿½Ã»ï¿½
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -57,11 +57,11 @@ namespace AFAS.Controllers
 
         #endregion
 
-        #region ²éÑ¯
+        #region ï¿½ï¿½Ñ¯
 
 
         /// <summary>
-        /// ÓÃ»§²éÑ¯
+        /// ï¿½Ã»ï¿½ï¿½ï¿½Ñ¯
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

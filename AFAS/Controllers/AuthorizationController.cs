@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mr1Ceng.Util;
 using Newtonsoft.Json;
 using System.Reflection;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -28,7 +28,7 @@ namespace AFAS.Controllers
 
 
         /// <summary>
-        /// »ñÈ¡TerminalAuthorization
+        /// ï¿½ï¿½È¡TerminalAuthorization
         /// </summary>
         /// <param name="terminalId"></param>
         /// <returns></returns>
@@ -36,16 +36,16 @@ namespace AFAS.Controllers
         [HttpPost("{terminalId}")]
         public ResponseModel<KeyValue<TerminalData>> GetTerminalAuthorization(string terminalId)
         {
-            //Ð£¶ÔTerminalId
+            //Ð£ï¿½ï¿½TerminalId
             var terminal = TerminalHelper.GetTerminalInfo(terminalId);
             if (terminal.TerminalKey == "")
             {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Î´ÖªµÄTerminalId");
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "Î´Öªï¿½ï¿½TerminalId");
             }
 
             try
             {
-                //Éú³ÉAuthorization
+                //ï¿½ï¿½ï¿½ï¿½Authorization
                 var authorization = WebApiAuthorization.GetString(terminal.TerminalKey, terminal.TerminalSecret);
                 return new ResponseModel<KeyValue<TerminalData>>(new KeyValue<TerminalData>
                 {
@@ -61,13 +61,13 @@ namespace AFAS.Controllers
             }
             catch (Exception ex)
             {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(), "¡¾Éú³ÉTerminalAuthorizationÊ§°Ü¡¿" + ex.Message);
+                throw MessageException.Get(MethodBase.GetCurrentMethod(), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TerminalAuthorizationÊ§ï¿½Ü¡ï¿½" + ex.Message);
             }
         }
 
 
         /// <summary>
-        /// »ñÈ¡UserTokenAuthorization
+        /// ï¿½ï¿½È¡UserTokenAuthorization
         /// </summary>
         /// <param name="terminalId"></param>
         /// <param name="userId"></param>
@@ -76,7 +76,7 @@ namespace AFAS.Controllers
         public async Task<ResponseModel<KeyValue<UserTokenData>>> GetUserTokenAuthorizationAsync(string terminalId,
             string userId)
         {
-            //Ð£¶ÔUserId
+            //Ð£ï¿½ï¿½UserId
             var identity = UserIdentityHelper.GetUserIdentityByUserId(userId, true);
 
             try
@@ -89,7 +89,7 @@ namespace AFAS.Controllers
                         userToken = JsonConvert.DeserializeObject<UserTokenData>(bUserToken.TokenData);
                         if (userToken != null)
                         {
-                            //Èç¹û»¹Ê£Ò»°ëµÄÊ±¼ä¹ýÆÚ£¬ÐøÆÚ
+                            //ï¿½ï¿½ï¿½ï¿½ï¿½Ê£Ò»ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½
                             if (userToken.Token.ExpireTime - UnixTimeHelper.GetUnixSeconds() < AUTHORIZATION_REDIS_EXPIRE_SECONDS / 2)
                             {
                                 userToken.Token.ExpireTime
@@ -101,7 +101,7 @@ namespace AFAS.Controllers
                         }
                         else
                         {
-                            #region ¹¹½¨ UserTokenData
+                            #region ï¿½ï¿½ï¿½ï¿½ UserTokenData
 
                             userToken = new UserTokenData
                             {
@@ -116,7 +116,7 @@ namespace AFAS.Controllers
 
                             #endregion
 
-                            #region ±£´æÓÃ»§µÇÂ¼Éí·Ýµ½Êý¾Ý¿â
+                            #region ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 
                             bUserToken = new BUserToken()
                             {
@@ -131,7 +131,7 @@ namespace AFAS.Controllers
                     }
                     else
                     {
-                        #region ¹¹½¨ UserTokenData
+                        #region ï¿½ï¿½ï¿½ï¿½ UserTokenData
 
                         userToken = new UserTokenData
                         {
@@ -146,7 +146,7 @@ namespace AFAS.Controllers
 
                         #endregion
 
-                        #region ±£´æÓÃ»§µÇÂ¼Éí·Ýµ½Êý¾Ý¿â
+                        #region ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 
                         bUserToken = new BUserToken()
                         {
@@ -160,7 +160,7 @@ namespace AFAS.Controllers
                         #endregion
                     }
                     await context.SaveChangesAsync();
-                    //Éú³ÉAuthorization
+                    //ï¿½ï¿½ï¿½ï¿½Authorization
                     var terminal = TerminalHelper.GetTerminalInfo(terminalId);
                     var authorization = WebApiAuthorization.GetString(terminal.TerminalKey, terminal.TerminalSecret,
                         userToken.User.UserId, userToken.Token.Value);
@@ -174,7 +174,7 @@ namespace AFAS.Controllers
             }
             catch (Exception ex)
             {
-                throw MessageException.Get(MethodBase.GetCurrentMethod(),"¡¾Éú³ÉUserTokenAuthorizationÊ§°Ü¡¿" + ex.Message);
+                throw MessageException.Get(MethodBase.GetCurrentMethod(),"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UserTokenAuthorizationÊ§ï¿½Ü¡ï¿½" + ex.Message);
             }
         }
     }

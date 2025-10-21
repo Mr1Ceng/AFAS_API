@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Mr1Ceng.Util;
-using WingWell.WebApi.Platform;
+using AFAS.WebApi.Platform;
 
 namespace AFAS.Controllers
 {
@@ -17,7 +17,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// ¼ÓÃÜÊÖ»úºÅ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{mobile}")]
@@ -27,7 +27,7 @@ namespace AFAS.Controllers
         }
 
         /// <summary>
-        /// ½âÃÜÊÖ»úºÅ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         [HttpPost("{data}")]
